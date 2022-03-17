@@ -1,0 +1,150 @@
+{
+  "manifestVersion": "3.2",
+  "admin": {
+    "address": "0x0ed64d01D0B4B655E410EF1441dD677B695639E7",
+    "txHash": "0xf631799c5e7373cf36e41712535c7f8f53948208fd7f1420e77719ec90a0c308"
+  },
+  "proxies": [
+    {
+      "address": "0x96F3Ce39Ad2BfDCf92C0F6E2C2CAbF83874660Fc",
+      "txHash": "0x13922f28156e7b506d086a5ecece8970b013f44d373fe6312217e9e41f4415a4",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x986aaa537b8cc170761FDAC6aC4fc7F9d8a20A8C",
+      "txHash": "0x6cc8ee2a1ded5fc8a9fa2c048598d61c30e8813b975fa853a7aafba3efb147ef",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x4bf010f1b9beDA5450a8dD702ED602A104ff65EE",
+      "txHash": "0x64f91cb4e2c6c6d634f1ec64267df7697af6c7495410cfec1e525ed8220e3bad",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "1a2720020ff98092a922046fea4ebb4cc7f85203594c7ed9d3e442c428c88c91": {
+      "address": "0x5302E909d1e93e30F05B5D6Eea766363D14F9892",
+      "txHash": "0x658ad4a480570f9c83160e66213b825352c057bd94525eba41d2358a2a166222",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:39"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:44"
+          },
+          {
+            "label": "augustus",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_contract(IAugustusSwapper)588",
+            "contract": "TestUniswap",
+            "src": "contracts/Uniswap.sol:12"
+          },
+          {
+            "label": "Router",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_contract(IUniswapV2Router)628",
+            "contract": "TestUniswap",
+            "src": "contracts/Uniswap.sol:13"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address_payable",
+            "contract": "TestUniswap",
+            "src": "contracts/Uniswap.sol:14"
+          }
+        ],
+        "types": {
+          "t_address_payable": {
+            "label": "address payable"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_contract(IAugustusSwapper)588": {
+            "label": "contract IAugustusSwapper"
+          },
+          "t_contract(IUniswapV2Router)628": {
+            "label": "contract IUniswapV2Router"
+          }
+        }
+      }
+    },
+    "ea77dc368f890911120ab41fdd386907ea4c3ed7a80478b1178fe503843f7123": {
+      "address": "0x40a42Baf86Fc821f972Ad2aC878729063CeEF403",
+      "txHash": "0x1b717ef29d3e67dd3f669dca0b34b9a2d307858b40f4327cad33804669e116de",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:39"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:44"
+          },
+          {
+            "label": "augustus",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_contract(IAugustusSwapper)588",
+            "contract": "TestUniswap",
+            "src": "contracts/Uniswap.sol:12"
+          },
+          {
+            "label": "Router",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_contract(IUniswapV2Router)628",
+            "contract": "TestUniswap",
+            "src": "contracts/Uniswap.sol:13"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address_payable",
+            "contract": "TestUniswap",
+            "src": "contracts/Uniswap.sol:14"
+          }
+        ],
+        "types": {
+          "t_address_payable": {
+            "label": "address payable"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_contract(IAugustusSwapper)588": {
+            "label": "contract IAugustusSwapper"
+          },
+          "t_contract(IUniswapV2Router)628": {
+            "label": "contract IUniswapV2Router"
+          }
+        }
+      }
+    }
+  }
+}

@@ -4,18 +4,25 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx hardhat test",
+    "compile": "npx hardhat compile"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@chainlink/contracts": "^0.4.0",
     "@openzeppelin/contracts": "^4.5.0",
+    "@openzeppelin/contracts-upgradeable": "^4.5.2",
     "@openzeppelin/hardhat-upgrades": "^1.16.0",
     "@uniswap/v2-core": "^1.0.1",
+    "axios": "^0.26.1",
     "bn.js": "^5.2.0",
+    "chai-http": "^4.3.0",
     "dotenv": "^16.0.0",
-    "hardhat": "^2.9.1"
+    "hardhat": "^2.9.1",
+    "paraswap": "^5.1.0",
+    "web3": "^1.7.1"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.5",

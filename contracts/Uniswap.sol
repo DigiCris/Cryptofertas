@@ -1,23 +1,125 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8;
+pragma solidity ^0.8.7;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./interfaces/Uniswap.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "./Interface/IUniswap.sol";
+import "./Interface/IAugustusSwapper.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-contract TestUniswap {
-  IUniswapV2Router Router = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
-  address private constant WETH = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
+//contract swaps
 
-  function swap(uint amountOutMin, address _tokenOut, address to, uint deadline) public payable {
+contract TestUniswap is Initializable{
+    IAugustusSwapper augustus;
+    IUniswapV2Router Router;
+    address payable public owner;
+
+    event swapWithEtherEvent(uint etherSpent, address[] _tokensOut, uint[] percentagesOfTokensOut, address to);
+    event swapWithTokenEvent(address _tokenIn ,address[] _tokensOut, uint _amountIn, uint[] percentagesOfTokensOut, address to);
+
+    /// @notice Constructor of upgradeable function
+    /// @dev  Sets UniswapRouter and owner
+    function initialize() external initializer {
+        Router = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+        augustus = IAugustusSwapper(0xDEF171Fe48CF0115B1d80b88dc8eAB59176FEe57);
+        owner = payable(msg.sender);
+    }
+
+    /// @notice Swaps ether for a list of ERC20 tokens in Uniswap with a given percentage
+    /// @param _tokensOut array with lists of tokens that to will get
+    /// @param percentagesOfTokensOut array with the percentage of ether that we will spend in each token
+    /// @param to Address that will get the tokens    
+    /// @dev  Use the Uniswap interface of Uniswap to change ether for tokens with the function swapExactETHForTokens
+    function swapFromEther(address[] memory _tokensOut, uint[] memory percentagesOfTokensOut, address to) public payable {
+        uint sumOfPercentages = 0;
+
+        require(_tokensOut.length == percentagesOfTokensOut.length, "You need an equal amount of addresses and percentages");
+
+        for(uint i = 0; i < percentagesOfTokensOut.length; i++){
+            require(percentagesOfTokensOut[i] > 0, "Each percentage has to be bigger than 0");
+            sumOfPercentages = sumOfPercentages + percentagesOfTokensOut[i];
+        }
+
+        require(sumOfPercentages == 100, "The sum of the percentages is not 100");
+        uint fee = msg.value / 1000;
+        uint etherAfterFee = msg.value - fee;
+        owner.transfer(fee);
+
+        for(uint i = 0; i < percentagesOfTokensOut.length; i++){
+            uint valueOfTransaction = (etherAfterFee * percentagesOfTokensOut[i]) / 100;
+            address[] memory path = getPathOfEtherAndToken(_tokensOut[i]);       
+            Router.swapExactETHForTokens{value: valueOfTransaction}(1, path, to, block.timestamp);
+        }
+
+        emit swapWithEtherEvent(msg.value, _tokensOut, percentagesOfTokensOut, to);
+    }
+
+    /// @notice Swaps a ERC20 token for a list of ERC20 tokens in Uniswap with a given percentage
+    /// @param _tokenIn address of the token that we will swap
+    /// @param _tokensOut array with lists of tokens that to will get
+    /// @param _amountIn Amount of _tokenIn what we will spend
+    /// @param percentagesOfTokensOut array with the percentage of ether that we will spend in each token
+    /// @param to Address that will get the tokens    
+    /// @dev  Use the Uniswap interface of Uniswap to change an ERC20 tokens for a list of ERC20 tokens with the function swapExactTokensForTokens
+    function swapFromToken(address _tokenIn ,address[] memory _tokensOut, uint _amountIn, uint[] memory percentagesOfTokensOut, address to) public payable {
+        uint sumOfPercentages = 0;
+
+        require(_tokensOut.length == percentagesOfTokensOut.length, "You need an equal amount of addresses and percentages");
+
+        for(uint i = 0; i < percentagesOfTokensOut.length; i++){
+            require(percentagesOfTokensOut[i] > 0, "Each percentage has to be bigger than 0");
+            sumOfPercentages = sumOfPercentages + percentagesOfTokensOut[i];
+        }
+
+        require(sumOfPercentages == 100, "The sum of the percentages is not 100");
+        
+        uint fee = _amountIn /1000;
+        uint amountOfTokensAfterFee = _amountIn - fee;
+        IERC20Upgradeable(_tokenIn).transferFrom(msg.sender, owner, fee);
+        IERC20Upgradeable(_tokenIn).transferFrom(msg.sender, address(this), amountOfTokensAfterFee);
+
+        IERC20Upgradeable(_tokenIn).approve(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D, amountOfTokensAfterFee);
+
+        for(uint i = 0; i < percentagesOfTokensOut.length; i++){
+            uint valueOfTransaction = (amountOfTokensAfterFee * percentagesOfTokensOut[i]) / 100;
+            address[] memory path = getPathOfTokenAndToken(_tokenIn, _tokensOut[i]);       
+            Router.swapExactTokensForTokens(valueOfTransaction, 1, path, to, block.timestamp);
+        }
+
+        emit swapWithTokenEvent(_tokenIn ,_tokensOut, _amountIn, percentagesOfTokensOut, to);
+    }
+
+    /// @notice Get path from ether to a token
+    /// @param _tokenOut The token what will be the last element of the path
+    /// @dev  Create an array of adresses with the address of Weth and the addres of a given token
+    function getPathOfEtherAndToken(address _tokenOut) public view returns(address[] memory){
         address[] memory path = new address[](2);
         path[0] = Router.WETH();
         path[1] = _tokenOut;
-
-        Router.swapExactETHForTokens{value: msg.value}(amountOutMin, path, to, block.timestamp);
+        return path;
     }
 
-    function sendEther(address _to) public payable {
-        payable(_to).transfer(msg.value);
+    /// @notice Get path from ether to a token
+    /// @param _tokenIn The token what will be the last element of the path
+    /// @param _tokenOut The token what will be the last element of the path
+    /// @dev  Create an array of adresses with the address of Weth and the addres of a given token
+    function getPathOfTokenAndToken(address _tokenIn, address _tokenOut) public view returns(address[] memory) {
+        address[] memory path;
+        if (_tokenIn == Router.WETH() || _tokenOut == Router.WETH()) {
+            path = new address[](2);
+            path[0] = _tokenIn;
+            path[1] = _tokenOut;
+        }   
+        else {
+            path = new address[](3);
+            path[0] = _tokenIn;
+            path[1] = Router.WETH();
+            path[2] = _tokenOut;
+        }
+        return path;
     }
-    
+
+    function getBalanceOfUser() public view returns(uint256) {
+        return msg.sender.balance;
+    }
+
 }
