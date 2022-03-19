@@ -1,20 +1,46 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 import "./Uniswap.sol";
-
+import "hardhat/console.sol";
 
 contract TestParaswap is TestUniswap {
-    /// @notice Swap in Paraswap
-    /// @param _dataSwap data sent by the paraswap sdk 
-    /// @dev  Checks error in paraswap transaction
-    function simpleSwapFromPara(bytes calldata _dataSwap) external payable {
-        (bool success, bytes memory result) = address(augustus).call{value: msg.value}(abi.encode(_dataSwap));
-        if(!success) {
-            if (result.length < 68) revert();
-            assembly {
-                result := add(result, 0x04)
+
+    /// @notice Swaps in Paraswap using a low level call
+    /// @param datas array of data from the paraswap sdk
+    /// @param tokens Address of tokens that the user will get   
+    /// @dev  Use a low level call to swap tokens from paraswap
+    function swapFromPara(bytes[] calldata datas, address[] calldata tokens) public payable {
+        require(datas.length == tokens.length, "datas and tokens must have the same size");
+
+        for(uint i = 0; i < datas.length; i++){
+        
+            (bool success, bytes memory returnData) = augustus.call{value: msg.value / tokens.length}(datas[i]);
+
+            if(!success) {
+                if(returnData.length < 68) revert();
+                assembly {
+                    returnData := add(returnData, 0x04)
+                }
+                revert(abi.decode(returnData, (string)));
             }
-            revert(abi.decode(result, (string)));
+
+        uint received = abi.decode(returnData, (uint));
+        assert(received > 0);
+
+			console.log("Tokens received", received);
+			console.log("Balance", IERC20Upgradeable(tokens[i]).balanceOf(address(this)));
+
+			uint256 fee = (received) / 1000;
+			console.log("Fees", fee);
+
+			// Charge fees
+
+			if (fee > 0) {
+				IERC20Upgradeable(tokens[i]).transfer(owner, fee);    
+			}
+			// Send back tokens to user
+			IERC20Upgradeable(tokens[i]).transfer(msg.sender, received - fee);       
+
         }
     } 
 }

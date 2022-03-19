@@ -3,13 +3,15 @@ pragma solidity ^0.8.7;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "./Interface/IUniswap.sol";
-import "./Interface/IAugustusSwapper.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 
 //contract swaps
 
 contract TestUniswap is Initializable{
-    IAugustusSwapper augustus;
+    using SafeERC20Upgradeable for IERC20Upgradeable;
+
+    address augustus;
     IUniswapV2Router Router;
     address payable public owner;
 
@@ -19,8 +21,8 @@ contract TestUniswap is Initializable{
     /// @notice Constructor of upgradeable function
     /// @dev  Sets UniswapRouter and owner
     function initialize() external initializer {
-        Router = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
-        augustus = IAugustusSwapper(0xDEF171Fe48CF0115B1d80b88dc8eAB59176FEe57);
+        Router = IUniswapV2Router(0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff);
+        augustus = 0xDEF171Fe48CF0115B1d80b88dc8eAB59176FEe57;
         owner = payable(msg.sender);
     }
 
@@ -77,7 +79,7 @@ contract TestUniswap is Initializable{
         IERC20Upgradeable(_tokenIn).transferFrom(msg.sender, owner, fee);
         IERC20Upgradeable(_tokenIn).transferFrom(msg.sender, address(this), amountOfTokensAfterFee);
 
-        IERC20Upgradeable(_tokenIn).approve(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D, amountOfTokensAfterFee);
+        IERC20Upgradeable(_tokenIn).approve(0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff, amountOfTokensAfterFee);
 
         for(uint i = 0; i < percentagesOfTokensOut.length; i++){
             uint valueOfTransaction = (amountOfTokensAfterFee * percentagesOfTokensOut[i]) / 100;
@@ -117,9 +119,4 @@ contract TestUniswap is Initializable{
         }
         return path;
     }
-
-    function getBalanceOfUser() public view returns(uint256) {
-        return msg.sender.balance;
-    }
-
 }

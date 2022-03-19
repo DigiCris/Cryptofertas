@@ -8,9 +8,9 @@ module.exports = {
 		hardhat: {
 			forking: {
 				url: process.env.ALCHEMY_KEY,
-				blockNumber: 14395247,
+				blockNumber: 26089200,
 			},
-			chainId: 31337,
+			chainId: 137,
 		},
 		mainnet: {
 			url: process.env.ALCHEMY_KEY,
