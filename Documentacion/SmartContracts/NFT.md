@@ -1,4 +1,194 @@
 ---
+title: Token Standard
+author: Cristian Marchese <cmarchesetdiii@gmail.com>
+type: Standards Track
+status: Idea
+created: 2022-08-26
+---
+
+NOTE: THE CODE LINES EXPRESSED HERE ARE JUST TO REPRESENT THE IDEA AND BY NO MEANS WOULD BE A WAY FOR IMPLMENTATION WITHOUT CHECKING OUT THE PROPER FUNCTIONALITY.
+
+TokenUri inside the ERC721 (It's easier), in production we should consider using IPFS. We are using ERC721 instead of ERC1155 for compatibility purpose. We can use ERC721 from openzeppelin being enumerable and mintable.
+
+we should work on an easier way to release the tokens with vesting.
+
+```json
+{
+    "name": "Discount Name",
+    "description": "What they offer",
+    "image": "Image of what they are offering",
+    "attributes": [
+        {
+            "trait-type": "EnterpriseName",
+            "value": "ENEFETON.COM"
+        },
+        {
+            "trait-type": "Price",
+            "value": "$100"
+        },
+        {
+            "trait-type": "WalletEnterprice",
+            "value": "0x32131231231..."
+        },
+        {
+            "trait-type": "Embasador",
+            "value": "0x72131231231..."
+        },
+        {
+            "trait-type": "OUR_WALLET",
+            "value": "0x92131231231..."
+        },
+        {
+            "trait-type": "DAO_WALLET",
+            "value": "0xA2131231231..."
+        }
+    ]
+}
+
+```
+
+
+
+
+
+#### mint
+
+Creates new tokens.
+
+**NOTE**: we can use the openzeppelin implementation.
+
+``` js
+function _mint...
+```
+
+
+
+
+#### expiration
+
+Stablishes the expiration of the NFT.
+
+**NOTE**: The mapping should relate the ID of the token to the expiration date. This expiration date should be changed by the minting function of the ERC20 token before setting it here as this expiration date should be unique for each person. We should set the permitions to the lowest possible.
+
+``` js
+mapping (uint256 => uint256 ) expiration
+```
+
+
+
+
+
+#### price
+
+returns the price of a specific NFT. This is the price inside the NFT and it is not the selling price. This should be the selling price at the begining but not for resellers.
+
+**NOTE**: We can get it from the tokenUri.
+
+``` js
+function price() public view returns(uint256 price)
+```
+
+
+
+
+
+
+#### enterpriceWallet
+
+returns the enterprice' wallet.
+
+**NOTE**: We can get it from the tokenUri.
+
+``` js
+function enterpriceWallet() public view returns(uint256 walletEmpresa)
+```
+
+
+
+
+
+#### embasadorWallet
+
+returns the embasador wallet.
+
+**NOTE**: We can get it from the tokenUri.
+
+``` js
+function embasadorWallet() public view returns(uint256 walletEmbasador)
+```
+
+
+
+
+
+
+
+
+#### multisignWallet
+
+returns the multisign wallet.
+
+**NOTE**: We can get it from the tokenUri. This multisign wallet is OUR WALLET.
+
+``` js
+function multisignWallet() public view returns(uint256 walletmultisign)
+```
+
+
+
+
+
+#### DAOWallet
+
+returns the DAO wallet.
+
+**NOTE**: We can get it from the tokenUri.
+
+``` js
+function DAOWallet() public view returns(uint256 walletDAO)
+```
+
+
+
+
+
+#### markUsed
+
+**NOTE**: Only the owner of the NFT should call this function. this function should call  NFT_claim(address, timestamp) from the ERC20 token. Address would be the one from the seller and the returning value success is in order to watch it in the front end. and event would be more apropiate.
+
+``` js
+fuction markUsed(uint256 ID) external Only_NFT_Owner returns(bool success)
+```
+
+
+
+#### used
+
+**NOTE**: false if it is not used, true if it's used.
+
+``` js
+mapping (uint256 => bool) private used;
+```
+
+
+
+#### getUsed
+
+**NOTE**: returns the value of the used mapping for a sepecific token
+
+``` js
+function getUsed(uint256 ID) public view returns(bool)
+```
+
+
+
+
+
+
+
+
+
+---
 eip: 721
 title: Non-Fungible Token Standard
 author: William Entriken (@fulldecent), Dieter Shirley <dete@axiomzen.co>, Jacob Evans <jacob@dekz.net>, Nastassia Sachs <nastassia.sachs@protonmail.com>

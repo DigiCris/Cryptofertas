@@ -1,4 +1,149 @@
 ---
+title: Token Standard
+author: Cristian Marchese <cmarchesetdiii@gmail.com>
+type: Standards Track
+status: Idea
+created: 2022-08-26
+---
+
+NOTE: THE CODE LINES EXPRESSED HERE ARE JUST TO REPRESENT THE IDEA AND BY NO MEANS WOULD BE A WAY FOR IMPLMENTATION WITHOUT CHECKING OUT THE PROPER FUNCTIONALITY.
+
+
+#### transfer OVERRIDE
+
+Transfers `_value` amount of tokens to address `_to`, and MUST fire the `Transfer` event.
+The function SHOULD `throw` if the message caller's account balance does not have enough tokens to spend WHICH ARE NOT IN VESTING 
+THEY MUST NOT BE ALLOWED TO TRANSFER THE TOKENS IN VESTING=> require( balanceOf()> (_value + Vesting_quantity) )
+
+*Note* Transfers of 0 values MUST be treated as normal transfers and fire the `Transfer` event.
+
+``` js
+function transfer(address _to, uint256 _value) public returns (bool success)
+```
+
+
+
+#### transferFrom OVERRIDE
+
+Transfers `_value` amount of tokens from address `_from` to address `_to`, and MUST fire the `Transfer` event.
+
+The `transferFrom` method is used for a withdraw workflow, allowing contracts to transfer tokens on your behalf.
+This can be used for example to allow a contract to transfer tokens on your behalf and/or to charge fees in sub-currencies.
+The function SHOULD `throw` unless the `_from` account has deliberately authorized the sender of the message via some mechanism.
+ONLY OUR MULTISIGN WALLET SHOULD TRANSFER THE TOKENS THEY HAVE IN VESTING =>
+	if(msg.sender!=OUR_WALLET){ require( balanceOf()> (_value + Vesting_quantity) ) }
+	else{// MOVE FORWARD IN THE NORMAL WAY}
+
+*Note* Transfers of 0 values MUST be treated as normal transfers and fire the `Transfer` event.
+
+``` js
+function transferFrom(address _from, address _to, uint256 _value) public returns (bool success)
+```
+
+
+
+#### approve OVERRIDE
+
+Allows `_spender` to withdraw from your account multiple times, up to the `_value` amount. If this function is called again it overwrites the current allowance with `_value`.
+
+**NOTE**: To prevent attack vectors like the one [described here](https://docs.google.com/document/d/1YLPtQxZu1UAvO9cZ1O2RPXBbT0mooh4DYKjA_jp-RLM/) and discussed [here](https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729),
+clients SHOULD make sure to create user interfaces in such a way that they set the allowance first to `0` before setting it to another value for the same spender.
+THOUGH The contract itself shouldn't enforce it, to allow backwards compatibility with contracts deployed before
+THE MSG.SENDER MUST NOT BE ALLOWED TO DECREASE THE ALLOWANCE TO OUR WALLET IN ORDER TO BE LESS THAN THE VESTING THEY HAVE =>
+if(vesting_quantity < allowance(msg.sender, OUR_WALLET) ) {allowance(msg.sender, OUR_WALLET)= vesting_quantity}
+
+``` js
+function approve(address _spender, uint256 _value) public returns (bool success)
+```
+
+
+
+#### vesting mapping
+
+**NOTE**: A mapping for each address having a unique vestingStamp and maping that into a quantity of tokens. The struct here it is used in order to allow us to iterate inside the mapping.
+
+``` js
+struct svesting {
+    address timeStamp;
+    uint256 amount;
+}
+mapping (address => mapping (uint256 => svesting)) internal vesting;
+```
+
+
+
+
+#### mint
+
+Allow us to create new tokens while we get the colateralization assets.
+
+**NOTE**: we can get it from de openzeppelin wizard but we should modify it.
+This function receives the addres _to to where we are going to mint the tokens, the quantity to mint and the vestingTime given in epoc.
+The returning value vestingStamp is due to an internal change this value may suffer as no-one should have 2 vesting time with the same vestingStamp, this function should increase the stamp in 1 when realising that the current address _to already has that stamp stamped. That result will be stored in the vesting mapping.
+
+``` js
+function mint(address _to, uint256 quantity, uint256 vestingStamp) external onlyOwner_or_marketplace returns (uint256 vestingStamp)
+```
+
+
+
+#### vestingQuantity
+
+Allow us to know the assets in vesting.
+
+**NOTE**: This should go on the vesting mapping retrieving the values and doing the addition in order to get the total amount.
+
+``` js
+function vestingQuantity(address) public view returns (uint256 vesting_quantity)
+```
+
+
+
+
+
+#### getVestingDates
+
+Allow us to know every single vesting a user has.
+
+**NOTE**: Using the vesting mapping this should return the vestings of a specific user (For mental sake). This should retrieved the timeStamps and the quiantity for each vesting in the vesting map of the user.
+
+``` js
+function getVestingDates(address) external view returns (uint256 vesting_quantity, uint256 when)
+```
+
+
+
+
+
+#### claim
+
+Allow users to redeem their tokens with expired timestamps.
+
+**NOTE**: checks in the vesting mapping if there is any expired date and if that's the case we redeem the tokens to the user (Errase that from the vesting mapping and change allowance)
+
+``` js
+function claim() external returns (uint256 amount)
+```
+
+
+
+
+
+#### NFT_claim
+
+Allow sellers and fees tokens to be claimed.
+
+**NOTE**: This function must only accept callings from the NFT contract. Using the vesting mapping and the information of timestamp and address sent by the NFT burn function, we should find the proper vesting for that specific NFT and change the vesting time to some time in the near future. For development we should stablish that time to a past time in order to claim the tokens inmediately, For production we should change it to some time in the future to give some time to the user to receive the product or service before releasing the money.
+
+``` js
+function NFT_claim(address, timestamp) external returns (uint256 amount)
+```
+
+
+
+
+
+---
 eip: 20
 title: Token Standard
 author: Fabian Vogelsteller <fabian@ethereum.org>, Vitalik Buterin <vitalik.buterin@ethereum.org>

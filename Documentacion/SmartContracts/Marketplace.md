@@ -1,4 +1,86 @@
 ---
+title: Token Standard
+author: Cristian Marchese <cmarchesetdiii@gmail.com>
+type: Standards Track
+status: Idea
+created: 2022-08-26
+---
+
+NOTE: THE CODE LINES EXPRESSED HERE ARE JUST TO REPRESENT THE IDEA AND BY NO MEANS WOULD BE A WAY FOR IMPLMENTATION WITHOUT CHECKING OUT THE PROPER FUNCTIONALITY.
+
+
+
+
+1) function VenderNFT(id) OnlyNFT_Owner
+    // aprove(address.this,id)... aprobamos que el address de este contrato venda el token
+    // Agrego el NFT al mapping Precio[id]
+
+
+
+#### price mapping
+
+Prices of all NFT we are selling
+
+**NOTE**: ID => price
+
+``` js
+mapping (uint256 => uint256) public price;
+```
+
+
+
+#### sellNFT
+
+Creates new tokens.
+
+**NOTE**: Approve the address of this contract to sell the NFT token with the specified ID. We should check that only the owner is calling it.
+We should also add the NFT to the Price mapping. This function will be called from the front in order for the seller to accept selling it.
+
+``` js
+function sellNFT(id) OnlyNFT_Owner
+```
+
+
+
+
+#### buyNFT
+
+Transacts the NFT, ERC20 and stable coins used to the right addresses.
+
+**NOTE**: If it is the first selling of the token the stable coins should go to our wallet (Multisign). and we give away the tokens with apropiate vestings. if it is a second sell we should exchange the tokens between buyer and seller and just get the fees, stable coins to our wallet (multisign) and the rest with the apropiate vesting in our native erc20 token. =>
+
+    // we can use the expiration mapping for a flag for the first selling or implement a bool mapping in our NFT contract. Talk about it.
+    if(first_time)
+    {
+        stableCoin.transferfrom(msg.sender, NFT.multifirma(), precio[id] ) // money to our multisign
+        ERC20.mint(owner(id_nft) , precio[id]-comisiones, NFT.Vencimiento) // ERC20 minting to the seller - fees
+                                                                            // minting fees to the rest of the wallets
+        transferfrom (id_nft, owner(id_nft),msg.sender) // transfer the NFT to the buyer
+    }
+    else
+    {
+        stableCoin.transferfrom(msg.sender, NFT.owner(id), precio[id]-comisiones ) // we transfer stable coin to the seller
+        stableCoin.transferfrom(msg.sender, NFT.multifirma, comisiones ) // stable coin to our multisign wallet
+        
+        ERC20.mint(todas las otras wallets , comisiones, 0) // minting ERC20 tokens to the rest (fees)
+
+        transferfrom (id_nft, owner(id_nft),msg.sender) // NFT to the buyer
+    }
+
+``` js
+function buyNFT(id) public 
+```
+
+
+
+
+
+
+
+
+
+
+---
 eip: 2981
 title: NFT Royalty Standard
 author: Zach Burks (@vexycats), James Morgan (@jamesmorgan), Blaine Malone (@blmalone), James Seibel (@seibelj)
