@@ -12,7 +12,7 @@ module.exports = {
 			},
 			chainId: 137,
 		},
-		mainnet: {
+		rinkeby: {
 			url: process.env.ALCHEMY_KEY,
 			accounts: [process.env.ACCOUNT_KEY],
 		},
