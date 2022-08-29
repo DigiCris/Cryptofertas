@@ -59,7 +59,7 @@ Transacts the NFT, ERC20 and stable coins used to the right addresses.
 This function should also release the ERC20 tokens to the right wallets so here is an example code for doing so:
 
 ``` js
-    function Buy(uint256 _token_id) public returns(bool _success)
+    function BuyNFT(uint256 _token_id) public returns(bool _success)
     {
         // previously to this function the seller should have given permision to this contract to transfer the NFT in the NFT factory contract
         

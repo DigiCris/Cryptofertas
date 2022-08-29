@@ -18,7 +18,7 @@ THEY MUST NOT BE ALLOWED TO TRANSFER THE TOKENS IN VESTING=> require( balanceOf(
 *Note* Transfers of 0 values MUST be treated as normal transfers and fire the `Transfer` event.
 
 ``` js
-function transfer(address _to, uint256 _value) public returns (bool success)
+function transfer(address _to, uint256 _value) public override returns(bool success)
 ```
 
 
@@ -37,7 +37,7 @@ ONLY OUR MULTISIGN WALLET SHOULD TRANSFER THE TOKENS THEY HAVE IN VESTING =>
 *Note* Transfers of 0 values MUST be treated as normal transfers and fire the `Transfer` event.
 
 ``` js
-function transferFrom(address _from, address _to, uint256 _value) public returns (bool success)
+function transferFrom(address _from, address _to, uint256 _value) public override returns (bool success)
 ```
 
 
@@ -53,7 +53,7 @@ THE MSG.SENDER MUST NOT BE ALLOWED TO DECREASE THE ALLOWANCE TO OUR WALLET IN OR
 if(vesting_quantity < allowance(msg.sender, OUR_WALLET) ) {allowance(msg.sender, OUR_WALLET)= vesting_quantity}
 
 ``` js
-function approve(address _spender, uint256 _value) public returns (bool success)
+function approve(address _spender, uint256 _value) public override returns (bool success)
 ```
 
 

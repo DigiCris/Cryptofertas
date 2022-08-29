@@ -43,6 +43,10 @@ Here we name the rolls in order to use them everywhere with the same name and av
         {
             "trait-type": "NftProviderName",
             "value": "Macro"
+        },        
+        {
+            "trait-type": "Category",
+            "value": "alimento"
         },
         {
             "trait-type": "Product",
@@ -182,6 +186,60 @@ function getPrice(uint256 _token_id) public view returns(uint256 _price)
 
 
 
+#### sellNft
+
+**Parameters**:
+_token_id= Id of the NFT we want to sell.
+_price= price in which we want to sell the NFT
+**returns**:
+_price= current price for the NFT token.
+**note**: it should modify the Price mapping of the NFT with the tokenId specified, mark it as insale with function SetInSale(_token_id,true) and call the approve function to allow the Marketplace address (which is a state in this contract) to transfer the NFT.
+
+``` js
+function sellNft(uint256 _token_id, uint256 _price) public view onlyNftOwner(_token_id) returns(_price)
+```
+
+
+
+
+#### getTokensByCategory
+
+**Parameters**:
+_category= category I'm trying to fetch.
+**returns**:
+category_to_token[_category]= All the tokenId related to _category.
+**note**: it's a getter for the mapping state variable category_to_token.
+
+``` js
+    function getTokensByCategory(uint8 _category) public view returns(uint256[] memory)
+    {
+        return(category_to_token[_category]);
+    }
+```
+
+
+
+
+
+#### getCuponsOwner
+
+**Parameters**:
+_addr= address I'm trying to fetch.
+**returns**:
+CuponsOwner[_addr]= All the tokenId related to a specific wallet.
+**note**: it's a getter for the mapping state variable CuponsOwner.
+
+``` js
+    function getCuponsOwner(address _addr) public view returns(uint256[] memory)
+    {
+        return(CuponsOwner[_addr]);
+    }
+```
+
+
+
+
+
 
 #### Some overrides needed
 
@@ -229,11 +287,15 @@ Variables we need to add for everything to run smoothly.
     mapping (uint256 => address) public NftProvider; // tokenId -> Address of NftProvider
     mapping (uint256 => address) public NftEmbasador; // tokenId -> Address of NftEmbasador
     mapping (uint256 => address) public NftOwner; // tokenId -> Address of NftOwner (rename of ownerOf)
-    mapping (uint256 => bool) public FirstSold; // tokenId -> firstSold (identify if it is a first time selling)
-    mapping (uint256 => uint256) public Price; // tokenId -> price (the actual selling price)
+    mapping (uint256 => uint128) public Price; // tokenId -> price (the actual selling price)
+    mapping (uint256 => uint64) public Expiration; // tokenId -> Expiration (last time to use the NFT?) 
+    mapping (uint256 => uint8) public Category;        
     mapping (uint256 => bool) public Used; // tokenId -> Used (identify if it is already used)
     mapping (uint256 => bool) public InSale; // tokenId -> InSale (are we selling it or not?)
-    mapping (uint256 => uint256) public Expiration; // tokenId -> Expiration (last time to use the NFT?)
+    mapping (uint256 => bool) public FirstSold; // tokenId -> firstSold (identify if it is a first time selling)
+
+    mapping (uint8 => uint256[] ) public category_to_token; // category -> array of tokenId 
+    mapping (address => uint256[] ) public CuponsOwner; // address -> all the tokens a wallet has. 
     ///////////////////////// End of NFT Information ////////////////////////////////////////////////////
 
     // Fixed wallets set in the constructor
