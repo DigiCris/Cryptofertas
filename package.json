@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@emotion/react": "^11.10.0",
+    "@emotion/styled": "^11.10.0",
+    "@mui/material": "^5.10.3",
+    "web3": "^1.7.5"
+  }
+}
