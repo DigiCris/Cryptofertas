@@ -8,9 +8,27 @@ created: 2022-08-26
 
 NOTE: THE CODE LINES EXPRESSED HERE ARE JUST TO REPRESENT THE IDEA AND BY NO MEANS WOULD BE A WAY FOR IMPLMENTATION WITHOUT CHECKING OUT THE PROPER FUNCTIONALITY.
 
-TokenUri inside the ERC721 (It's easier), in production we should consider using IPFS. We are using ERC721 instead of ERC1155 for compatibility purpose. We can use ERC721 from openzeppelin being enumerable and mintable.
+TokenUri inside the ERC721 (It's easier), in production we should consider using IPFS. We are using ERC721 instead of ERC1155 for compatibility purpose. We can use ERC721 from openzeppelin being enumerable and mintable. The image will be upload with IPFS and then added here.
 
-we should work on an easier way to release the tokens with vesting.
+
+
+
+#### Rolls
+
+Here we name the rolls in order to use them everywhere with the same name and avoid confusion.
+
+``` js
+    //NftProvider= Person or company that will provide the service or product for the NFT
+    //NftOwner= current owner of the NFT
+    //Owner= Owner of the current contruct
+    //NftEmbasador= Person who publishes the NFT. If the publisher is the provider, there is no embasador.
+    //NftDeveloper= The team developing the project
+    //NftDao= the DAO that will be our entry point to production
+    //NftCompany= The company we will be creating.
+```
+
+
+
 
 ```json
 {
@@ -19,29 +37,41 @@ we should work on an easier way to release the tokens with vesting.
     "image": "Image of what they are offering",
     "attributes": [
         {
-            "trait-type": "EnterpriseName",
+            "trait-type": "NftCompanyName",
             "value": "ENEFETON.COM"
         },
         {
+            "trait-type": "NftProviderName",
+            "value": "Macro"
+        },
+        {
+            "trait-type": "Product",
+            "value": "Arroz"
+        },
+        {
             "trait-type": "Price",
-            "value": "$100"
+            "value": "100"
         },
         {
-            "trait-type": "WalletEnterprice",
-            "value": "0x32131231231..."
+            "trait-type": "NftProvider",
+            "value": "0x32131231231..." //wallet
         },
         {
-            "trait-type": "Embasador",
-            "value": "0x72131231231..."
+            "trait-type": "NftEmbasador",
+            "value": "0x72131231231..." //wallet
         },
         {
-            "trait-type": "OUR_WALLET",
+            "trait-type": "NftCompany",
             "value": "0x92131231231..."
         },
         {
-            "trait-type": "DAO_WALLET",
+            "trait-type": "NftDao",
             "value": "0xA2131231231..."
-        }
+        },
+        {
+            "trait-type": "NftDeveloper",
+            "value": "0xA2131231231..."
+        } //any other description we want to add to the NFT
     ]
 }
 
@@ -50,71 +80,56 @@ we should work on an easier way to release the tokens with vesting.
 
 
 
+#### constructor
+
+Creates the NFT factory.
+
+**Parameters**:
+_AddrContract= address of our ERC20 contract once deployed.
+_name= name of our NFT collection.
+_symbol= symbol for our NFT colection.
+**Note**:
+We should fix the benefits, the wallets and the interfaces here. The owner would be the message sender.
+``` js
+constructor(address _AddrContract,string _name, string _symbol) ERC721(_name, _symbol)
+```
+
+
+
 
 #### mint
 
 Creates new tokens.
 
-**NOTE**: we can use the openzeppelin implementation.
-
+**Parameters**:
+_NftProvider= Address of the person/company who is giving away the NFTs
+_price= first selling price for the NFT.
+_seconds_to_expire= seconds for the NFT to expire from now.
+_maxCupons= number of cupons we are creating.
+**returns**:
+_token_id= Id of the last cupon created.
+**note**:
+We should complete all the information of the NFT we are minting here besides minting it. For mor Info about this you should read the State variables section.
 ``` js
-function _mint...
-```
-
-
-
-
-#### expiration
-
-Stablishes the expiration of the NFT.
-
-**NOTE**: The mapping should relate the ID of the token to the expiration date. This expiration date should be changed by the minting function of the ERC20 token before setting it here as this expiration date should be unique for each person. We should set the permitions to the lowest possible.
-
-``` js
-mapping (uint256 => uint256 ) expiration
+function Mint(address _NftProvider, uint256 _price, uint256 _seconds_to_expire, uint256 _maxCupons) public returns(uint256 _token_id)
 ```
 
 
 
 
 
-#### price
+#### SetInSale
 
-returns the price of a specific NFT. This is the price inside the NFT and it is not the selling price. This should be the selling price at the begining but not for resellers.
+Creates new tokens.
 
-**NOTE**: We can get it from the tokenUri.
-
+**Parameters**:
+_token_id= ID of the NFT we want to change the state.
+_new_value= new state we want our NFT to be. true for selling, false for not selling.
+**returns**:
+_in_sale= true if we are selling it, false if we are not.
+**note**: Only the NFT owner should change this ( onlyNftOwner(_token_id) ). This function will mark an NFT in order to sell or not to sell.
 ``` js
-function price() public view returns(uint256 price)
-```
-
-
-
-
-
-
-#### enterpriceWallet
-
-returns the enterprice' wallet.
-
-**NOTE**: We can get it from the tokenUri.
-
-``` js
-function enterpriceWallet() public view returns(uint256 walletEmpresa)
-```
-
-
-
-
-
-#### embasadorWallet
-
-returns the embasador wallet.
-
-**NOTE**: We can get it from the tokenUri.
-
-``` js
-function embasadorWallet() public view returns(uint256 walletEmbasador)
+function SetInSale(uint256 _token_id, bool _new_value) external onlyNftOwner(_token_id) returns(bool _in_sale)
 ```
 
 
@@ -122,64 +137,142 @@ function embasadorWallet() public view returns(uint256 walletEmbasador)
 
 
 
+#### setMarketplace
 
-
-#### multisignWallet
-
-returns the multisign wallet.
-
-**NOTE**: We can get it from the tokenUri. This multisign wallet is OUR WALLET.
+**Parameters**:
+_new_contract_address= Address of the contract in which the marketplace was deployed.
+**returns**:
+_new_contract_address= returns the new address.
+**note**: Only the owner of the NFT factory contract should be able to change this (onlyOwner). This function will change the marketplace state variable address which will be the only one allowed to act as a marketplace.
 
 ``` js
-function multisignWallet() public view returns(uint256 walletmultisign)
+function setMarketplace(address _new_contract_address) public onlyOwner returns(address)
 ```
 
 
 
 
 
-#### DAOWallet
+#### MarkUsed
 
-returns the DAO wallet.
-
-**NOTE**: We can get it from the tokenUri.
+**Parameters**:
+_token_id= Id of the NFT we want to mark as already used.
+**returns**:
+_success= true if everything went right, false if not.
+**note**: Only the owner of the NFT should be able to change this ( onlyNftOwner(_token_id) ), This function should run only once and mark an NFT as used. Here we must also release al the vestings associated to this NFT by calling .NFT_claim() from the ERC20 token contract.
 
 ``` js
-function DAOWallet() public view returns(uint256 walletDAO)
+function MarkUsed(uint256 _token_id) external onlyNftOwner(_token_id) returns(bool _success)
 ```
 
 
 
 
+#### getPrice
 
-#### markUsed
-
-**NOTE**: Only the owner of the NFT should call this function. this function should call  NFT_claim(address, timestamp) from the ERC20 token. Address would be the one from the seller and the returning value success is in order to watch it in the front end. and event would be more apropiate.
+**Parameters**:
+_token_id= Id of the NFT we want to mark as already used.
+**returns**:
+_price= current price for the token.
+**note**: it is a getter function for the price saved in the mapping (see state variable section)
 
 ``` js
-fuction markUsed(uint256 ID) external Only_NFT_Owner returns(bool success)
+function getPrice(uint256 _token_id) public view returns(uint256 _price)
 ```
 
 
 
-#### used
 
-**NOTE**: false if it is not used, true if it's used.
+#### Some overrides needed
+
+bunch of overrides needed for the openzeppelin implementation
 
 ``` js
-mapping (uint256 => bool) private used;
+    function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal override(ERC721, ERC721Enumerable)
+    {
+        super._beforeTokenTransfer(from, to, tokenId);
+    }
+
+    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) 
+    {
+        super._burn(tokenId);
+    }
+
+    function tokenURI(uint256 tokenId) public view override(ERC721, ERC721URIStorage) returns (string memory)
+    {
+        return super.tokenURI(tokenId);
+    }
+
+    function supportsInterface(bytes4 interfaceId) public view override(ERC721, ERC721Enumerable) returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
+    }
 ```
 
 
 
-#### getUsed
 
-**NOTE**: returns the value of the used mapping for a sepecific token
+#### State variables
+
+Variables we need to add for everything to run smoothly.
+
+**NOTE**: Most of this variables were written in Camel-case as they are conceived as public functions to read their values.
 
 ``` js
-function getUsed(uint256 ID) public view returns(bool)
+    // ERC20 token contract interface
+    IVESTING private i_my_token_Contract;
+
+    // counting the NFT
+    uint256 private token_id;
+
+    ///////////////////////// NFT Information //////////////////////////////////////////////////////////
+    mapping (uint256 => address) public NftProvider; // tokenId -> Address of NftProvider
+    mapping (uint256 => address) public NftEmbasador; // tokenId -> Address of NftEmbasador
+    mapping (uint256 => address) public NftOwner; // tokenId -> Address of NftOwner (rename of ownerOf)
+    mapping (uint256 => bool) public FirstSold; // tokenId -> firstSold (identify if it is a first time selling)
+    mapping (uint256 => uint256) public Price; // tokenId -> price (the actual selling price)
+    mapping (uint256 => bool) public Used; // tokenId -> Used (identify if it is already used)
+    mapping (uint256 => bool) public InSale; // tokenId -> InSale (are we selling it or not?)
+    mapping (uint256 => uint256) public Expiration; // tokenId -> Expiration (last time to use the NFT?)
+    ///////////////////////// End of NFT Information ////////////////////////////////////////////////////
+
+    // Fixed wallets set in the constructor
+    address public NftDeveloper; // our wallet
+    address public NftDAO; // wallet of the DAO
+    address public NftCompany; //wallet of our company
+    address public NftUser; //wallet for user redistribution
+    address public Marketplace; //address of marketplace
+    address private Owner;
+
+    //Tokenomics set in the constructor
+    uint256 public  OwnerBenefit; //90 %
+    uint256 public  ProviderBenefit; // 0.2% -> in first time selling this amount goes to companyBenefit
+    uint256 public  EmbasadorBenefit; // 2%
+    uint256 public  DeveloperBenefit; // 2.5%
+    uint256 public  DaoBenefit; // 1%
+    uint256 public  CompanyBenefit; // 2.3%
+    uint256 public  UserBenefit; // 2%
 ```
 
+
+
+
+#### Modifiers
+
+This are the minimum modifiers we need to have for everything to work smoothly.
+
+``` js
+    modifier onlyOwner()  // this is the contract owner
+    {
+        require(msg.sender == Owner, "You are not the owner of the smart contract");
+        _;
+    }
+    modifier onlyNftOwner(uint256 _token_id)  // this is the owner of the NFT
+    {
+        require(msg.sender == NftOwner[_token_id], "You are not the owner of the NFT");
+        _;
+    }
+```
 
 
 

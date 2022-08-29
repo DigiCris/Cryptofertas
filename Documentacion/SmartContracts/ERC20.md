@@ -58,32 +58,59 @@ function approve(address _spender, uint256 _value) public returns (bool success)
 
 
 
-#### vesting mapping
+#### struct SVESTING
 
-**NOTE**: A mapping for each address having a unique vestingStamp and maping that into a quantity of tokens. The struct here it is used in order to allow us to iterate inside the mapping.
+**NOTE**: A struct containing the vesting amount, the timestamp when it's going to be released and the tokenId asociated with all these.
 
 ``` js
-struct svesting {
-    address timeStamp;
-    uint256 amount;
-}
-mapping (address => mapping (uint256 => svesting)) internal vesting;
+    struct SVESTING
+    {
+        uint256 timeStamp;
+        uint256 amount;
+        uint256 tokenId;
+    }
+```
+
+
+
+#### vesting mapping
+
+**NOTE**: A mapping for each address pointing to an uint256(increased in 1 by every addition of the collection to a specific wallet) that will be pointing to the struct SVESTING containing all the vesting information needed.
+
+``` js
+mapping (address => mapping (uint256 => SVESTING)) private sVesting;// address -> NFT_number_in_wallet ->sVesting
 ```
 
 
 
 
-#### mint
+#### vesting mapping
+
+**NOTE**: A mapping for each address pointing to how many NFTs do they have used to iterate each wallet with the sVesting mapping in order to get or modiefy all the vestings for each wallet. this should be increased every time we buy an NFT in all the wallets that do their part in the business.
+
+``` js
+mapping (address => uint256) NftAmount; // keeps the counting of how many NFT this wallet has
+```
+
+
+
+#### mintWithVesting
 
 Allow us to create new tokens while we get the colateralization assets.
 
-**NOTE**: we can get it from de openzeppelin wizard but we should modify it.
-This function receives the addres _to to where we are going to mint the tokens, the quantity to mint and the vestingTime given in epoc.
-The returning value vestingStamp is due to an internal change this value may suffer as no-one should have 2 vesting time with the same vestingStamp, this function should increase the stamp in 1 when realising that the current address _to already has that stamp stamped. That result will be stored in the vesting mapping.
+**NOTE**: we can get (_mint) from de openzeppelin wizard but we should modify it into this.
+**parameters**
+_to = the Adress that will receive the tokens
+_amount = the quantity of tokens they will receive
+_tokenID = The ID of the NFT associated to the tokens that we are minting
+_vesting_time = How long would they not be able to use those tokens. It should be greater than the expiration date. The value should be given in seconds from the current time and should be saved in epoc timestamp in the sVesting mapping. And all the rest of the information here completed.
+**returns**
+_success= return true if everything went right.
 
 ``` js
-function mint(address _to, uint256 quantity, uint256 vestingStamp) external onlyOwner_or_marketplace returns (uint256 vestingStamp)
+    function mintWithVesting(address _to,uint256 _amount, uint256 _tokenID, uint256 _vesting_time) external returns(bool _success)
 ```
+
 
 
 
@@ -92,9 +119,13 @@ function mint(address _to, uint256 quantity, uint256 vestingStamp) external only
 Allow us to know the assets in vesting.
 
 **NOTE**: This should go on the vesting mapping retrieving the values and doing the addition in order to get the total amount.
+**parameters**:
+_of= address from who we want to get the value.
+**returns**:
+_vesting_quantity= total amount of ERC20 tokens this address specified in the parameters has in vesting.
 
 ``` js
-function vestingQuantity(address) public view returns (uint256 vesting_quantity)
+function vestingQuantity(address _of) public view returns (uint256 _vesting_quantity)
 ```
 
 
@@ -103,13 +134,42 @@ function vestingQuantity(address) public view returns (uint256 vesting_quantity)
 
 #### getVestingDates
 
-Allow us to know every single vesting a user has.
+Allow us to know the vesting a wallet has in a determined position of sVsting
 
-**NOTE**: Using the vesting mapping this should return the vestings of a specific user (For mental sake). This should retrieved the timeStamps and the quiantity for each vesting in the vesting map of the user.
+**NOTE**: Using the sVesting mapping this should return the vestings of a specific user (For mental sake). This should retrieved the timeStamps and the quiantity for each vesting in the sVesting map of the user.
+**parameters**:
+_of= address from who we want to get the value.
+_position= NftAmount number assigend to a determined token when writing the vesting.
+**returns**:
+_my_Vesting= Amount that this wallet has in vesting
+_my_Timestamp= timestamp to release the vesting in epoc.
+_my_token_ID= TokenID of the NFT associated with this vesting
 
 ``` js
-function getVestingDates(address) external view returns (uint256 vesting_quantity, uint256 when)
+ function getVestingDates(address _of, uint256 _position) external view returns (uint256 _my_Vesting, uint256 _my_timestamp, uint256 _my_token_ID)
 ```
+
+
+
+
+
+#### getNftAmount
+
+Allow us to know the maximum value a wallet would have to iterate in order to get or modify all the vestings from the sVesting Mapping
+
+**NOTE**: this value we need it is contained in the NftAmount.
+**parameters**:
+_of= address from who we want to get the value.
+**returns**:
+_amount= maximum value a wallet would have to iterate, as this value will increase every time the person gets a new NFT.
+
+``` js
+    function getNftAmount(address _of) public view returns (uint256 _amount)
+    {
+        _amount=NftAmount[_of];
+        return(_amount);
+    }
+ ```
 
 
 
@@ -119,10 +179,12 @@ function getVestingDates(address) external view returns (uint256 vesting_quantit
 
 Allow users to redeem their tokens with expired timestamps.
 
-**NOTE**: checks in the vesting mapping if there is any expired date and if that's the case we redeem the tokens to the user (Errase that from the vesting mapping and change allowance)
+**NOTE**: checks in the sVesting mapping if there is any expired date and if that's the case we redeem the tokens to the user (Errase that from the vesting mapping and change allowance). To iterate you should use NftAmount.
 
+**returns**:
+_divesting_quantity= It should return the value of how many tokens were released from the vesting.
 ``` js
-function claim() external returns (uint256 amount)
+    function claim() external returns (uint256 _divesting_quantity)
 ```
 
 
@@ -133,10 +195,32 @@ function claim() external returns (uint256 amount)
 
 Allow sellers and fees tokens to be claimed.
 
-**NOTE**: This function must only accept callings from the NFT contract. Using the vesting mapping and the information of timestamp and address sent by the NFT burn function, we should find the proper vesting for that specific NFT and change the vesting time to some time in the near future. For development we should stablish that time to a past time in order to claim the tokens inmediately, For production we should change it to some time in the future to give some time to the user to receive the product or service before releasing the money.
+**NOTE**: This function must only accept callings from the NFT contract (onlyNftContract). Using the sVesting mapping and the information of timestamp, address and tokenID sent by the NFT factory MarkUsed() function, we should find the proper vesting for that specific NFT and change the vesting time to block.timestamp.For production we should change it to some time in the future to give some time to the user to receive the product or service before releasing the money.
 
+**parameters**:
+_to= The wallet of the person we want to release the money to. This info is inside the NFT information.
+_tokenID= Id of the NFT
+
+**returns**:
+_new_amount= Amount in vesting after doing this (which should be the same than before). We should not change the value, just the timestamp, then the claim() function will be the one changing the amount.
 ``` js
-function NFT_claim(address, timestamp) external returns (uint256 amount)
+    function NFT_claim(address _to, uint256 _tokenID) external onlyNftContract returns (uint256 _new_amount)
+    {
+        for(uint256 __counter=NftAmount[_to]; __counter>=0; __counter--)
+        {
+            if(sVesting[_to][__counter].tokenId==_tokenID)
+            {
+                sVesting[_to][__counter].timeStamp=0;  
+            }
+            else
+            {
+                _new_amount+=sVesting[_to][__counter].amount;
+            }
+            if(__counter==0)
+                break;
+        }
+        return(_new_amount);
+    }
 ```
 
 
