@@ -68,61 +68,61 @@ This function should also release the ERC20 tokens to the right wallets so here 
         // we transfer the ERC20 tokens from the buyer to the 0x0 (we burn them)
 
         // we transfer the NFT from the seller to the user
-        address __from=i_nft_factory_Contract.NftOwner(_token_id);
+        address __from=iNFTFactoryContract.NftOwner(_token_id);
         address __to=msg.sender;
-        i_nft_factory_Contract.safeTransferFrom(__from, __to, _token_id);
+        iNFTFactoryContract.safeTransferFrom(__from, __to, _token_id);
 
 
         // then we mint ERC20 tokens to all the following addresses.
 
         // minting to owner
         __to=__from;
-        uint256 __amount=( i_nft_factory_Contract.getPrice(_token_id)*i_nft_factory_Contract.OwnerBenefit() ) /1000;
+        uint256 __amount=( iNFTFactoryContract.getPrice(_token_id)*iNFTFactoryContract.OwnerBenefit() ) /1000;
         uint256 __tokenID=_token_id;
-        uint256 __vesting_time= i_nft_factory_Contract.Expiration(_token_id);
-        _success=i_my_token_Contract.mintWithVesting(__to, __amount, __tokenID, __vesting_time);
+        uint256 __vesting_time= iNFTFactoryContract.Expiration(_token_id);
+        _success=iMyTokenContract.mintWithVesting(__to, __amount, __tokenID, __vesting_time);
 
         // minting to Provider
-        __to=i_nft_factory_Contract.NftProvider(_token_id);
-        __amount=( i_nft_factory_Contract.getPrice(_token_id)*i_nft_factory_Contract.ProviderBenefit() ) /1000;
+        __to=iNFTFactoryContract.NftProvider(_token_id);
+        __amount=( iNFTFactoryContract.getPrice(_token_id)*iNFTFactoryContract.ProviderBenefit() ) /1000;
         __tokenID=_token_id;
-        __vesting_time= i_nft_factory_Contract.Expiration(_token_id);
-        _success=i_my_token_Contract.mintWithVesting(__to, __amount, __tokenID, __vesting_time);
+        __vesting_time= iNFTFactoryContract.Expiration(_token_id);
+        _success=iMyTokenContract.mintWithVesting(__to, __amount, __tokenID, __vesting_time);
 
         // minting to Embasador
-        __to=i_nft_factory_Contract.NftEmbasador(_token_id);
-        __amount=( i_nft_factory_Contract.getPrice(_token_id)*i_nft_factory_Contract.EmbasadorBenefit() ) /1000;
+        __to=iNFTFactoryContract.NftEmbasador(_token_id);
+        __amount=( iNFTFactoryContract.getPrice(_token_id)*iNFTFactoryContract.EmbasadorBenefit() ) /1000;
         __tokenID=_token_id;
-        __vesting_time= i_nft_factory_Contract.Expiration(_token_id);
-        _success=i_my_token_Contract.mintWithVesting(__to, __amount, __tokenID, __vesting_time);
+        __vesting_time= iNFTFactoryContract.Expiration(_token_id);
+        _success=iMyTokenContract.mintWithVesting(__to, __amount, __tokenID, __vesting_time);
         
         // minting to Developer
-        __to=i_nft_factory_Contract.NftDeveloper();
-        __amount=( i_nft_factory_Contract.getPrice(_token_id)*i_nft_factory_Contract.DeveloperBenefit() ) /1000;
+        __to=iNFTFactoryContract.NftDeveloper();
+        __amount=( iNFTFactoryContract.getPrice(_token_id)*iNFTFactoryContract.DeveloperBenefit() ) /1000;
         __tokenID=_token_id;
-        __vesting_time= i_nft_factory_Contract.Expiration(_token_id);
-        _success=i_my_token_Contract.mintWithVesting(__to, __amount, __tokenID, __vesting_time);
+        __vesting_time= iNFTFactoryContract.Expiration(_token_id);
+        _success=iMyTokenContract.mintWithVesting(__to, __amount, __tokenID, __vesting_time);
 
         // minting to DAO
-        __to=i_nft_factory_Contract.NftDAO();
-        __amount=( i_nft_factory_Contract.getPrice(_token_id)*i_nft_factory_Contract.DaoBenefit() ) /1000;
+        __to=iNFTFactoryContract.NftDAO();
+        __amount=( iNFTFactoryContract.getPrice(_token_id)*iNFTFactoryContract.DaoBenefit() ) /1000;
         __tokenID=_token_id;
-        __vesting_time= i_nft_factory_Contract.Expiration(_token_id);
-        _success=i_my_token_Contract.mintWithVesting(__to, __amount, __tokenID, __vesting_time);
+        __vesting_time= iNFTFactoryContract.Expiration(_token_id);
+        _success=iMyTokenContract.mintWithVesting(__to, __amount, __tokenID, __vesting_time);
 
         // minting to Company
-        __to=i_nft_factory_Contract.NftCompany();
-        __amount=( i_nft_factory_Contract.getPrice(_token_id)*i_nft_factory_Contract.CompanyBenefit() ) /1000;
+        __to=iNFTFactoryContract.NftCompany();
+        __amount=( iNFTFactoryContract.getPrice(_token_id)*iNFTFactoryContract.CompanyBenefit() ) /1000;
         __tokenID=_token_id;
-        __vesting_time= i_nft_factory_Contract.Expiration(_token_id);
-        _success=i_my_token_Contract.mintWithVesting(__to, __amount, __tokenID, __vesting_time);
+        __vesting_time= iNFTFactoryContract.Expiration(_token_id);
+        _success=iMyTokenContract.mintWithVesting(__to, __amount, __tokenID, __vesting_time);
 
         // minting to User
-        __to=i_nft_factory_Contract.NftUser();
-        __amount=( i_nft_factory_Contract.getPrice(_token_id)*i_nft_factory_Contract.UserBenefit() ) /1000;
+        __to=iNFTFactoryContract.NftUser();
+        __amount=( iNFTFactoryContract.getPrice(_token_id)*iNFTFactoryContract.UserBenefit() ) /1000;
         __tokenID=_token_id;
-        __vesting_time= i_nft_factory_Contract.Expiration(_token_id);
-        _success=i_my_token_Contract.mintWithVesting(__to, __amount, __tokenID, __vesting_time);
+        __vesting_time= iNFTFactoryContract.Expiration(_token_id);
+        _success=iMyTokenContract.mintWithVesting(__to, __amount, __tokenID, __vesting_time);
 
     }
 ```

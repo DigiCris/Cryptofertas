@@ -1,3 +1,18 @@
 En el siguinete video de youtube muestro el funcionamiento de los contratos aquí programados con el objetivo de documentarlo:
 
 https://www.youtube.com/watch?v=ver3RAgpJ7I
+
+
+Recomendaciones de coding
+
+- Nombre de Contrato: MAYÚSCULAS
+- camelCase para funciones
+- para variables de estado: camelCase
+- constantes MAYÚSCULAS
+- variables internas y funciones internas con _undercase al inicio
+- variables auxiliares: __dobleUnderscore
+- definir una estructura con una S Mayúscula al inicio: SEJEMPLO
+- instanciar una estructura con s minúscula al inicio: sEjemplo
+- uniones con una u minúscula adelante
+
+

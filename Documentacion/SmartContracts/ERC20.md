@@ -89,7 +89,7 @@ mapping (address => mapping (uint256 => SVESTING)) private sVesting;// address -
 **NOTE**: A mapping for each address pointing to how many NFTs do they have used to iterate each wallet with the sVesting mapping in order to get or modiefy all the vestings for each wallet. this should be increased every time we buy an NFT in all the wallets that do their part in the business.
 
 ``` js
-mapping (address => uint256) NftAmount; // keeps the counting of how many NFT this wallet has
+mapping (address => uint256) nftAmount; // keeps the counting of how many NFT this wallet has
 ```
 
 
@@ -139,7 +139,7 @@ Allow us to know the vesting a wallet has in a determined position of sVsting
 **NOTE**: Using the sVesting mapping this should return the vestings of a specific user (For mental sake). This should retrieved the timeStamps and the quiantity for each vesting in the sVesting map of the user.
 **parameters**:
 _of= address from who we want to get the value.
-_position= NftAmount number assigend to a determined token when writing the vesting.
+_position= nftAmount number assigend to a determined token when writing the vesting.
 **returns**:
 _my_Vesting= Amount that this wallet has in vesting
 _my_Timestamp= timestamp to release the vesting in epoc.
@@ -157,7 +157,7 @@ _my_token_ID= TokenID of the NFT associated with this vesting
 
 Allow us to know the maximum value a wallet would have to iterate in order to get or modify all the vestings from the sVesting Mapping
 
-**NOTE**: this value we need it is contained in the NftAmount.
+**NOTE**: this value we need it is contained in the nftAmount.
 **parameters**:
 _of= address from who we want to get the value.
 **returns**:
@@ -166,7 +166,7 @@ _amount= maximum value a wallet would have to iterate, as this value will increa
 ``` js
     function getNftAmount(address _of) public view returns (uint256 _amount)
     {
-        _amount=NftAmount[_of];
+        _amount=nftAmount[_of];
         return(_amount);
     }
  ```
@@ -179,12 +179,12 @@ _amount= maximum value a wallet would have to iterate, as this value will increa
 
 Allow users to redeem their tokens with expired timestamps.
 
-**NOTE**: checks in the sVesting mapping if there is any expired date and if that's the case we redeem the tokens to the user (Errase that from the vesting mapping and change allowance). To iterate you should use NftAmount.
+**NOTE**: checks in the sVesting mapping if there is any expired date and if that's the case we redeem the tokens to the user (Errase that from the vesting mapping and change allowance). To iterate you should use nftAmount.
 
 **returns**:
-_divesting_quantity= It should return the value of how many tokens were released from the vesting.
+_divestingQuantity= It should return the value of how many tokens were released from the vesting.
 ``` js
-    function claim() external returns (uint256 _divesting_quantity)
+    function claim() external returns (uint256 _divestingQuantity)
 ```
 
 
@@ -206,7 +206,7 @@ _new_amount= Amount in vesting after doing this (which should be the same than b
 ``` js
     function NFT_claim(address _to, uint256 _tokenID) external onlyNftContract returns (uint256 _new_amount)
     {
-        for(uint256 __counter=NftAmount[_to]; __counter>=0; __counter--)
+        for(uint256 __counter=nftAmount[_to]; __counter>=0; __counter--)
         {
             if(sVesting[_to][__counter].tokenId==_tokenID)
             {

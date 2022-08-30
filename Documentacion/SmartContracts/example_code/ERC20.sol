@@ -15,28 +15,28 @@ contract CVESTING
         uint256 tokenId;
     }
     mapping (address => mapping (uint256 => SVESTING)) private sVesting;// address -> NFT_number_in_wallet ->sVesting
-    mapping (address => uint256) NftAmount; // keeps the counting of how many NFT this wallet has
+    mapping (address => uint256) nftAmount; // keeps the counting of how many NFT this wallet has
 
-    function mintWithVesting(address _to,uint256 _amount, uint256 _tokenID, uint256 _vesting_time) external returns(bool success)
+    function mintWithVesting(address _to,uint256 _amount, uint256 _tokenID, uint256 _vestingTime) external returns(bool success)
     {
-        uint256 __counter=NftAmount[_to];
-        sVesting[_to][__counter].timeStamp= block.timestamp + _vesting_time;
+        uint256 __counter=nftAmount[_to];
+        sVesting[_to][__counter].timeStamp= block.timestamp + _vestingTime;
         sVesting[_to][__counter].amount= _amount;
         sVesting[_to][__counter].tokenId= _tokenID;
-        NftAmount[_to]++;
+        nftAmount[_to]++;
         success=true;
         return(success);
     }
 
-    function vestingQuantity(address _of) public view returns (uint256 _vesting_quantity)
+    function vestingQuantity(address _of) public view returns (uint256 _vestingQuantity)
     {
-        for(uint256 __counter=NftAmount[_of]; __counter>=0; __counter--)
+        for(uint256 __counter=nftAmount[_of]; __counter>=0; __counter--)
         {
-            _vesting_quantity+=sVesting[_of][__counter].amount;
+            _vestingQuantity+=sVesting[_of][__counter].amount;
             if(__counter==0)
                 break;
         }
-        return(_vesting_quantity);
+        return(_vestingQuantity);
     }
 
     function getVestingDates(address _of, uint256 _position) external view returns (uint256 _myVesting, uint256 _myTiemstamp)
@@ -48,13 +48,13 @@ contract CVESTING
 
     function getNftAmount(address _of) public view returns (uint256 _amount)
     {
-        _amount=NftAmount[_of];
+        _amount=nftAmount[_of];
         return(_amount);
     }
 
-    function claim(uint256 _tokenID) external returns (uint256 _vesting_quantity)
+    function claim(uint256 _tokenID) external returns (uint256 _vestingQuantity)
     {
-        for(uint256 __counter=NftAmount[msg.sender]; __counter>=0; __counter--)
+        for(uint256 __counter=nftAmount[msg.sender]; __counter>=0; __counter--)
         {
             if(sVesting[msg.sender][__counter].tokenId==_tokenID)
             {
@@ -63,16 +63,16 @@ contract CVESTING
                     sVesting[msg.sender][__counter].amount=0;
                 }                
             }
-            _vesting_quantity+=sVesting[msg.sender][__counter].amount;
+            _vestingQuantity+=sVesting[msg.sender][__counter].amount;
             if(__counter==0)
                 break;
         }
-        return(_vesting_quantity);
+        return(_vestingQuantity);
     }
 
-    function NFT_claim(address _to, uint256 _tokenID) external returns (uint256 _new_amount)
+    function nftClaim(address _to, uint256 _tokenID) external returns (uint256 _newAmount)
     {
-        for(uint256 __counter=NftAmount[_to]; __counter>=0; __counter--)
+        for(uint256 __counter=nftAmount[_to]; __counter>=0; __counter--)
         {
             if(sVesting[_to][__counter].tokenId==_tokenID)
             {
@@ -80,12 +80,12 @@ contract CVESTING
             }
             else
             {
-                _new_amount+=sVesting[_to][__counter].amount;
+                _newAmount+=sVesting[_to][__counter].amount;
             }
             if(__counter==0)
                 break;
         }
-        return(_new_amount);
+        return(_newAmount);
     }
 
 }

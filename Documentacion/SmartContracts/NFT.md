@@ -18,13 +18,13 @@ TokenUri inside the ERC721 (It's easier), in production we should consider using
 Here we name the rolls in order to use them everywhere with the same name and avoid confusion.
 
 ``` js
-    //NftProvider= Person or company that will provide the service or product for the NFT
-    //NftOwner= current owner of the NFT
-    //Owner= Owner of the current contruct
-    //NftEmbasador= Person who publishes the NFT. If the publisher is the provider, there is no embasador.
-    //NftDeveloper= The team developing the project
+    //nftProvider= Person or company that will provide the service or product for the NFT
+    //nftOwner= current owner of the NFT
+    //owner= owner of the current contruct
+    //nftEmbasador= Person who publishes the NFT. If the publisher is the provider, there is no embasador.
+    //nftDeveloper= The team developing the project
     //NftDao= the DAO that will be our entry point to production
-    //NftCompany= The company we will be creating.
+    //nftCompany= The company we will be creating.
 ```
 
 
@@ -34,7 +34,7 @@ Here we name the rolls in order to use them everywhere with the same name and av
 {
     "name": "Discount Name",
     "description": "What they offer",
-    "image": "Image of what they are offering",
+    "image": "URL image from IPFS",
     "attributes": [
         {
             "trait-type": "NftCompanyName",
@@ -45,7 +45,7 @@ Here we name the rolls in order to use them everywhere with the same name and av
             "value": "Macro"
         },        
         {
-            "trait-type": "Category",
+            "trait-type": "category",
             "value": "alimento"
         },
         {
@@ -53,19 +53,19 @@ Here we name the rolls in order to use them everywhere with the same name and av
             "value": "Arroz"
         },
         {
-            "trait-type": "Price",
+            "trait-type": "price",
             "value": "100"
         },
         {
-            "trait-type": "NftProvider",
+            "trait-type": "nftProvider",
             "value": "0x32131231231..." //wallet
         },
         {
-            "trait-type": "NftEmbasador",
+            "trait-type": "nftEmbasador",
             "value": "0x72131231231..." //wallet
         },
         {
-            "trait-type": "NftCompany",
+            "trait-type": "nftCompany",
             "value": "0x92131231231..."
         },
         {
@@ -73,7 +73,7 @@ Here we name the rolls in order to use them everywhere with the same name and av
             "value": "0xA2131231231..."
         },
         {
-            "trait-type": "NftDeveloper",
+            "trait-type": "nftDeveloper",
             "value": "0xA2131231231..."
         } //any other description we want to add to the NFT
     ]
@@ -111,11 +111,19 @@ _price= first selling price for the NFT.
 _seconds_to_expire= seconds for the NFT to expire from now.
 _maxCupons= number of cupons we are creating.
 **returns**:
-_token_id= Id of the last cupon created.
+_tokenId= Id of the last cupon created.
 **note**:
 We should complete all the information of the NFT we are minting here besides minting it. For mor Info about this you should read the State variables section.
 ``` js
-function Mint(address _NftProvider, uint256 _price, uint256 _seconds_to_expire, uint256 _maxCupons) public returns(uint256 _token_id)
+function Mint(
+    address _NftProvider, 
+    string memory name,
+    uint8 category,
+    string memory description,
+    uint256 _price, 
+    uint256 _secondsToExpire, 
+    uint256 _maxCupons,
+    ) public returns(uint256 _tokenId)
 ```
 
 
@@ -127,13 +135,13 @@ function Mint(address _NftProvider, uint256 _price, uint256 _seconds_to_expire, 
 Creates new tokens.
 
 **Parameters**:
-_token_id= ID of the NFT we want to change the state.
-_new_value= new state we want our NFT to be. true for selling, false for not selling.
+_tokenId= ID of the NFT we want to change the state.
+_newValue= new state we want our NFT to be. true for selling, false for not selling.
 **returns**:
-_in_sale= true if we are selling it, false if we are not.
-**note**: Only the NFT owner should change this ( onlyNftOwner(_token_id) ). This function will mark an NFT in order to sell or not to sell.
+_inSale= true if we are selling it, false if we are not.
+**note**: Only the NFT owner should change this ( onlyNftOwner(_tokenId) ). This function will mark an NFT in order to sell or not to sell.
 ``` js
-function SetInSale(uint256 _token_id, bool _new_value) external onlyNftOwner(_token_id) returns(bool _in_sale)
+function SetInSale(uint256 _tokenId, bool _newValue) external onlyNftOwner(_tokenId) returns(bool _inSale)
 ```
 
 
@@ -144,13 +152,13 @@ function SetInSale(uint256 _token_id, bool _new_value) external onlyNftOwner(_to
 #### setMarketplace
 
 **Parameters**:
-_new_contract_address= Address of the contract in which the marketplace was deployed.
+_newContractAddress= Address of the contract in which the marketplace was deployed.
 **returns**:
-_new_contract_address= returns the new address.
+_newContractAddress= returns the new address.
 **note**: Only the owner of the NFT factory contract should be able to change this (onlyOwner). This function will change the marketplace state variable address which will be the only one allowed to act as a marketplace.
 
 ``` js
-function setMarketplace(address _new_contract_address) public onlyOwner returns(address)
+function setMarketplace(address _newContractAddress) public onlyOwner returns(address)
 ```
 
 
@@ -160,13 +168,13 @@ function setMarketplace(address _new_contract_address) public onlyOwner returns(
 #### MarkUsed
 
 **Parameters**:
-_token_id= Id of the NFT we want to mark as already used.
+_tokenId= Id of the NFT we want to mark as already used.
 **returns**:
 _success= true if everything went right, false if not.
-**note**: Only the owner of the NFT should be able to change this ( onlyNftOwner(_token_id) ), This function should run only once and mark an NFT as used. Here we must also release al the vestings associated to this NFT by calling .NFT_claim() from the ERC20 token contract.
+**note**: Only the owner of the NFT should be able to change this ( onlyNftOwner(_tokenId) ), This function should run only once and mark an NFT as used. Here we must also release al the vestings associated to this NFT by calling .NFT_claim() from the ERC20 token contract.
 
 ``` js
-function MarkUsed(uint256 _token_id) external onlyNftOwner(_token_id) returns(bool _success)
+function MarkUsed(uint256 _tokenId) external onlyNftOwner(_tokenId) returns(bool _success)
 ```
 
 
@@ -175,13 +183,13 @@ function MarkUsed(uint256 _token_id) external onlyNftOwner(_token_id) returns(bo
 #### getPrice
 
 **Parameters**:
-_token_id= Id of the NFT we want to mark as already used.
+_tokenId= Id of the NFT we want to mark as already used.
 **returns**:
 _price= current price for the token.
 **note**: it is a getter function for the price saved in the mapping (see state variable section)
 
 ``` js
-function getPrice(uint256 _token_id) public view returns(uint256 _price)
+function getPrice(uint256 _tokenId) public view returns(uint256 _price)
 ```
 
 
@@ -189,14 +197,14 @@ function getPrice(uint256 _token_id) public view returns(uint256 _price)
 #### sellNft
 
 **Parameters**:
-_token_id= Id of the NFT we want to sell.
+_tokenId= Id of the NFT we want to sell.
 _price= price in which we want to sell the NFT
 **returns**:
 _price= current price for the NFT token.
-**note**: it should modify the Price mapping of the NFT with the tokenId specified, mark it as insale with function SetInSale(_token_id,true) and call the approve function to allow the Marketplace address (which is a state in this contract) to transfer the NFT.
+**note**: it should modify the price mapping of the NFT with the tokenId specified, mark it as insale with function SetInSale(_tokenId,true) and call the approve function to allow the marketplace address (which is a state in this contract) to transfer the NFT.
 
 ``` js
-function sellNft(uint256 _token_id, uint256 _price) public view onlyNftOwner(_token_id) returns(_price)
+function sellNft(uint256 _tokenId, uint256 _price) public view onlyNftOwner(_tokenId) returns(_price)
 ```
 
 
@@ -207,13 +215,13 @@ function sellNft(uint256 _token_id, uint256 _price) public view onlyNftOwner(_to
 **Parameters**:
 _category= category I'm trying to fetch.
 **returns**:
-category_to_token[_category]= All the tokenId related to _category.
-**note**: it's a getter for the mapping state variable category_to_token.
+categoryToToken[_category]= All the tokenId related to _category.
+**note**: it's a getter for the mapping state variable categoryToToken.
 
 ``` js
     function getTokensByCategory(uint8 _category) public view returns(uint256[] memory)
     {
-        return(category_to_token[_category]);
+        return(categoryToToken[_category]);
     }
 ```
 
@@ -226,13 +234,13 @@ category_to_token[_category]= All the tokenId related to _category.
 **Parameters**:
 _addr= address I'm trying to fetch.
 **returns**:
-CuponsOwner[_addr]= All the tokenId related to a specific wallet.
-**note**: it's a getter for the mapping state variable CuponsOwner.
+cuponsOwner[_addr]= All the tokenId related to a specific wallet.
+**note**: it's a getter for the mapping state variable cuponsOwner.
 
 ``` js
     function getCuponsOwner(address _addr) public view returns(uint256[] memory)
     {
-        return(CuponsOwner[_addr]);
+        return(cuponsOwner[_addr]);
     }
 ```
 
@@ -278,42 +286,42 @@ Variables we need to add for everything to run smoothly.
 
 ``` js
     // ERC20 token contract interface
-    IVESTING private i_my_token_Contract;
+    IVESTING private iMyTokenContract;
 
     // counting the NFT
-    uint256 private token_id;
+    uint256 private tokenId;
 
     ///////////////////////// NFT Information //////////////////////////////////////////////////////////
-    mapping (uint256 => address) public NftProvider; // tokenId -> Address of NftProvider
-    mapping (uint256 => address) public NftEmbasador; // tokenId -> Address of NftEmbasador
-    mapping (uint256 => address) public NftOwner; // tokenId -> Address of NftOwner (rename of ownerOf)
-    mapping (uint256 => uint128) public Price; // tokenId -> price (the actual selling price)
-    mapping (uint256 => uint64) public Expiration; // tokenId -> Expiration (last time to use the NFT?) 
-    mapping (uint256 => uint8) public Category;        
-    mapping (uint256 => bool) public Used; // tokenId -> Used (identify if it is already used)
-    mapping (uint256 => bool) public InSale; // tokenId -> InSale (are we selling it or not?)
-    mapping (uint256 => bool) public FirstSold; // tokenId -> firstSold (identify if it is a first time selling)
+    mapping (uint256 => address) public nftProvider; // tokenId -> Address of nftProvider
+    mapping (uint256 => address) public nftEmbasador; // tokenId -> Address of nftEmbasador
+    mapping (uint256 => address) public nftOwner; // tokenId -> Address of nftOwner (rename of ownerOf)
+    mapping (uint256 => uint128) public price; // tokenId -> price (the actual selling price)
+    mapping (uint256 => uint64) public expiration; // tokenId -> expiration (last time to use the NFT?) 
+    mapping (uint256 => uint8) public category; 
+    mapping (uint256 => bool) public used; // tokenId -> used (identify if it is already used)
+    mapping (uint256 => bool) public inSale; // tokenId -> inSale (are we selling it or not?)
+    mapping (uint256 => bool) public firstSold; // tokenId -> firstSold (identify if it is a first time selling)
 
-    mapping (uint8 => uint256[] ) public category_to_token; // category -> array of tokenId 
-    mapping (address => uint256[] ) public CuponsOwner; // address -> all the tokens a wallet has. 
+    mapping (uint8 => uint256[] ) public categoryToToken; // category -> array of tokenId 
+    mapping (address => uint256[] ) public cuponsOwner; // address -> all the tokens a wallet has. 
     ///////////////////////// End of NFT Information ////////////////////////////////////////////////////
 
     // Fixed wallets set in the constructor
-    address public NftDeveloper; // our wallet
-    address public NftDAO; // wallet of the DAO
-    address public NftCompany; //wallet of our company
-    address public NftUser; //wallet for user redistribution
-    address public Marketplace; //address of marketplace
-    address private Owner;
+    address public nftDeveloper; // our wallet
+    address public nftDAO; // wallet of the DAO
+    address public nftCompany; //wallet of our company
+    address public nftUser; //wallet for user redistribution
+    address public marketplace; //address of marketplace
+    address private owner;
 
     //Tokenomics set in the constructor
-    uint256 public  OwnerBenefit; //90 %
-    uint256 public  ProviderBenefit; // 0.2% -> in first time selling this amount goes to companyBenefit
-    uint256 public  EmbasadorBenefit; // 2%
-    uint256 public  DeveloperBenefit; // 2.5%
-    uint256 public  DaoBenefit; // 1%
-    uint256 public  CompanyBenefit; // 2.3%
-    uint256 public  UserBenefit; // 2%
+    uint256 public  ownerBenefit; //90 %
+    uint256 public  providerBenefit; // 0.2% -> in first time selling this amount goes to companyBenefit
+    uint256 public  embasadorBenefit; // 2%
+    uint256 public  developerBenefit; // 2.5%
+    uint256 public  daoBenefit; // 1%
+    uint256 public  companyBenefit; // 2.3%
+    uint256 public  userBenefit; // 2%
 ```
 
 
@@ -326,12 +334,12 @@ This are the minimum modifiers we need to have for everything to work smoothly.
 ``` js
     modifier onlyOwner()  // this is the contract owner
     {
-        require(msg.sender == Owner, "You are not the owner of the smart contract");
+        require(msg.sender == owner, "You are not the owner of the smart contract");
         _;
     }
-    modifier onlyNftOwner(uint256 _token_id)  // this is the owner of the NFT
+    modifier onlyNftOwner(uint256 _tokenId)  // this is the owner of the NFT
     {
-        require(msg.sender == NftOwner[_token_id], "You are not the owner of the NFT");
+        require(msg.sender == nftOwner[_tokenId], "You are not the owner of the NFT");
         _;
     }
 ```
