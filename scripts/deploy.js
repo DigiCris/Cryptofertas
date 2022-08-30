@@ -9,10 +9,10 @@ async function main() {
     const erc20 = await ERC20.deploy([])
     await erc20.deployed()
 
-    const nft = await NFT.deploy([erc20.address])
+    const nft = await NFT.deploy(erc20.address)
     await nft.deployed()
 
-    const marketplace = await Marketplace.deploy([erc20.address, nft.address])
+    const marketplace = await Marketplace.deploy(erc20.address, nft.address)
     await marketplace.deployed()
 
     console.log("ERC20 deployed to: ", erc20.address)

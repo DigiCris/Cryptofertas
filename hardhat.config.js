@@ -7,17 +7,17 @@ module.exports = {
 	networks: {
 		hardhat: {
 			forking: {
-				url: process.env.ALCHEMY_KEY,
+				url: process.env.PROVIDER_URL,
 				blockNumber: 26089200,
 			},
 			chainId: 137,
 		},
-		mainnet: {
-			url: process.env.ALCHEMY_KEY,
+		rinkeby: {
+			url: process.env.PROVIDER_URL,
 			accounts: [process.env.ACCOUNT_KEY],
 		},
 		live: {
-			url: process.env.ALCHEMY_KEY,
+			url: process.env.PROVIDER_URL,
 			accounts: [process.env.ACCOUNT_KEY],
 		},
 	},
