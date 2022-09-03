@@ -54,14 +54,6 @@ const ProductDetails = () => {
           >
             validar
           </Button>
-          <Button
-            colorScheme="teal"
-            mt={10}
-            w="100%"
-            onClick={onTransactionOpen}
-          >
-            ir a aprobacion
-          </Button>
         </Box>
         <ModalMetamask
           {...{ isOpen, onClose }}
