@@ -1,6 +1,6 @@
 const NFTFactory = {
     address: {
-        4: "0x948a4183baff477f659f6eef56b2e3f257e87acb",
+        4: "0x888Ce52cD915eaB8Df724B5cDcC5ddAf87Aec2A2",
       },
       "abi": [
         {
@@ -241,6 +241,25 @@ const NFTFactory = {
         {
             "inputs": [],
             "name": "name",
+            "outputs": [
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "name": "nftMetadata",
             "outputs": [
                 {
                     "internalType": "string",

@@ -12,7 +12,8 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
-  useToast
+  useToast,
+  FormControl
 } from '@chakra-ui/react';
 import { useRef, useState } from 'react';
 import axios from 'axios';
@@ -25,10 +26,10 @@ const ProductForm = (props) => {
   const [fileImg, setFileImg] = useState(null);
   const [name, setName] = useState("")
   const [desc, setDesc] = useState("")
-  const [category, setCategory] = useState("")
-  const [value, setValue] = useState('1.98')
-  const [fileHash, setFileHash] = useState('1.98')
-  const [numCupons, setNumCupons] = useState("")
+  const [category, setCategory] = useState(0)
+  const [value, setValue] = useState('1')
+  const [fileHash, setFileHash] = useState('')
+  const [numCupons, setNumCupons] = useState(5)
   const [nftProvider, setNftProvider] = useState("")
   const [message, setMessage] = useState("")
   const [link, setLink] = useState("")
@@ -58,15 +59,26 @@ const ProductForm = (props) => {
   const format = (val) => `$` + val
   const parse = (val) => val.replace(/^\$/, '')
 
-  const submitForm = (e) => {
+  const submitForm = async (e) => {
+    e.preventDefault();
+    printDataForm();
 
-    //sendFileToIPFS(e)
-    mint()
+    const hashimg = await sendFileToIPFS(e)
+    if (!hashimg) return null
+    const tokenuri = await sendJSONtoIPFS (hashimg)
+    if (!tokenuri) return null
+    console.log('data to mint',category,Math.trunc(Number(value)*100),numCupons,hashimg,tokenuri)
+    await mint(tokenuri);
+
+  }
+
+  const printDataForm = () =>{
+    console.log('form data',category,Math.trunc(Number(value)*100),numCupons)
   }
 
 
   
-  const mint = () => {
+  const mint = async (tokenURI) => {
     setMinting(true);
     showToast('Creando cupon en Blockchain', 'info')
 
@@ -74,8 +86,8 @@ const ProductForm = (props) => {
       .mint(
         '0x15220e7317Bc0169067B93d93f54a8807E0FAfa4',
         category,
-        `https://gateway.pinata.cloud/ipfs/QmaFKJThjhkkB3pSgkYkw6ztZV5fEKPHeKWVyXad5515dq`,
-        value,
+        tokenURI,
+        Math.trunc(Number(value)*100),
         300,
         numCupons
       )
@@ -135,16 +147,20 @@ const ProductForm = (props) => {
       setFileHash(tokenURI)
       console.log("Token URI", tokenURI);
       showToast('Metadata creada correctamente', 'success')
+      return `https://gateway.pinata.cloud/ipfs/${tokenURI}`
       //mint()
 
     } catch (error) {
+      setMinting(false)
       showToast('Error creando metadata', 'error')
       console.log('error JSON', error);
+      return null
     }
 
   }
 
   const sendFileToIPFS = async (e) => {
+    setMinting(true)
     e.preventDefault();
     if (fileImg) {
       try {
@@ -164,17 +180,24 @@ const ProductForm = (props) => {
         });
         const ImgHash = resFile.data.IpfsHash;
         if (resFile.data.isDuplicate) {
-          showToast('Atención Imágen duplicada', 'error')
+          showToast('Cupón de imágen ya existente', 'warning')
+          //setMinting(false)
+          return ImgHash
         } else {
 
-          sendJSONtoIPFS(ImgHash)
+          //const tokenuri = await sendJSONtoIPFS(ImgHash)
+          return ImgHash
         }
 
       } catch (error) {
+        setMinting(false)
         showToast('Error al crear, intente nuevamente . . ', 'error')
+        return null
       }
     } else {
+      setMinting(false)
       showToast('Debe seleccionar un archivo tipo imagen . . ', 'error')
+      return null
     }
   }
 
@@ -202,8 +225,11 @@ const ProductForm = (props) => {
           Cuentanos sobre tu producto y crea los cupones para tus nuevos clientes
         </Text>
       </Stack>
-      <Box as={'form'} mt={10}>
+      <form onSubmit={submitForm}>
+      {/* <Box as={'form'} mt={10}> */}
+      
         <Stack spacing={4}>
+        <FormControl isRequired>
           <Input
             isRequired={true}
             placeholder="Nombre del Producto"
@@ -215,6 +241,8 @@ const ProductForm = (props) => {
               color: 'gray.500',
             }}
           />
+          </FormControl>
+          <FormControl isRequired>
           <Input
             isRequired={true}
             placeholder="Descripción del Producto"
@@ -226,10 +254,12 @@ const ProductForm = (props) => {
               color: 'gray.500',
             }}
           />
+          </FormControl>
+          <FormControl isRequired>
           <Select
             isRequired={true}
             bg={'gray.100'}
-            onChange={(e) => setCategory(e.target.value)}
+            onChange={(e) => setCategory(Number(e.target.value))}
             border={0}
             color={'gray.500'}
             _placeholder={{
@@ -240,11 +270,12 @@ const ProductForm = (props) => {
             <option value='2'>Salud</option>
             <option value='3'>Educación</option>
           </Select>
+          </FormControl>
           <Grid templateColumns='repeat(2, 1fr)' gap={5}>
             <Text align={'center'} >
               Cupones
             </Text>
-            <NumberInput onChange={(e) => setNumCupons(e)} isRequired={true} step={5} defaultValue={15} min={10} max={30}>
+            <NumberInput onChange={(e) => setNumCupons(Number(e))} isRequired={true} step={5} defaultValue={numCupons} min={numCupons} max={50}>
               <NumberInputField />
               <NumberInputStepper>
                 <NumberIncrementStepper />
@@ -268,7 +299,6 @@ const ProductForm = (props) => {
             </NumberInput>
           </Grid>
           <Input
-            isRequired={true}
             type={'file'}
             accept="image/*"
             onChange={(e) => setFileImg(e.target.files[0])}
@@ -280,11 +310,11 @@ const ProductForm = (props) => {
             fontFamily={'heading'} bg={'gray.200'} color={'gray.800'}>
             Subir Imagen
           </Button>
-
         </Stack>
         <Button
+          isLoading={minting}
           type="submit"
-          onClick={submitForm}
+          //onClick={submitForm}
           fontFamily={'heading'}
           mt={8}
           w={'full'}
@@ -296,8 +326,8 @@ const ProductForm = (props) => {
           }}>
           Subir Cupones del Producto
         </Button>
-      </Box>
-      form
+      {/* </Box> */}
+      </form>
     </Stack>
 
   );

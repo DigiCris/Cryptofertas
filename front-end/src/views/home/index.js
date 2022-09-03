@@ -10,7 +10,9 @@ import {
   ModalContent,
   useDisclosure,
   ModalCloseButton,
-  ModalFooter
+  ModalFooter,
+  Heading,
+  Text
 } from '@chakra-ui/react'
 
 import ProductForm from '../../components/ProductForm'
@@ -56,10 +58,22 @@ const Home = () => {
   return (
     <Center>
       <VStack>
-        This is the Center
+        <Heading
+          color={'gray.800'}
+          lineHeight={1.1}
+          fontSize={{ base: '2xl', sm: '3xl', md: '4xl' }}>
+          Encuentra las mejores&nbsp;
+          <Text
+            as={'span'}
+            background={'#67E992'}
+            bgClip="text">
+            ofertas&nbsp;
+          </Text>
+          y paga con tus cryptomonedas
+        </Heading>
 
-        <div>csldmskds</div>
-        <Button onClick={onOpen}>Crear Cupón</Button>
+
+
         <Modal
           initialFocusRef={initialRef}
           finalFocusRef={finalRef}
@@ -68,23 +82,49 @@ const Home = () => {
         >
           <ModalOverlay />
           <ModalContent>
-          <ModalCloseButton />
-            <ProductForm walletAddress={account}/>
+            <ModalCloseButton />
+            <ProductForm walletAddress={account} />
             <ModalFooter>
-            <Button onClick={onClose}>Cancel</Button>
+              <Button onClick={onClose}>Cancel</Button>
             </ModalFooter>
-            
+
           </ModalContent>
         </Modal>
 
         {active ?
           <>
-            <p>Cuenta: {account}</p>
-            <p>Balance: ~{balance}</p>
-            <button onClick={disconnect}>Desconectar</button>
+            <div>Quieres publicar una oferta?</div>
+            <Button
+              background={'#67E992'}
+              color={'white'}
+              _hover={{
+
+                boxShadow: 'xl',
+              }}
+              onClick={onOpen}>
+                Crear Cupón
+              </Button>
           </>
           :
-          <button onClick={connect} disabled={isUnsupportedChain}>{isUnsupportedChain ? 'Red no soportada. Cambie a Rinkeby.' : 'Conectar Wallet'}</button>
+   /*        <Button
+            background={'#67E992'}
+            color={'white'}
+            _hover={{
+
+              boxShadow: 'xl',
+            }}
+            onClick={connect}
+            disabled={isUnsupportedChain}>
+            {isUnsupportedChain ? 'Red no soportada. Cambie a Rinkeby.' : 'Conectar Wallet'}
+          </Button> */
+          <Text
+          as={'span'}
+          lineHeight={1.5}
+          fontSize={{ base: '2xl', sm: '3xl', md: '4xl' }}
+          background={'#d1320f'}
+          bgClip="text">
+          Conecta tu Wallet !
+        </Text>
         }
       </VStack>
     </Center>

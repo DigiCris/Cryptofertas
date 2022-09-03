@@ -29,7 +29,7 @@ contract CNFTFactory is ERC721  {
     mapping (uint256 => string) private nftImage;
     mapping (uint256 => string) private nftProviderName;
     
-    mapping (uint256 => string) private nftMetadata;
+    mapping (uint256 => string) public nftMetadata;
     mapping (uint256 => uint256[] ) public ProductTokens; 
     
     constructor() ERC721("Token", "TOK"){
@@ -45,8 +45,8 @@ contract CNFTFactory is ERC721  {
             uint256 _secondsToExpire, 
             uint256 _maxCupons
         ) public {
+            productsAmount.increment();
             uint256 _productid = productsAmount.current();
-
           for(uint i = 0; i < _maxCupons; i++) {
             tokenAmount.increment();
             uint256 _tokenId = tokenAmount.current();
