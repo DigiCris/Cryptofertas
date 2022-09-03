@@ -3,7 +3,9 @@ import {
   Box,
   Center,
   Heading,
-  Text
+  Text,
+  Image,
+  VStack
 } from '@chakra-ui/react';
 import {
   Modal,
@@ -14,9 +16,10 @@ import {
   ModalBody,
   ModalCloseButton,
 } from '@chakra-ui/react';
-import { useDisclosure } from '@chakra-ui/react'
-
+import { useDisclosure } from '@chakra-ui/react';
 import { Button, ButtonGroup } from '@chakra-ui/react';
+const IMAGE =
+    'https://images.unsplash.com/photo-1518051870910-a46e30d9db16?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1350&q=80';
 
 const ProductDetails = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -40,17 +43,27 @@ const ProductDetails = () => {
     <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+        <Center py={12}>
+        <Image
+            rounded={'lg'}
+            height={230}
+            width={282}
+            objectFit={'cover'}
+            src={IMAGE}
+          />
+          </Center>
           <ModalCloseButton />
           <ModalBody>
-          <Text color={'gray.500'}> Un delicado proceso de selección electrónica del grano garantizan más de un 90% de granos enteros, utilizados en infinidades de platos y postres,</Text>
+          <Text color={'gray.500'}> Primero debe conectar su billetera para firmar mensajes y enviar transacciones a la red Ethereum</Text>
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={onClose}>
+            <VStack  w={'full'}>
+            <Button colorScheme='blue' mr={3} onClick={onClose}  w="100%">
               Close
             </Button>
-            <Button variant='ghost'>Secondary Action</Button>
+            <Button variant='ghost'  w="100%">Secondary Action</Button>
+            </VStack>
           </ModalFooter>
         </ModalContent>
       </Modal>
