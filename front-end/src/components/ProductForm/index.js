@@ -36,8 +36,8 @@ const ProductForm = (props) => {
   const NFTFactory = useNFTFactory();
   const [minting, setMinting] = useState(false);
 
-  const { active, activate, deactivate, account, error, library } = useWeb3React();  
-  
+  const { active, activate, deactivate, account, error, library } = useWeb3React();
+
   const hiddenFileInput = useRef(null)
   const handleClick = event => {
     hiddenFileInput.current.click();
@@ -63,21 +63,21 @@ const ProductForm = (props) => {
     e.preventDefault();
     printDataForm();
 
+
     const hashimg = await sendFileToIPFS(e)
     if (!hashimg) return null
-    const tokenuri = await sendJSONtoIPFS (hashimg)
+    const tokenuri = await sendJSONtoIPFS(hashimg)
     if (!tokenuri) return null
-    console.log('data to mint',category,Math.trunc(Number(value)*100),numCupons,hashimg,tokenuri)
-    await mint(tokenuri);
-
+    console.log('data to mint', category, Math.trunc(Number(value) * 100), numCupons, hashimg, tokenuri)
+    mint(tokenuri);
   }
 
-  const printDataForm = () =>{
-    console.log('form data',category,Math.trunc(Number(value)*100),numCupons)
+  const printDataForm = () => {
+    console.log('form data', category, Math.trunc(Number(value) * 100), numCupons)
   }
 
 
-  
+
   const mint = async (tokenURI) => {
     setMinting(true);
     showToast('Creando cupon en Blockchain', 'info')
@@ -87,7 +87,7 @@ const ProductForm = (props) => {
         '0x15220e7317Bc0169067B93d93f54a8807E0FAfa4',
         category,
         tokenURI,
-        Math.trunc(Number(value)*100),
+        Math.trunc(Number(value) * 100),
         300,
         numCupons
       )
@@ -95,17 +95,21 @@ const ProductForm = (props) => {
         from: account,
       })
       .on("error", () => {
-        showToast('error', 'error')
+        showToast('Error minteando cupón ', 'error')
         setMinting(false);
+        return null
       })
       .on("transactionHash", (txHash) => {
         showToast('Transacción enviada', 'info')
+        props.closeModal()
       })
       .on("receipt", (receipt) => {
         setMinting(false);
-        showToast('Transacción confirmada', 'success')
+        showToast('Token Minteado Correctamente', 'success')
         //getPlatziPunksData();
         console.log(receipt);
+        props.closeModal()
+        return 'ok'
       });
   };
 
@@ -226,50 +230,50 @@ const ProductForm = (props) => {
         </Text>
       </Stack>
       <form onSubmit={submitForm}>
-      {/* <Box as={'form'} mt={10}> */}
-      
+        {/* <Box as={'form'} mt={10}> */}
+
         <Stack spacing={4}>
-        <FormControl isRequired>
-          <Input
-            isRequired={true}
-            placeholder="Nombre del Producto"
-            onChange={(e) => setName(e.target.value)}
-            bg={'gray.100'}
-            border={0}
-            color={'gray.500'}
-            _placeholder={{
-              color: 'gray.500',
-            }}
-          />
+          <FormControl isRequired>
+            <Input
+              isRequired={true}
+              placeholder="Nombre del Producto"
+              onChange={(e) => setName(e.target.value)}
+              bg={'gray.100'}
+              border={0}
+              color={'gray.500'}
+              _placeholder={{
+                color: 'gray.500',
+              }}
+            />
           </FormControl>
           <FormControl isRequired>
-          <Input
-            isRequired={true}
-            placeholder="Descripción del Producto"
-            onChange={(e) => setDesc(e.target.value)}
-            bg={'gray.100'}
-            border={0}
-            color={'gray.500'}
-            _placeholder={{
-              color: 'gray.500',
-            }}
-          />
+            <Input
+              isRequired={true}
+              placeholder="Descripción del Producto"
+              onChange={(e) => setDesc(e.target.value)}
+              bg={'gray.100'}
+              border={0}
+              color={'gray.500'}
+              _placeholder={{
+                color: 'gray.500',
+              }}
+            />
           </FormControl>
           <FormControl isRequired>
-          <Select
-            isRequired={true}
-            bg={'gray.100'}
-            onChange={(e) => setCategory(Number(e.target.value))}
-            border={0}
-            color={'gray.500'}
-            _placeholder={{
-              color: 'gray.500',
-            }}
-            placeholder='Categoría'>
-            <option value='1'>Alimentación</option>
-            <option value='2'>Salud</option>
-            <option value='3'>Educación</option>
-          </Select>
+            <Select
+              isRequired={true}
+              bg={'gray.100'}
+              onChange={(e) => setCategory(Number(e.target.value))}
+              border={0}
+              color={'gray.500'}
+              _placeholder={{
+                color: 'gray.500',
+              }}
+              placeholder='Categoría'>
+              <option value='1'>Alimentación</option>
+              <option value='2'>Salud</option>
+              <option value='3'>Educación</option>
+            </Select>
           </FormControl>
           <Grid templateColumns='repeat(2, 1fr)' gap={5}>
             <Text align={'center'} >
@@ -326,7 +330,7 @@ const ProductForm = (props) => {
           }}>
           Subir Cupones del Producto
         </Button>
-      {/* </Box> */}
+        {/* </Box> */}
       </form>
     </Stack>
 

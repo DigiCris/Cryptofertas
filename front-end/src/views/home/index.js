@@ -12,7 +12,10 @@ import {
   ModalCloseButton,
   ModalFooter,
   Heading,
-  Text
+  Text,
+  Icon,
+  HStack,
+  
 } from '@chakra-ui/react'
 
 import ProductForm from '../../components/ProductForm'
@@ -56,68 +59,64 @@ const Home = () => {
   }, [active, getBalance])
 
   return (
-    <Center>
-      <VStack>
-        <Heading
-          color={'gray.800'}
-          lineHeight={1.1}
-          fontSize={{ base: '2xl', sm: '3xl', md: '4xl' }}>
-          Encuentra las mejores&nbsp;
-          <Text
-            as={'span'}
-            background={'#67E992'}
-            bgClip="text">
-            ofertas&nbsp;
-          </Text>
-          y paga con tus cryptomonedas
-        </Heading>
+    < Center >
+    <VStack>
+      <Heading
+        color={'gray.800'}
+        lineHeight={1.1}
+        fontSize={{ base: '2xl', sm: '3xl', md: '4xl' }}>
+        Encuentra las mejores&nbsp;
+        <Text
+          as={'span'}
+          background={'#67E992'}
+          bgClip="text">
+          ofertas&nbsp;
+        </Text>
+        y paga con tus cryptomonedas
+      </Heading>
 
 
 
-        <Modal
-          initialFocusRef={initialRef}
-          finalFocusRef={finalRef}
-          isOpen={isOpen}
-          onClose={onClose}
-        >
-          <ModalOverlay />
-          <ModalContent>
-            <ModalCloseButton />
-            <ProductForm walletAddress={account} />
-            <ModalFooter>
-              <Button onClick={onClose}>Cancel</Button>
-            </ModalFooter>
+      <Modal
+        initialFocusRef={initialRef}
+        finalFocusRef={finalRef}
+        isOpen={isOpen}
+        onClose={onClose}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton />
+          <ProductForm walletAddress={account} closeModal={onClose} />
+          <ModalFooter>
+            <Button onClick={onClose}>Cancel</Button>
+          </ModalFooter>
 
-          </ModalContent>
-        </Modal>
+        </ModalContent>
+      </Modal>
 
-        {active ?
-          <>
-            <div>Quieres publicar una oferta?</div>
-            <Button
-              background={'#67E992'}
-              color={'white'}
-              _hover={{
-
-                boxShadow: 'xl',
-              }}
-              onClick={onOpen}>
-                Crear Cupón
-              </Button>
-          </>
-          :
-   /*        <Button
+      {active ?
+        <>
+          <div>Quieres publicar una oferta?</div>
+          <Button
             background={'#67E992'}
             color={'white'}
             _hover={{
 
               boxShadow: 'xl',
             }}
-            onClick={connect}
-            disabled={isUnsupportedChain}>
-            {isUnsupportedChain ? 'Red no soportada. Cambie a Rinkeby.' : 'Conectar Wallet'}
-          </Button> */
-          <Text
+            onClick={onOpen}>
+            Crear Cupón
+          </Button>
+          <HStack>
+            <Icon  w={8} h={8} color='red.500'/>
+
+            <Icon w={8} h={8}  />
+
+            <Icon w={8} h={8}  />
+          </HStack>
+        </>
+        :
+        <Text
           as={'span'}
           lineHeight={1.5}
           fontSize={{ base: '2xl', sm: '3xl', md: '4xl' }}
@@ -125,9 +124,9 @@ const Home = () => {
           bgClip="text">
           Conecta tu Wallet !
         </Text>
-        }
-      </VStack>
-    </Center>
+      }
+    </VStack>
+    </Center >
   );
 };
 
