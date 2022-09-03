@@ -6,6 +6,8 @@ import {
   Text
 } from '@chakra-ui/react';
 
+import { Button, ButtonGroup } from '@chakra-ui/react';
+
 const ProductDetails = () => {
   return (
     <>
@@ -23,6 +25,7 @@ const ProductDetails = () => {
     <Text color={'gray.500'} mb={6}> Un delicado proceso de selección electrónica del grano garantizan más de un 90% de granos enteros, utilizados en infinidades de platos y postres,</Text>
     <Heading fontSize="sm" color={'gray.500'} >Product Description</Heading>
     <Text color={'gray.500'}> Un delicado proceso de selección electrónica del grano garantizan más de un 90% de granos enteros, utilizados en infinidades de platos y postres,</Text>
+    <Button colorScheme='teal'mt={10} w="100%">Button</Button>
     </Box>
     </Center>
     </>

@@ -9,7 +9,6 @@ import {
     VStack,
     Image,
   } from '@chakra-ui/react';
-  import { Button, ButtonGroup } from '@chakra-ui/react';
   import { Flex, Spacer } from '@chakra-ui/react'  ;
   import { Badge } from '@chakra-ui/react';
   const IMAGE =
