@@ -54,15 +54,15 @@ const ProductDetails = () => {
           </Center>
           <ModalCloseButton />
           <ModalBody>
-          <Text color={'gray.500'}> Primero debe conectar su billetera para firmar mensajes y enviar transacciones a la red Ethereum</Text>
+          <Text color={'gray.500'} align="center"> Primero debe conectar su billetera para firmar mensajes y enviar transacciones a la red Ethereum</Text>
           </ModalBody>
 
           <ModalFooter>
             <VStack  w={'full'}>
-            <Button colorScheme='blue' mr={3} onClick={onClose}  w="100%">
-              Close
+            <Button colorScheme='teal' mr={3} onClick={onClose}  w="100%">
+            Conectar billetera
             </Button>
-            <Button variant='ghost'  w="100%">Secondary Action</Button>
+            <Button variant='outline'  w="100%" onClick={onClose}>Cancelar</Button>
             </VStack>
           </ModalFooter>
         </ModalContent>
