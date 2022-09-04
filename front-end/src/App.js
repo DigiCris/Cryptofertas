@@ -13,18 +13,12 @@ function App() {
       <BrowserRouter>
       <MainLayout>
         <Routes>
-          
             <Route path="/" exact element={<Home />} />
-            <Route path="/producDetails/:nftId"  element={<ProductDetails />} />
+            {/* <Route path="/producDetails/:nftId"  element={<ProductDetails />} /> */}
             <Route path="/user-coupons" exact element={<UserCoupons />} />
             <Route path="/user-coupons/actives"  element={<UserCouponsActives />} />
             <Route path="/user-coupons/used"  element={<UserCouponsUsed />} /> 
-          <Route path="/" exact element={<Home />} />
           <Route path="/productDetails/"  element={<ProductDetails />} />
-          <Route path="/user-coupons" exact element={<UserCoupons />} />
-          <Route path="/user-coupons/actives"  element={<UserCouponsActives />} />
-          <Route path="/user-coupons/used"  element={<UserCouponsUsed />} /> 
-
         </Routes>  
         </MainLayout>
       </BrowserRouter>    
