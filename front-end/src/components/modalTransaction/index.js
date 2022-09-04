@@ -75,7 +75,7 @@ const ModalTransition = (props) => {
 
         <ModalFooter>
           <VStack  w={'full'}>
-          <Button colorScheme='teal' mr={3} onClick={onTransactionClose}  w="100%">
+          <Button colorScheme={"green"} mr={3} onClick={onTransactionClose}  w="100%">
           Aprobar
           </Button>
           <Button variant='outline'  w="100%" onClick={onTransactionClose}>Cancelar</Button>

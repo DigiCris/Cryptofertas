@@ -64,7 +64,7 @@ import { connector } from '../../config/web3'
 
           <ModalFooter>
             <VStack  w={'full'}>
-            <Button colorScheme='teal' mr={3}  onClick={connectWallet}  disabled={isUnsupportedChain}  w="100%">
+            <Button colorScheme={"green"} mr={3}  onClick={connectWallet}  disabled={isUnsupportedChain}  w="100%">
             {isUnsupportedChain ? "Red no soportada" : "Conectar wallet"}
             </Button>
             <Button variant='outline'  w="100%" onClick={onClose}>Cancelar</Button>

@@ -50,12 +50,12 @@ const ProductDetails = () => {
             y postres,
           </Text>
           <Button
-            colorScheme="teal"
+            colorScheme={"green"}
             mt={10}
             w="100%"
             onClick={() => metamaskValidation(!isOpen)}
           >
-            validar
+            Comprar
           </Button>
         </Box>
         <ModalMetamask
