@@ -3,9 +3,15 @@ import {ChakraProvider} from "@chakra-ui/react";
 import Home from "./views/home";
 import ProductDetails from "./views/productDetails";
 import UserCoupons from "./views/userCoupons";
-import UserCouponsActives from "./views/userCouponsActives"
-import UserCouponsUsed from "./views/userCouponsUsed"
+import ExchangeCoupon from "./views/exchangeCoupon";
+import PageNotFound from "./views/pageNotFound";
 
+
+//Tiempo
+//Nombre
+//Cantidad
+//Imagen
+//Precio
 
 function App() {
   return (
@@ -14,9 +20,9 @@ function App() {
         <Routes>
           <Route path="/" exact element={<Home />} />
           <Route path="/producDetails/:nftId"  element={<ProductDetails />} />
-          <Route path="/user-coupons" exact element={<UserCoupons />} />
-          <Route path="/user-coupons/actives"  element={<UserCouponsActives />} />
-          <Route path="/user-coupons/used"  element={<UserCouponsUsed />} /> 
+          <Route path="/user-coupons/:ownerOrCreated/:value" element={<UserCoupons />} />
+          <Route path="/exchange-coupon/:id" element={<ExchangeCoupon />} /> 
+          <Route path="*" element={<PageNotFound />} />
         </Routes>  
       </BrowserRouter>    
     </ChakraProvider>
