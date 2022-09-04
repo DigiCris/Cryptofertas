@@ -59,7 +59,7 @@ const ProductDetails = () => {
           </Button>
         </Box>
         <ModalMetamask
-          {...{ isOpen, onClose }}
+          {...{ isOpen, onClose, onTransactionOpen }}
         ></ModalMetamask>
         <ModalTransaction
           {...{ isTransactionOpen, onTransactionClose }}
