@@ -28,6 +28,9 @@ const ProductForm = (props) => {
   const [desc, setDesc] = useState("")
   const [category, setCategory] = useState(0)
   const [value, setValue] = useState('1')
+  const [dateExp, setDateExp] = useState(new Date())
+  const [providerAddress, setProviderAddress] = useState('')
+  
   const [fileHash, setFileHash] = useState('')
   const [numCupons, setNumCupons] = useState(5)
   const [nftProvider, setNftProvider] = useState("")
@@ -59,36 +62,38 @@ const ProductForm = (props) => {
   const format = (val) => `$` + val
   const parse = (val) => val.replace(/^\$/, '')
 
+  const diff_minutes=(dt2, dt1) => {
+   var diff =(dt2.getTime() - dt1.getTime()) / 1000;
+   //diff /= 60;
+   return Math.abs(Math.round(diff));
+  }
+
   const submitForm = async (e) => {
     e.preventDefault();
     printDataForm();
-
 
     const hashimg = await sendFileToIPFS(e)
     if (!hashimg) return null
     const tokenuri = await sendJSONtoIPFS(hashimg)
     if (!tokenuri) return null
     console.log('data to mint', category, Math.trunc(Number(value) * 100), numCupons, hashimg, tokenuri)
-    mint(tokenuri);
+     mint(tokenuri);
   }
 
   const printDataForm = () => {
     console.log('form data', category, Math.trunc(Number(value) * 100), numCupons)
   }
 
-
-
   const mint = async (tokenURI) => {
     setMinting(true);
     showToast('Creando cupon en Blockchain', 'info')
-
     NFTFactory.methods
       .mint(
-        '0x15220e7317Bc0169067B93d93f54a8807E0FAfa4',
+        providerAddress,
         category,
         tokenURI,
         Math.trunc(Number(value) * 100),
-        300,
+        diff_minutes(new Date(), dateExp),
         numCupons
       )
       .send({
@@ -127,18 +132,41 @@ const ProductForm = (props) => {
           "image": `https://gateway.pinata.cloud/ipfs/${ImgHash}`,
           "attributes": [
             {
-              "Attribute": "category",
+              "trait-type": "category",
               "value": category
             },
             {
-              "Attribute": "price",
+              "trait-type": "price",
               "value": value
             },
             {
-              "Attribute": "nftProvider",
-              "value": props.walletAddress
+              "trait-type": "NftCompanyName",
+              "value": 'ENEFETON.COM'
             },
-
+            {
+              "trait-type": "NftProviderName",
+              "value": 'Macro'
+            },
+            {
+              "trait-type": "nftProvider",
+              "value": providerAddress//wallet
+            },
+            {
+              "trait-type": "nftEmbasador",
+              "value": "0x72131231231..." //wallet
+            },
+            {
+              "trait-type": "nftCompany",
+              "value": "0x92131231231..."
+            },
+            {
+              "trait-type": "NftDao",
+              "value": "0xA2131231231..."
+            },
+            {
+              "trait-type": "nftDeveloper",
+              "value": "0xA2131231231..."
+            }
           ]
         },
         headers: {
@@ -301,6 +329,38 @@ const ProductForm = (props) => {
               <NumberInputStepper>
               </NumberInputStepper>
             </NumberInput>
+          </Grid>
+          <Grid templateColumns='repeat(2, 1fr)' gap={5}>
+            <Text align={'center'} >
+              Expiración del cupón
+            </Text>
+            <Input
+            isRequired={true}
+            //value={dateExp}
+            onChange={(valueString) => setDateExp(new Date(valueString.target.value))}
+            //onChange={(valueString) => console.log(valueString.target.value)}
+            placeholder="Fecha y hora de expiración del Cupón"
+            size="md"
+            type="date"
+          />
+          </Grid>
+          <Grid templateColumns='repeat(2, 1fr)' gap={5}>
+            <Text align={'center'} >
+              address del proveedor
+            </Text>
+            <FormControl isRequired>
+            <Input
+              isRequired={true}
+              placeholder="0x3434....3434"
+              onChange={(e) => setProviderAddress(e.target.value)}
+              bg={'gray.100'}
+              border={0}
+              color={'gray.500'}
+              _placeholder={{
+                color: 'gray.500',
+              }}
+            />
+          </FormControl>
           </Grid>
           <Input
             type={'file'}
