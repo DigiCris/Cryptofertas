@@ -13,7 +13,7 @@ import {
   Image,
   Heading,
 } from "@chakra-ui/react";
-import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
+import { HamburgerIcon, CloseIcon, QuestionIcon } from "@chakra-ui/icons";
 import NavLink from "./nav-link";
 import WalletData from "./wallet-data";
 import {
@@ -121,8 +121,8 @@ const MainLayout = ({ children }) => {
           <DrawerCloseButton />
           <DrawerHeader>Categorias</DrawerHeader>
 
-          <DrawerBody>
-          <Flex flexDir="column" align="center">
+          <DrawerBody color={'gray.500'}>
+          <Flex flexDir="column" align="left" lineHeight={10}  >
               {Filters.map(({ name, to }) => (
                 <ul key={name}>
                   {name}
@@ -130,7 +130,7 @@ const MainLayout = ({ children }) => {
               ))}
             <Divider />
 
-            <Flex  flexDir="column" align="center">
+            <Flex flexDir="column" align="left">
               {Links.map(({ name, to }) => (
                 <NavLink key={name} to={to}>
                   {name}
@@ -138,7 +138,7 @@ const MainLayout = ({ children }) => {
               ))}
             </Flex>
 
-            <Flex flexDir="column" align="center" >
+            <Flex flexDir="column" align="left" mt={10}>
             <div>Quieres publicar una oferta?</div>
           <Button
             background={'#67E992'}
@@ -154,8 +154,10 @@ const MainLayout = ({ children }) => {
             </Flex>
           </DrawerBody>
 
-          <DrawerFooter>
-           <Text>Ayuda</Text>
+          <DrawerFooter borderTopWidth='1px' justify={'flex-start'}>
+          <Flex flexDir="row" align="center" color={'gray.500'}>
+            <QuestionIcon/><Text ml='2'>Ayuda</Text>
+          </Flex>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
