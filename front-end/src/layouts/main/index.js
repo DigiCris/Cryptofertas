@@ -30,11 +30,12 @@ import { useRef } from 'react'
 
 const Links = [
   {
-    name: "Home",
-    to: "/",
+    name: "Cupones comprados",
+    to: "/user-coupons",
   },
+
   {
-    name: "Mis Cupones",
+    name: "Cupones vendidos",
     to: "/user-coupons",
   },
 ];
@@ -121,6 +122,7 @@ const MainLayout = ({ children }) => {
           <DrawerCloseButton />
           <DrawerHeader>Categorias</DrawerHeader>
 
+          {/* For the categories, just to show this working, i used ul tag, but this may be replaced by a navlink */}
           <DrawerBody color={'gray.500'}>
           <Flex flexDir="column" align="left" lineHeight={10}  >
               {Filters.map(({ name, to }) => (
