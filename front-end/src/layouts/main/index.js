@@ -7,6 +7,7 @@ import {
   useColorModeValue,
   Stack,
   VStack,
+  Divider,
   Text,
   Button,
   Image,
@@ -35,6 +36,21 @@ const Links = [
   {
     name: "Mis Cupones",
     to: "/user-coupons",
+  },
+];
+
+const Filters = [
+  {
+    name: "Todas"
+  },
+  {
+    name: "Alimentos",
+  },
+  {
+    name: "Salud"
+  },
+  {
+    name: "Electronicos",
   },
 ];
 
@@ -96,22 +112,45 @@ const MainLayout = ({ children }) => {
         {isOpen ? (
         <Drawer
         isOpen={isOpen}
-        placement='right'
+        placement='left'
         onClose={onClose}
         finalFocusRef={btnRef}
       >
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>Create your account</DrawerHeader>
+          <DrawerHeader>Categorias</DrawerHeader>
 
           <DrawerBody>
           <Flex flexDir="column" align="center">
+              {Filters.map(({ name, to }) => (
+                <ul key={name}>
+                  {name}
+                </ul>
+              ))}
+            <Divider />
+
+            <Flex  flexDir="column" align="center">
               {Links.map(({ name, to }) => (
                 <NavLink key={name} to={to}>
                   {name}
                 </NavLink>
               ))}
+            </Flex>
+
+            <Flex flexDir="column" align="center" >
+            <div>Quieres publicar una oferta?</div>
+          <Button
+            background={'#67E992'}
+            color={'white'}
+            _hover={{
+
+              boxShadow: 'xl',
+            }}
+            onClick={onOpen}>
+            Crear Cupón
+          </Button>
+            </Flex>
             </Flex>
           </DrawerBody>
 
