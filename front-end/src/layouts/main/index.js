@@ -6,12 +6,26 @@ import {
   useDisclosure,
   useColorModeValue,
   Stack,
+  VStack,
+  Text,
+  Button,
   Image,
   Heading,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import NavLink from "./nav-link";
 import WalletData from "./wallet-data";
+import {
+  Drawer,
+  DrawerBody,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+} from '@chakra-ui/react';
+import { useRef } from 'react'
+
 
 const Links = [
   {
@@ -26,6 +40,8 @@ const Links = [
 
 const MainLayout = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const btnRef = useRef()
+
 
   return (
     <Flex minH="100vh" direction="column">
@@ -78,15 +94,32 @@ const MainLayout = ({ children }) => {
         </Flex>
 
         {isOpen ? (
-          <Box pb={4} display={{ md: "none" }}>
-            <Stack as={"nav"} spacing={4}>
+        <Drawer
+        isOpen={isOpen}
+        placement='right'
+        onClose={onClose}
+        finalFocusRef={btnRef}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>Create your account</DrawerHeader>
+
+          <DrawerBody>
+          <Flex flexDir="column" align="center">
               {Links.map(({ name, to }) => (
                 <NavLink key={name} to={to}>
                   {name}
                 </NavLink>
               ))}
-            </Stack>
-          </Box>
+            </Flex>
+          </DrawerBody>
+
+          <DrawerFooter>
+           <Text>Ayuda</Text>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
         ) : null}
       </Box>
       <Box mx="auto" flex={1} p={4} maxW={"7xl"} width="100%">
