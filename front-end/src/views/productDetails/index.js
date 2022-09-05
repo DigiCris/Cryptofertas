@@ -1,5 +1,6 @@
 import ProductDescription from "../../components/productDescription";
 import { Box, Center, Heading, Text } from "@chakra-ui/react";
+import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import { useDisclosure } from "@chakra-ui/react";
 import ModalMetamask from "../../components/modalMetamask";
 import ModalTransaction from "../../components/modalTransaction";
@@ -7,6 +8,8 @@ import { Button } from "@chakra-ui/react";
 
 const ProductDetails = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { activate, account, library, active, deactivate, error } =
+    useWeb3React();
 
   const {
     isOpen: isTransactionOpen,
@@ -14,9 +17,9 @@ const ProductDetails = () => {
     onClose: onTransactionClose,
   } = useDisclosure();
 
-  const metamaskConnect = false;
+  // const metamaskConnect = false;
   const metamaskValidation = () => {
-    !metamaskConnect ? onOpen() : onTransactionOpen();
+    !active  ? onOpen() : onTransactionOpen();
   };
 
   return (
@@ -47,16 +50,16 @@ const ProductDetails = () => {
             y postres,
           </Text>
           <Button
-            colorScheme="teal"
+            colorScheme={"green"}
             mt={10}
             w="100%"
             onClick={() => metamaskValidation(!isOpen)}
           >
-            validar
+            Comprar
           </Button>
         </Box>
         <ModalMetamask
-          {...{ isOpen, onClose }}
+          {...{ isOpen, onClose, onTransactionOpen }}
         ></ModalMetamask>
         <ModalTransaction
           {...{ isTransactionOpen, onTransactionClose }}

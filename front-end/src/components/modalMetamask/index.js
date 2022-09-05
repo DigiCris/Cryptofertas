@@ -1,3 +1,4 @@
+import { useState, useCallback, useEffect } from "react";
 import {
     Center,
     Text,
@@ -12,13 +13,35 @@ import {
     ModalBody,
     ModalCloseButton,
   } from '@chakra-ui/react';
+  import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
+import { connector } from '../../config/web3'
   import { Button } from '@chakra-ui/react';
   const IMAGE =
     'https://images.unsplash.com/photo-1518051870910-a46e30d9db16?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1350&q=80';
   
   
   const ModalMetamask = (props) => {
-    const {isOpen, onClose} = props;
+    const {isOpen, onClose, onTransactionOpen} = props;
+    const { activate, account, library, active, deactivate, error } =
+    useWeb3React();
+
+    const isUnsupportedChain = error instanceof UnsupportedChainIdError;
+
+    function connectWallet() {
+      connect();
+      onClose();
+      onTransactionOpen();
+    }
+
+    const connect = useCallback(() => {
+      activate(connector);
+      localStorage.setItem("previouslyConnected", "true");
+    }, [activate]);
+  
+    useEffect(() => {
+      if (localStorage.getItem("previouslyConnected") === "true") connect();
+    }, [connect]);
+
     return (
         <>
         <Center py={12}>
@@ -41,8 +64,8 @@ import {
 
           <ModalFooter>
             <VStack  w={'full'}>
-            <Button colorScheme='teal' mr={3} onClick={onClose}  w="100%">
-            Conectar billetera
+            <Button colorScheme={"green"} mr={3}  onClick={connectWallet}  disabled={isUnsupportedChain}  w="100%">
+            {isUnsupportedChain ? "Red no soportada" : "Conectar wallet"}
             </Button>
             <Button variant='outline'  w="100%" onClick={onClose}>Cancelar</Button>
             </VStack>
