@@ -12,12 +12,6 @@ import UserCouponsUsed from "./views/userCouponsUsed"
 import MainLayout from "./layouts/main";
 
 
-//Tiempo
-//Nombre
-//Cantidad
-//Imagen
-//Precio
-
 function App() {
   return (
     <ChakraProvider>

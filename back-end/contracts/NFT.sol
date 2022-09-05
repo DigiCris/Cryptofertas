@@ -7,8 +7,8 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 
 pragma solidity >=0.7.0 <0.9.0;
 
-contract CNFTFactory is ERC721, ERC721URIStorage, Ownable {
 
+contract CNFTFactory is ERC721, ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter public tokenAmount;
     Counters.Counter public productsAmount;
@@ -47,6 +47,7 @@ contract CNFTFactory is ERC721, ERC721URIStorage, Ownable {
     mapping (uint256 => string) public nftMetadata;
 
     mapping (uint256 => string) public productMetadata;
+
     mapping (uint256 => uint256[]) public productTokens;
     mapping (uint256 => uint256) public tokenToProduct;
     mapping(address => uint256[]) public tokensCreatedByUser; 
@@ -70,6 +71,7 @@ contract CNFTFactory is ERC721, ERC721URIStorage, Ownable {
             uint256 _productid = productsAmount.current();
             productsAmount.increment();
             productMetadata[_productid] = _urlMetadata;
+
           for(uint i = 0; i < _maxCupons; i++) {
             tokenAmount.increment();
             uint256 _tokenId = tokenAmount.current();
@@ -207,18 +209,18 @@ contract CNFTFactory is ERC721, ERC721URIStorage, Ownable {
     function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
         super._burn(tokenId);
     }
-    
+
 
     function tokenURI(uint256 tokenId)
         public
         view
-
-        override
+        override(ERC721, ERC721URIStorage)
         returns (string memory)
     {
-        return nftMetadata[tokenId];
+        return super.tokenURI(tokenId);
     }
 
 
 }
+
 
