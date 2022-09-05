@@ -21,6 +21,7 @@ import {
 
 import ProductForm from '../../components/ProductForm'
 import Loading from '../../components/loading'
+import ModalUsability from "../../components/modalUsability";
 
 
 const Home = () => {
@@ -110,7 +111,7 @@ const Home = () => {
         y paga con tus cryptomonedas
       </Heading>
 
-
+      <ModalUsability></ModalUsability>
 
       <Modal
         initialFocusRef={initialRef}
