@@ -14,6 +14,7 @@ import {
     ModalCloseButton,
   } from '@chakra-ui/react';
   import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
+  import Loading from '../../components/loading';
 import { connector } from '../../config/web3'
   import { Button } from '@chakra-ui/react';
   const IMAGE =
@@ -28,6 +29,8 @@ import { connector } from '../../config/web3'
     const isUnsupportedChain = error instanceof UnsupportedChainIdError;
 
     function connectWallet() {
+      const { ethereum } = window;
+      if (!ethereum)return alert('Install metamask');
       connect();
       onClose();
       onTransactionOpen();
@@ -64,7 +67,7 @@ import { connector } from '../../config/web3'
 
           <ModalFooter>
             <VStack  w={'full'}>
-            <Button colorScheme={"green"} mr={3}  onClick={connectWallet}  disabled={isUnsupportedChain}  w="100%">
+            <Button colorScheme={"green"} mr={3}  onClick={() => connectWallet()}  disabled={isUnsupportedChain}  w="100%" >
             {isUnsupportedChain ? "Red no soportada" : "Conectar wallet"}
             </Button>
             <Button variant='outline'  w="100%" onClick={onClose}>Cancelar</Button>
