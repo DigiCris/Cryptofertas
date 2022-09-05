@@ -120,9 +120,9 @@ const UserCoupons = () => {
       const { ethereum } = window;
 
       const accounts = await ethereum.request({ method: "eth_accounts" });
-       const web3 = new Web3(process.env.REACT_APP_PROVIDER_ADDRESS)
+       const web3 = new Web3("https://rinkeby.infura.io/v3/da3a7118ce6842b7b0fa32d304e1382b")
 
-       const contract = new web3.eth.Contract(abi, process.env.REACT_APP_CONTRACT_ADDRESS)
+       const contract = new web3.eth.Contract(abi, "0x247eF7b7f156C2c6b8e117B358c21B21473A7BB4")
        const res = await contract.methods.getDataToDisplayForCreator(accounts[0]).call((err, result) => { 
         return  result
       })
@@ -167,9 +167,9 @@ const UserCoupons = () => {
 
       const accounts = await ethereum.request({ method: "eth_accounts" });     
       
-      const web3 = new Web3(process.env.REACT_APP_PROVIDER_ADDRESS)
+      const web3 = new Web3("https://rinkeby.infura.io/v3/da3a7118ce6842b7b0fa32d304e1382b")
 
-      const contract = new web3.eth.Contract(abi, process.env.REACT_APP_CONTRACT_ADDRESS)
+      const contract = new web3.eth.Contract(abi, "0x247eF7b7f156C2c6b8e117B358c21B21473A7BB4")
       const res = await contract.methods.getDataToDisplayForOwner(accounts[0]).call((err, result) => { 
        return  result
      })

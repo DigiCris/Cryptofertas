@@ -7,12 +7,6 @@ import ExchangeCoupon from "./views/exchangeCoupon";
 import PageNotFound from "./views/pageNotFound";
 
 
-//Tiempo
-//Nombre
-//Cantidad
-//Imagen
-//Precio
-
 function App() {
   return (
     <ChakraProvider>
