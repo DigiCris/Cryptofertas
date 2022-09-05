@@ -1,6 +1,7 @@
 import {useState, useEffect} from "react"
 import axios from "axios"
 import NavbarCoupons from "../../components/navbarCoupons"
+import EmptyCouponList from "../../components/emptyCouponList"
 import PageNotFound from "../pageNotFound"
 import Coupons from "../../components/coupon"
 import {Grid, GridItem, Center} from '@chakra-ui/react';
@@ -13,6 +14,7 @@ const UserCoupons = () => {
   const {value, ownerOrCreated} = useParams() 
   const [dataListOfTokensCreated, setDataListOfTokensCreated] = useState([])
   const [dataListOfTokensOwned, setDataListOfTokensOwned] = useState([])
+  const [showEmptyList, setShowEmptyList] = useState(false)
 
   const getArrayOfCreatorOrOwner = () => {
       if(ownerOrCreated === "owner") {
@@ -84,6 +86,15 @@ const UserCoupons = () => {
       return `Expired`
     }
     
+  }
+
+  const checkIfReturnEmptyList = () => {
+      const arrayToShow = getRightArray(getArrayOfCreatorOrOwner())
+      if(arrayToShow.length) {
+        return false
+      } else {
+        return true
+      }
   }
 
   useEffect(() => {
@@ -167,9 +178,9 @@ const UserCoupons = () => {
 
       const accounts = await ethereum.request({ method: "eth_accounts" });     
       
-      const web3 = new Web3("https://rinkeby.infura.io/v3/da3a7118ce6842b7b0fa32d304e1382b")
+      const web3 = new Web3(process.env.REACT_APP_PROVIDER_ADDRESS)
 
-      const contract = new web3.eth.Contract(abi, "0x247eF7b7f156C2c6b8e117B358c21B21473A7BB4")
+      const contract = new web3.eth.Contract(abi, process.env.REACT_APP_CONTRACT_ADDRESS)
       const res = await contract.methods.getDataToDisplayForOwner(accounts[0]).call((err, result) => { 
        return  result
      })
@@ -207,11 +218,26 @@ const UserCoupons = () => {
     getDataOfOwner()
   }, [])
 
+  useEffect(()=>{
+    const isEmptyListNeeded = checkIfReturnEmptyList()
+    setShowEmptyList(isEmptyListNeeded)
+  }, [value])
+
     if(!((ownerOrCreated === "created" || ownerOrCreated === "owner") &&  (value === "actives" || value === "used" || value === "all" ))){
       return (
         <PageNotFound />
       )
     }  
+
+    if(showEmptyList) {
+      return(
+        <>  
+          <NavbarCoupons />
+          <EmptyCouponList />
+        </>
+      )
+    }
+
 
     return (
       <>
