@@ -1,6 +1,6 @@
 const NFTFactory = {
     address: {
-        4: "0x304722dC9b8BeD00c9225fe312332350AB645aD2",
+        4: "0xE12C3155d6D30ceB076CD40bd42c65882BFa3c87",
       },
       "abi": [
         {

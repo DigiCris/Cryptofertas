@@ -1,6 +1,6 @@
 const MarketPlace = {
     address: {
-        4: "0x304722dC9b8BeD00c9225fe312332350AB645aD2",
+        4: "0x0E995bbe4E86520E7e68C6fe14E6954842Eef503",
       },
       "abi": [
         {
