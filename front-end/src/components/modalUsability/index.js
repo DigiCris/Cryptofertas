@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -12,9 +12,10 @@ import {
   Text,
   Center,
   extendTheme,
-  Image
+  useToast
 } from "@chakra-ui/react";
 import QR from "../QR";
+import useNFTFactory from "../../hooks/useNFTFactory";
 
 const borderRadius = {
   radii: {
@@ -32,9 +33,44 @@ const borderRadius = {
 
 function ModalUsability() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [ usedQR, setUsedQR ] = useState(true);
+  const [usedQR, setUsedQR] = useState(false);
 
-  //Para cambiar de modal, setear usedQR en true/false
+  const NFTFactory = useNFTFactory();
+
+  const toast = useToast();
+
+  const useNFT = async () => {
+    NFTFactory.methods
+    .MarkUsed(
+      _tokenId
+    )
+    .send({
+      from: account
+    })
+    .on("transactionHash", (txHash) => {
+      toast({
+        title: "Transacción enviada",
+        description: txHash,
+        status: "info"
+      })
+    })
+    .on("receipt", () => {
+      setUsedQR(true);
+      toast({
+        title: "Transacción confirmada.",
+        description: "Cupón redimido",
+        status: "success"
+      })
+    })
+    .on("error", (error) => {
+      setUsedQR(false);
+      toast({
+        title: "Transacción fallida",
+        description: "Cupón no redimido",
+        status: "error"
+      })
+    })
+  };
 
   return (
     <>
@@ -55,6 +91,7 @@ function ModalUsability() {
               <ModalCloseButton />
               <ModalBody>
                 <QR></QR>
+                <Button isLoading={usedQR} onClick={useNFT}>Canjear cupón</Button>
               </ModalBody>
               <Center>
                 <Button
@@ -86,7 +123,7 @@ function ModalUsability() {
               <ModalCloseButton />
               <ModalBody>
                 {/* <img src="../../assets/check.png"/> */}
-                <img src='https://bit.ly/dan-abramov'/>
+                <img src="https://bit.ly/dan-abramov" />
               </ModalBody>
               <Center>
                 <Button
