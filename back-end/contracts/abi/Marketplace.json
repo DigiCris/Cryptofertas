@@ -129,25 +129,6 @@
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "_amount",
-                "type": "uint256"
-            }
-        ],
-        "name": "burnERC20",
-        "outputs": [
-            {
-                "internalType": "bool",
-                "name": "_success",
-                "type": "bool"
-            }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
                 "name": "_tokenId",
                 "type": "uint256"
             }
@@ -199,40 +180,6 @@
             }
         ],
         "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "_to",
-                "type": "address"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_amount",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_vestingTime",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_tokenId",
-                "type": "uint256"
-            }
-        ],
-        "name": "mintERC20",
-        "outputs": [
-            {
-                "internalType": "bool",
-                "name": "_success",
-                "type": "bool"
-            }
-        ],
-        "stateMutability": "nonpayable",
         "type": "function"
     },
     {
@@ -358,54 +305,6 @@
             }
         ],
         "name": "setUserBenefit",
-        "outputs": [
-            {
-                "internalType": "bool",
-                "name": "_success",
-                "type": "bool"
-            }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "_to",
-                "type": "address"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_amount",
-                "type": "uint256"
-            }
-        ],
-        "name": "transferERC20",
-        "outputs": [
-            {
-                "internalType": "bool",
-                "name": "_success",
-                "type": "bool"
-            }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "_from",
-                "type": "address"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_tokenId",
-                "type": "uint256"
-            }
-        ],
-        "name": "transferNft",
         "outputs": [
             {
                 "internalType": "bool",

@@ -13,9 +13,12 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-//deployed at=0x8Af96CED952F5B02A142fD1D1E5eA34eE32A9218
+
 contract CNFTFactory is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable 
 {
+
+/****************************Author: CMarchese*********************************/
+/*******************Deployed: 0xE12C3155d6D30ceB076CD40bd42c65882BFa3c87*******/
 
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdCounter;
@@ -219,10 +222,10 @@ contract CNFTFactory is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable
         // We release the vestings associated with this NFT
         i_my_token_Contract.NFT_claim(nftProvider[_tokenId], _tokenId);
         i_my_token_Contract.NFT_claim(nftEmbasador[_tokenId], _tokenId);
-        i_my_token_Contract.NFT_claim(nftOwner[_tokenId], _tokenId);
+        i_my_token_Contract.NFT_claim(nftOwner[_tokenId], _tokenId);/*
         i_my_token_Contract.NFT_claim(NftDeveloper, _tokenId);
         i_my_token_Contract.NFT_claim(NftDAO, _tokenId);
-        i_my_token_Contract.NFT_claim(NftCompany, _tokenId);
+        i_my_token_Contract.NFT_claim(NftCompany, _tokenId);*/
         
         _success=true;
         return(_success);
@@ -244,7 +247,9 @@ contract CNFTFactory is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable
         return(cuponsOwner[_addr]);
     }
 
-// Functions by jhonaiker
+    /****************************End Author: CMarchese*********************************/
+
+    /****************************Author: Jhonaiker Blanco*********************************/
     function getTokenAmount(uint256 _productId) private view returns (STokenAmountData memory tokenAmountStruct) {
         uint256[] memory _tokenList = productTokens[_productId];
         uint256 _tokenTotal = _tokenList.length;
@@ -355,7 +360,7 @@ contract CNFTFactory is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable
         return price[_firstToken];        
     } // I didn't errase this function because it is just a view but you should use getPrice(uint256 _tokenId), not this one
 
-
+/****************************End Author: Jhonaiker Blanco*********************************/
 
 
 
@@ -387,7 +392,7 @@ contract CNFTFactory is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable
 
     function _afterTokenTransfer(address /*from*/, address /*to*/, uint256 tokenId ) internal override 
     {
-        nftOwner[tokenId]=ownerOf(tokenId);
+        nftOwner[tokenId]=ownerOf(tokenId); // added by smarchese
     }
 
     function supportsInterface(bytes4 interfaceId)

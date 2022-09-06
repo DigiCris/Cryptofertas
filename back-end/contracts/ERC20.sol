@@ -6,12 +6,11 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
-
-//deployed at= 0x0922FB4007946e3838A07483eFDe991480c982fD
 contract Doloferta is ERC20, ERC20Burnable, Pausable, AccessControl 
 {
 
-    /****************************CMarchese*********************************/
+    /****************************Author: CMarchese*********************************/
+    /*******************Deployed: 0x851705F7A0E26cc03656d6d1d9E21778dd7A1D08*******/
 
     // Fixed wallets set in the constructor
     address private NftDeveloper; // our wallet
