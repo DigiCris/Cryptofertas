@@ -24,6 +24,7 @@ import { Link, useLocation, useHistory } from "react-router-dom";
 import ProductForm from '../../components/ProductForm'
 import Loading from '../../components/loading'
 import CuponImage from '../../components/coupon';
+import ModalUsability from "../../components/modalUsability";
 
 import useMarketPlace from '../../hooks/useMarketPlace'
 import useNFTFactory from '../../hooks/useNFTFactory'
@@ -317,40 +318,39 @@ const Home = () => {
 
   return (
     < Center >
-      <VStack>
-        <Heading
-          color={'gray.800'}
-          lineHeight={1.1}
-          fontSize={{ base: '2xl', sm: '3xl', md: '4xl' }}>
-          Encuentra las mejores&nbsp;
-          <Text
-            as={'span'}
-            background={'#67E992'}
-            bgClip="text">
-            ofertas&nbsp;
-          </Text>
-          y paga con tus cryptomonedas
-        </Heading>
+    <VStack>
+      <Heading
+        color={'gray.800'}
+        lineHeight={1.1}
+        fontSize={{ base: '2xl', sm: '3xl', md: '4xl' }}>
+        Encuentra las mejores&nbsp;
+        <Text
+          as={'span'}
+          background={'#67E992'}
+          bgClip="text">
+          ofertas&nbsp;
+        </Text>
+        y paga con tus cryptomonedas
+      </Heading>
 
+      <ModalUsability></ModalUsability>
 
+      <Modal
+        initialFocusRef={initialRef}
+        finalFocusRef={finalRef}
+        isOpen={isOpen}
+        onClose={onClose}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton />
+          <ProductForm walletAddress={account} closeModal={onClose} />
+          <ModalFooter>
+            <Button onClick={onClose}>Cancel</Button>
+          </ModalFooter>
 
-        <Modal
-          initialFocusRef={initialRef}
-          finalFocusRef={finalRef}
-          isOpen={isOpen}
-          onClose={onClose}
-        >
-          <ModalOverlay />
-          <ModalContent>
-            <ModalCloseButton />
-            <ProductForm walletAddress={account} closeModal={onClose} />
-            <ModalFooter>
-              <Button onClick={onClose}>Cancel</Button>
-            </ModalFooter>
-
-          </ModalContent>
-        </Modal>
-
+        </ModalContent>
+      </Modal>
         {active ?
           <>
             <div>Quieres publicar una oferta?</div>

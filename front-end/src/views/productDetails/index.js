@@ -1,5 +1,5 @@
 import ProductDescription from "../../components/productDescription";
-import { Box, Center, Heading, Text } from "@chakra-ui/react";
+import { Box, Center, Heading, Text} from "@chakra-ui/react";
 import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import { useDisclosure } from "@chakra-ui/react";
 import ModalMetamask from "../../components/modalMetamask";
@@ -20,6 +20,7 @@ const ProductDetails = () => {
   // const metamaskConnect = false;
   const metamaskValidation = () => {
     !active  ? onOpen() : onTransactionOpen();
+    console.log(active)
   };
 
   return (
@@ -61,9 +62,11 @@ const ProductDetails = () => {
         <ModalMetamask
           {...{ isOpen, onClose, onTransactionOpen }}
         ></ModalMetamask>
-        <ModalTransaction
+        {active ? <><ModalTransaction
           {...{ isTransactionOpen, onTransactionClose }}
         ></ModalTransaction>
+        </>: []
+        }
       </Center>
     </>
   );

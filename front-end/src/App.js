@@ -23,7 +23,7 @@ function App() {
             <Route path="/user-coupons" exact element={<UserCoupons />} />
             <Route path="/user-coupons/actives"  element={<UserCouponsActives />} />
             <Route path="/user-coupons/used"  element={<UserCouponsUsed />} /> 
-          <Route path="/productDetails/"  element={<ProductDetails />} />
+          <Route path="/productDetails/:tokenId"  element={<ProductDetails />} />
           <Route path="/exchange-coupon/:id" element={<ExchangeCoupon />} /> 
           <Route path="*" element={<PageNotFound />} />
         </Routes>  
