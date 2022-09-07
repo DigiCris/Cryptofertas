@@ -14,6 +14,7 @@ import {
   extendTheme,
   useToast
 } from "@chakra-ui/react";
+import { useWeb3React} from "@web3-react/core";
 import QR from "../QR";
 import useNFTFactory from "../../hooks/useNFTFactory";
 
@@ -32,6 +33,7 @@ const borderRadius = {
 };
 
 function ModalUsability() {
+  const { active, activate, deactivate, account, error, library } = useWeb3React();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [usedQR, setUsedQR] = useState(false);
 
@@ -41,9 +43,7 @@ function ModalUsability() {
 
   const useNFT = async () => {
     NFTFactory.methods
-    .MarkUsed(
-      _tokenId
-    )
+    .MarkUsed(0)
     .send({
       from: account
     })
