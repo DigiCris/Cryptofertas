@@ -333,7 +333,7 @@ const Home = () => {
         y paga con tus cryptomonedas
       </Heading>
 
-      <ModalUsability></ModalUsability>
+      {/* <ModalUsability></ModalUsability> */}
 
       <Modal
         initialFocusRef={initialRef}
@@ -364,7 +364,7 @@ const Home = () => {
               onClick={onOpen}>
               Crear Cupón
             </Button>
-            <Button
+            {/* <Button
               background={'blue'}
               color={'white'}
               _hover={{
@@ -383,7 +383,7 @@ const Home = () => {
               }}
               onClick={onTestingBuy}>
               Usar cupon
-            </Button>
+            </Button> */}
             <HStack>
               <Icon w={8} h={8} color='red.500' />
 
