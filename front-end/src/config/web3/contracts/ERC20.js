@@ -1,6 +1,6 @@
 const ERC20 = {
     address: {
-        4: "0x851705F7A0E26cc03656d6d1d9E21778dd7A1D08",
+        4: "0x495654e1208aaCB4aa4C3AF3fAa64111c6CDd83a",
       },
       "abi": [
         {

@@ -86,24 +86,46 @@ const Home = () => {
   }
 
   //const {image, name, amount, activeAmount, usedAmount, newPrice, oldPrice, timeToExpirate} = data
-  const getAllActiveCoupons = async () => {
-    //const numtokens = await NFTFactory.methods.TokenAmount().call();
-    const numtokens = 30;
 
+  const getCouponsByCategory = async(category)=> {
+    const arrayTokens = await NFTFactory.methods.getTokensByCategory(category).call();
+    return getDataCoupons(arrayTokens,category)
+  }
+
+  const getAllActiveCoupons = async () => {
+    const numtokens = await NFTFactory.methods.tokenAmount().call();
+    //tokenIds = new Array(numtokens).fill()
+    console.log('tokamount',numtokens)
+    const aux = new Array(Number(numtokens)).fill(1)
+    return getDataCoupons(aux,0)
+  }
+
+  const getDataCoupons = async (arrayTokens,category) => {
+
+    //const numtokens = 2;
     SetLoadingCoupons(true)
 
     const allActiveCouponsData = []
     const moskused = [true, false, false, true, false, true, false, false, true, false, true, false,true, false, false, true, false, true, false, false, true, false, true, false]
-    for (let i = 0; i < numtokens; i++) {
-      //const isUsed = await NFTFactory.methods.isTokenUsed(i).call();
+    //let tokenId;
+    let tokenId;
+    //await arrayTokens.map(async (id,index) => {
+    for (let i=0; i < arrayTokens.length; i++){
+      
+      if (category>0) tokenId=arrayTokens[i]
+      else  tokenId=i
+      console.log('tokenid',i,tokenId)
+      const isSale = await NFTFactory.methods.inSale(tokenId).call();
+      console.log('insale',isSale,tokenId)
       //const isUsed = moskused[i]
-      const isUsed = false
-      if (!isUsed) {
-        const tokenURI = await NFTFactory.methods.tokenURI(i).call();
-        const price = await NFTFactory.methods.getPrice(i).call();
+      //const isUsed = false
+      if (isSale) {
+        const tokenURI = await NFTFactory.methods.tokenURI(tokenId).call();
+        const price = await NFTFactory.methods.getPrice(tokenId).call();
         const res = await axios.get(tokenURI);
         const response = res.data
         const dataCoupon = {
+          tokenId:tokenId,
           name: response['name'],
           image: response['image'],
           oldPrice: response['attributes'][1]['value'],
@@ -119,6 +141,7 @@ const Home = () => {
       }
 
     }
+    //)
     SetLoadingCoupons(false)
 
     return allActiveCouponsData
@@ -218,6 +241,8 @@ const Home = () => {
 
   const allowanceAccount = async () => {
     const dataIPFS = await getAllActiveCoupons();
+    //const dataIPFS = await getCouponsByCategory(1);
+    
     SetLoadingCoupons(false)
     setAllCoupons(dataIPFS)
 
@@ -371,7 +396,7 @@ const Home = () => {
               : <Grid templateColumns='repeat(5, 1fr)' gap={5}>
                 {//new Array(14).fill().map(() => (
                   allCoupons.map((datacoupon) => (
-                    <Link key={1} to={`/productDetails/${1}`}>
+                    <Link key={datacoupon.tokenId} to={`/productDetails/${datacoupon.tokenId}`}>
                       <CuponImage data={datacoupon} value={'actives'} />
                     </Link>
                   ))}

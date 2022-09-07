@@ -1,6 +1,6 @@
 const NFTFactory = {
     address: {
-        4: "0xE12C3155d6D30ceB076CD40bd42c65882BFa3c87",
+        4: "0xE54CB67B86335286bE90c63E6C9632846D3830a1",
       },
       "abi": [
         {
@@ -280,6 +280,30 @@ const NFTFactory = {
         {
             "inputs": [
                 {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "name": "cuponsProvider",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
                     "internalType": "uint256",
                     "name": "",
                     "type": "uint256"
@@ -338,55 +362,16 @@ const NFTFactory = {
             "inputs": [
                 {
                     "internalType": "address",
-                    "name": "_user",
+                    "name": "_addr",
                     "type": "address"
                 }
             ],
-            "name": "getDataToDisplayForCreator",
+            "name": "getCuponsProvider",
             "outputs": [
                 {
-                    "components": [
-                        {
-                            "internalType": "uint256",
-                            "name": "timeToExpirate",
-                            "type": "uint256"
-                        },
-                        {
-                            "components": [
-                                {
-                                    "internalType": "uint256",
-                                    "name": "tokenTotal",
-                                    "type": "uint256"
-                                },
-                                {
-                                    "internalType": "uint256",
-                                    "name": "tokenActives",
-                                    "type": "uint256"
-                                },
-                                {
-                                    "internalType": "uint256",
-                                    "name": "tokenUsed",
-                                    "type": "uint256"
-                                }
-                            ],
-                            "internalType": "struct CNFTFactory.STokenAmountData",
-                            "name": "tokenAmountInformation",
-                            "type": "tuple"
-                        },
-                        {
-                            "internalType": "string",
-                            "name": "tokenURI",
-                            "type": "string"
-                        },
-                        {
-                            "internalType": "uint256",
-                            "name": "tokenPrice",
-                            "type": "uint256"
-                        }
-                    ],
-                    "internalType": "struct CNFTFactory.SDataToDisplay[]",
-                    "name": "_result",
-                    "type": "tuple[]"
+                    "internalType": "uint256[]",
+                    "name": "",
+                    "type": "uint256[]"
                 }
             ],
             "stateMutability": "view",
@@ -395,56 +380,110 @@ const NFTFactory = {
         {
             "inputs": [
                 {
+                    "internalType": "uint256",
+                    "name": "_Targetpage",
+                    "type": "uint256"
+                },
+                {
                     "internalType": "address",
-                    "name": "_user",
+                    "name": "_NftOwner",
                     "type": "address"
                 }
             ],
-            "name": "getDataToDisplayForOwner",
+            "name": "getNFTByOwner",
             "outputs": [
                 {
                     "components": [
                         {
-                            "internalType": "uint256",
-                            "name": "timeToExpirate",
-                            "type": "uint256"
-                        },
-                        {
-                            "components": [
-                                {
-                                    "internalType": "uint256",
-                                    "name": "tokenTotal",
-                                    "type": "uint256"
-                                },
-                                {
-                                    "internalType": "uint256",
-                                    "name": "tokenActives",
-                                    "type": "uint256"
-                                },
-                                {
-                                    "internalType": "uint256",
-                                    "name": "tokenUsed",
-                                    "type": "uint256"
-                                }
-                            ],
-                            "internalType": "struct CNFTFactory.STokenAmountData",
-                            "name": "tokenAmountInformation",
-                            "type": "tuple"
-                        },
-                        {
                             "internalType": "string",
-                            "name": "tokenURI",
+                            "name": "tokenUri",
                             "type": "string"
                         },
                         {
                             "internalType": "uint256",
-                            "name": "tokenPrice",
+                            "name": "expiration",
                             "type": "uint256"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "precio",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "bool",
+                            "name": "used",
+                            "type": "bool"
+                        },
+                        {
+                            "internalType": "bool",
+                            "name": "inSale",
+                            "type": "bool"
+                        },
+                        {
+                            "internalType": "bool",
+                            "name": "valid",
+                            "type": "bool"
                         }
                     ],
-                    "internalType": "struct CNFTFactory.SDataToDisplay[]",
-                    "name": "_result",
-                    "type": "tuple[]"
+                    "internalType": "struct CNFTFactory.SJHONAIKER[10]",
+                    "name": "_value",
+                    "type": "tuple[10]"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "_Targetpage",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "address",
+                    "name": "_NftOwner",
+                    "type": "address"
+                }
+            ],
+            "name": "getNFTByProvider",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "string",
+                            "name": "tokenUri",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "expiration",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "precio",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "bool",
+                            "name": "used",
+                            "type": "bool"
+                        },
+                        {
+                            "internalType": "bool",
+                            "name": "inSale",
+                            "type": "bool"
+                        },
+                        {
+                            "internalType": "bool",
+                            "name": "valid",
+                            "type": "bool"
+                        }
+                    ],
+                    "internalType": "struct CNFTFactory.SJHONAIKER[10]",
+                    "name": "_value",
+                    "type": "tuple[10]"
                 }
             ],
             "stateMutability": "view",
@@ -483,6 +522,25 @@ const NFTFactory = {
                     "internalType": "uint256[]",
                     "name": "",
                     "type": "uint256[]"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "name": "inSale",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
                 }
             ],
             "stateMutability": "view",
@@ -950,6 +1008,19 @@ const NFTFactory = {
             "type": "function"
         },
         {
+            "inputs": [],
+            "name": "tokenAmount",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "_amount",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
             "inputs": [
                 {
                     "internalType": "uint256",
@@ -1101,6 +1172,25 @@ const NFTFactory = {
             "name": "transferOwnership",
             "outputs": [],
             "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "name": "used",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
             "type": "function"
         }
     ],
