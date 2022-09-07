@@ -1,0 +1,11 @@
+{
+    "name": "Arroz",
+    "description": "Un producto de arroz",
+    "image": "https://gateway.pinata.cloud/ipfs/QmPgsxxyinxH5E6sPrL4BBjShLFxN1Ecj2RizkMMj5Jfe9/fase1.jpeg",
+    "attributes": [
+        {
+          "trait-type": "price",
+          "value": 100
+        }
+      ]    
+}

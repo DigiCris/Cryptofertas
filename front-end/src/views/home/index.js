@@ -1,3 +1,4 @@
+
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import { useCallback, useEffect, useState, useRef } from "react";
 import { connector, getLibrary } from "../../config/web3";
@@ -34,6 +35,40 @@ const Home = () => {
 
   const initialRef = useRef(null)
   const finalRef = useRef(null)
+
+  const [currentAccount, setCurrentAccount] = useState("");
+  
+
+  useEffect(() => {
+    const connectWallet = async () => {
+      try {
+        const { ethereum } = window;
+  
+        if (!ethereum) {
+          alert("Get MetaMask!");
+          return;
+        }
+  
+        /*
+         * Fancy method to request access to account.
+         */
+        const accounts = await ethereum.request({
+          method: "eth_requestAccounts",
+        });
+  
+        /*
+         * Boom! This should print out public address once we authorize Metamask.
+         */
+        console.log("Connected", accounts[0]);
+        setCurrentAccount(accounts[0]);
+      } catch (error) {
+        console.log(error);
+      }
+    } 
+
+    connectWallet()
+  
+  }, [])
 
   const connect = useCallback(() => {
     activate(connector);
