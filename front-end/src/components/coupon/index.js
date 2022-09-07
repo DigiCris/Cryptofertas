@@ -9,7 +9,7 @@ import {
   GridItem
 } from '@chakra-ui/react';
 
-export default function cuponImage({data, value}) {
+export default function CuponImage({data, value}) {
 
   const {image, name, amount, activeAmount, usedAmount, newPrice, oldPrice, timeToExpirate} = data
 

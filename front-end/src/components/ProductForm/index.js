@@ -20,6 +20,10 @@ import axios from 'axios';
 import useNFTFactory from '../../hooks/useNFTFactory'
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 
+//import BigNumber from "bignumber.js";
+//import { BigNumber } from "./node_modules/bignumber.js/bignumber.mjs";
+import BigNumber from 'big-number';
+
 
 const ProductForm = (props) => {
 
@@ -28,6 +32,7 @@ const ProductForm = (props) => {
   const [desc, setDesc] = useState("")
   const [category, setCategory] = useState(0)
   const [value, setValue] = useState('1')
+  const [valueNew, setValueNew] = useState('1')
   const [dateExp, setDateExp] = useState(new Date())
   const [providerAddress, setProviderAddress] = useState('')
   
@@ -71,7 +76,8 @@ const ProductForm = (props) => {
   const submitForm = async (e) => {
     e.preventDefault();
     printDataForm();
-
+    //const priceBg =BigNumber(Number(valueNew))*BigNumber(10).pow(18)
+    //console.log('bignumber',valueNew,priceBg)
     const hashimg = await sendFileToIPFS(e)
     if (!hashimg) return null
     const tokenuri = await sendJSONtoIPFS(hashimg)
@@ -81,10 +87,14 @@ const ProductForm = (props) => {
   }
 
   const printDataForm = () => {
-    console.log('form data', category, Math.trunc(Number(value) * 100), numCupons)
+    console.log('form data', category, BigNumber(Number(valueNew))*BigNumber(10).pow(18), numCupons)
   }
 
   const mint = async (tokenURI) => {
+    //const priceBg = Math.trunc(new BigNumber(Number(valueNew) * 1000000000000000000))
+
+    const priceBg = BigNumber(BigNumber(Number(valueNew))*BigNumber(10).pow(18))
+    console.log('bignumber',valueNew,priceBg)
     setMinting(true);
     showToast('Creando cupon en Blockchain', 'info')
     NFTFactory.methods
@@ -92,7 +102,7 @@ const ProductForm = (props) => {
         providerAddress,
         category,
         tokenURI,
-        Math.trunc(Number(value) * 100),
+        priceBg,
         diff_minutes(new Date(), dateExp),
         numCupons
       )
@@ -317,12 +327,27 @@ const ProductForm = (props) => {
           </Grid>
           <Grid templateColumns='repeat(2, 1fr)' gap={5}>
             <Text align={'center'} >
-              Valor de cada cupón
+              Precio anterior del cupón
             </Text>
             <NumberInput
               isRequired={true}
               onChange={(valueString) => setValue(parse(valueString))}
               value={format(value)}
+              max={50}
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+              </NumberInputStepper>
+            </NumberInput>
+          </Grid>
+          <Grid templateColumns='repeat(2, 1fr)' gap={5}>
+            <Text align={'center'} >
+              Precio nuevo del cupón
+            </Text>
+            <NumberInput
+              isRequired={true}
+              onChange={(valueString) => setValueNew(parse(valueString))}
+              value={format(valueNew)}
               max={50}
             >
               <NumberInputField />
