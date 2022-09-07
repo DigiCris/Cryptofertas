@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import {
   Box,
   Center,
@@ -36,6 +37,9 @@ import { useMarketPlace  as market } from '../../config/web3/contracts/MarketPla
 import { useParams } from "react-router-dom";
 
 const ModalTransition = (props) => {
+  useEffect(() => {
+    allowanceAccount();
+}, []);
 const MarketPlace = useMarketPlace();
 const ERC20 = useERC20();
 const { tokenId } = useParams();
@@ -121,7 +125,6 @@ const showToast = (des, status) => {
     isClosable: true,
   })
 }
-
 
   const {isTransactionOpen, onTransactionClose} = props;
   return (
