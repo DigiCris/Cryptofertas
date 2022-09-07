@@ -208,7 +208,7 @@ contract Doloferta is ERC20, ERC20Burnable, Pausable, AccessControl
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
-    constructor() ERC20("Doloferta", "USDO") {
+    constructor() ERC20("Dolarton", "OFFUSD") {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(PAUSER_ROLE, msg.sender);
         _grantRole(MINTER_ROLE, msg.sender);

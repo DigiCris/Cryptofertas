@@ -19,7 +19,11 @@ const Links = [
     to: "/",
   },
   {
-    name: "Mis Cupones",
+    name: "Mis Cupones Comprados",
+    to: "/user-coupons",
+  },
+  {
+    name: "Mis Cupones Vendidos",
     to: "/user-coupons",
   },
 ];
