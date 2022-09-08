@@ -27,6 +27,15 @@ function decode($value,$type)
 	        	$value=true;
 	        }
 	        break;
+	    case 'address':
+	    	$value=bchexdec($value);
+	    	$value=bcdechex($value);
+	    	while( strlen($value) < 40 )
+	    	{
+	    		$value='0'.$value;
+	    	}
+	    	$value='0x'.$value;
+	    	break;
 	}
 	return($value);
 }
