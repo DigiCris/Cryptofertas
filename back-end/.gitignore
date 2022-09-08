@@ -5,7 +5,8 @@ typechain
 cache
 artifacts
 
-
+# Ignora la carpeta ignore
+cache/ignore
 
 # Logs
 logs
