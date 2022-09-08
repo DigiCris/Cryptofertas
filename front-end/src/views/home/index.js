@@ -30,7 +30,6 @@ import useMarketPlace from '../../hooks/useMarketPlace'
 import useNFTFactory from '../../hooks/useNFTFactory'
 import useERC20 from '../../hooks/useERC20'
 
-import BigNumber from 'big-number';
 
 import axios from "axios";
 
@@ -55,9 +54,6 @@ const Home = () => {
   const NFTFactory = useNFTFactory();
   const ERC20 = useERC20();
 
-  const marketPlaceAddress = '0x0E995bbe4E86520E7e68C6fe14E6954842Eef503';
-  const limitAllowance = BigNumber(BigNumber(500) * BigNumber(10).pow(18))//500 000000000000000000
-  const amountAllowance = BigNumber(BigNumber(900) * BigNumber(10).pow(18))//900 000000000000000000
 
   const categories = ['Alimentación', 'Salud', 'Educación']
   const url = 'https://gateway.pinata.cloud/ipfs/QmQcpVXPBzJybpkffGyPvSv8amVYnrb9pdH3qe7qY1s5zH'
@@ -95,10 +91,11 @@ const Home = () => {
 
   const getAllActiveCoupons = async () => {
     const numtokens = await NFTFactory.methods.tokenAmount().call();
-    //tokenIds = new Array(numtokens).fill()
-    console.log('tokamount',numtokens)
     const aux = new Array(Number(numtokens)).fill(1)
-    return getDataCoupons(aux,0)
+    const dataIPFS = await getDataCoupons(aux,0)
+    SetLoadingCoupons(false)
+    setAllCoupons(dataIPFS)
+    return dataIPFS
   }
 
   const getDataCoupons = async (arrayTokens,category) => {
@@ -115,11 +112,7 @@ const Home = () => {
       
       if (category>0) tokenId=arrayTokens[i]
       else  tokenId=i
-      console.log('tokenid',i,tokenId)
       const isSale = await NFTFactory.methods.inSale(tokenId).call();
-      console.log('insale',isSale,tokenId)
-      //const isUsed = moskused[i]
-      //const isUsed = false
       if (isSale) {
         const tokenURI = await NFTFactory.methods.tokenURI(tokenId).call();
         const price = await NFTFactory.methods.getPrice(tokenId).call();
@@ -150,115 +143,6 @@ const Home = () => {
 
   }
 
-
-
-  const useCoupon = () => {
-
-    NFTFactory.methods
-      .MarkUsed(30)
-      .send({
-        from: account,
-        gas: 3000000,
-      })
-      .on("error", () => {
-        showToast('Error minteando cupón ', 'error')
-        //setMinting(false);
-        return null
-      })
-      .on("transactionHash", (txHash) => {
-        showToast('Transacción enviada', 'info')
-        console.log('hash', txHash)
-        //props.closeModal()
-      })
-      .on("receipt", (receipt) => {
-        //setMinting(false);
-        showToast('Token Minteado Correctamente', 'success')
-        //getPlatziPunksData();
-        console.log(receipt);
-        //props.closeModal()
-        return 'ok'
-      });
-
-
-  }
-
-
-  const onTestingBuy = () => {
-
-    MarketPlace.methods
-      .Buy(30)
-      .send({
-        from: account,
-        gas: 3000000,
-      })
-      .on("error", () => {
-        showToast('Error minteando cupón ', 'error')
-        //setMinting(false);
-        return null
-      })
-      .on("transactionHash", (txHash) => {
-        showToast('Transacción enviada', 'info')
-        console.log('hash', txHash)
-        //props.closeModal()
-      })
-      .on("receipt", (receipt) => {
-        //setMinting(false);
-        showToast('Token Minteado Correctamente', 'success')
-        //getPlatziPunksData();
-        console.log(receipt);
-        //props.closeModal()
-        return 'ok'
-      });
-
-
-  }
-
-  const approveAmount = () => {
-    ERC20.methods
-      .approve(marketPlaceAddress, amountAllowance)
-      .send({
-        from: account,
-        gas: 3000000,
-      })
-      .on("error", () => {
-        showToast('Error approve ', 'error')
-        //setMinting(false);
-        return null
-      })
-      .on("transactionHash", (txHash) => {
-        showToast('Transacción enviada: approve(ERC20)', 'info')
-        console.log('hash', txHash)
-        //props.closeModal()
-      })
-      .on("receipt", (receipt) => {
-        //setMinting(false);
-        showToast('Approve(ERC20) Ejecutado Correctamente', 'success')
-        //getPlatziPunksData();
-        console.log(receipt);
-        //props.closeModal()
-        return 'ok'
-      });
-  }
-
-  const allowanceAccount = async () => {
-    const dataIPFS = await getAllActiveCoupons();
-    //const dataIPFS = await getCouponsByCategory(1);
-    
-    SetLoadingCoupons(false)
-    setAllCoupons(dataIPFS)
-
-    console.log('getdataIPFS', dataIPFS)
-    const allowance = await ERC20.methods.allowance(account, marketPlaceAddress).call();
-
-    if (allowance < limitAllowance) {
-      console.log('menor', allowance, amountAllowance)
-      approveAmount();
-    }
-    else console.log('mayor', allowance)
-
-  }
-
-
   useEffect(() => {
 
     const connectWallet = async () => {
@@ -280,7 +164,6 @@ const Home = () => {
         /*
          * Boom! This should print out public address once we authorize Metamask.
          */
-        console.log("Connected", accounts[0]);
         setCurrentAccount(accounts[0]);
       } catch (error) {
         console.log(error);
@@ -312,7 +195,7 @@ const Home = () => {
 
   useEffect(() => {
     if (active) getBalance();
-    if (active) allowanceAccount();
+    if (active) getAllActiveCoupons();
 
   }, [active, getBalance])
 

@@ -29,12 +29,13 @@ import {
   TableContainer,
 } from '@chakra-ui/react';
 import { Button, ButtonGroup } from '@chakra-ui/react';
-import BigNumber from 'big-number';
 import useMarketPlace from '../../hooks/useMarketPlace';
 import useERC20 from '../../hooks/useERC20';
 import { useWeb3React} from "@web3-react/core";
 import { useMarketPlace  as market } from '../../config/web3/contracts/MarketPlace';
 import { useParams } from "react-router-dom";
+
+import { ethers} from "ethers";
 
 const ModalTransition = (props) => {
   useEffect(() => {
@@ -46,8 +47,9 @@ const { tokenId } = useParams();
 console.log(tokenId);
 
 const marketPlaceAddress = '0x9196d7405C52E37CEe59A3E16e209285f6Fa11Aa';
-const limitAllowance = BigNumber(BigNumber(500) * BigNumber(10).pow(18))//500 000000000000000000
-const amountAllowance = BigNumber(BigNumber(900) * BigNumber(10).pow(18))//900 000000000000000000
+//const limitAllowance = BigNumber(BigNumber(999) * BigNumber(10).pow(18))//500 000000000000000000
+const limitAllowance = ethers.BigNumber.from(500).mul(ethers.BigNumber.from(10).pow(18))//500 000000000000000000
+const amountAllowance = ethers.BigNumber.from(900).mul(ethers.BigNumber.from(10).pow(18))//900 000000000000000000
 const { active, activate, deactivate, account, error, library } = useWeb3React();
 
 const Buy = (tokenId) => {

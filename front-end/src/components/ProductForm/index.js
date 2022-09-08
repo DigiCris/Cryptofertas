@@ -19,11 +19,7 @@ import { useRef, useState } from 'react';
 import axios from 'axios';
 import useNFTFactory from '../../hooks/useNFTFactory'
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
-
-//import BigNumber from "bignumber.js";
-//import { BigNumber } from "./node_modules/bignumber.js/bignumber.mjs";
-import BigNumber from 'big-number';
-
+import { ethers } from "ethers";
 
 const ProductForm = (props) => {
 
@@ -35,7 +31,7 @@ const ProductForm = (props) => {
   const [valueNew, setValueNew] = useState('1')
   const [dateExp, setDateExp] = useState(new Date())
   const [providerAddress, setProviderAddress] = useState('')
-  
+
   const [fileHash, setFileHash] = useState('')
   const [numCupons, setNumCupons] = useState(5)
   const [nftProvider, setNftProvider] = useState("")
@@ -67,34 +63,33 @@ const ProductForm = (props) => {
   const format = (val) => `$` + val
   const parse = (val) => val.replace(/^\$/, '')
 
-  const diff_minutes=(dt2, dt1) => {
-   var diff =(dt2.getTime() - dt1.getTime()) / 1000;
-   //diff /= 60;
-   return Math.abs(Math.round(diff));
+  const diff_minutes = (dt2, dt1) => {
+    var diff = (dt2.getTime() - dt1.getTime()) / 1000;
+    //diff /= 60;
+    return Math.abs(Math.round(diff));
   }
 
   const submitForm = async (e) => {
     e.preventDefault();
     printDataForm();
-    //const priceBg =BigNumber(Number(valueNew))*BigNumber(10).pow(18)
-    //console.log('bignumber',valueNew,priceBg)
     const hashimg = await sendFileToIPFS(e)
     if (!hashimg) return null
     const tokenuri = await sendJSONtoIPFS(hashimg)
     if (!tokenuri) return null
     console.log('data to mint', category, Math.trunc(Number(value) * 100), numCupons, hashimg, tokenuri)
-     mint(tokenuri);
+    mint(tokenuri);
   }
 
   const printDataForm = () => {
-    console.log('form data', category, BigNumber(Number(valueNew))*BigNumber(10).pow(18), numCupons)
+    console.log('form data',
+      category,
+      ethers.BigNumber.from(valueNew).mul(ethers.BigNumber.from(10).pow(18)),
+      numCupons)
   }
 
   const mint = async (tokenURI) => {
-    //const priceBg = Math.trunc(new BigNumber(Number(valueNew) * 1000000000000000000))
-
-    const priceBg = BigNumber(BigNumber(Number(valueNew))*BigNumber(10).pow(18))
-    console.log('bignumber',valueNew,priceBg)
+    const priceBg = ethers.BigNumber.from(valueNew).mul(ethers.BigNumber.from(10).pow(18))
+    console.log('bignumber', valueNew, priceBg)
     setMinting(true);
     showToast('Creando cupon en Blockchain', 'info')
     NFTFactory.methods
@@ -146,8 +141,16 @@ const ProductForm = (props) => {
               "value": category
             },
             {
-              "trait-type": "price",
+              "trait-type": "oldprice",
               "value": value
+            },
+            {
+              "trait-type": "newprice",
+              "value": valueNew
+            },
+            {
+              "trait-type": "expirate",
+              "value": dateExp
             },
             {
               "trait-type": "NftCompanyName",
@@ -360,32 +363,32 @@ const ProductForm = (props) => {
               Expiración del cupón
             </Text>
             <Input
-            isRequired={true}
-            //value={dateExp}
-            onChange={(valueString) => setDateExp(new Date(valueString.target.value))}
-            //onChange={(valueString) => console.log(valueString.target.value)}
-            placeholder="Fecha y hora de expiración del Cupón"
-            size="md"
-            type="date"
-          />
+              isRequired={true}
+              //value={dateExp}
+              onChange={(valueString) => setDateExp(new Date(valueString.target.value))}
+              //onChange={(valueString) => console.log(valueString.target.value)}
+              placeholder="Fecha y hora de expiración del Cupón"
+              size="md"
+              type="date"
+            />
           </Grid>
           <Grid templateColumns='repeat(2, 1fr)' gap={5}>
             <Text align={'center'} >
               address del proveedor
             </Text>
             <FormControl isRequired>
-            <Input
-              isRequired={true}
-              placeholder="0x3434....3434"
-              onChange={(e) => setProviderAddress(e.target.value)}
-              bg={'gray.100'}
-              border={0}
-              color={'gray.500'}
-              _placeholder={{
-                color: 'gray.500',
-              }}
-            />
-          </FormControl>
+              <Input
+                isRequired={true}
+                placeholder="0x3434....3434"
+                onChange={(e) => setProviderAddress(e.target.value)}
+                bg={'gray.100'}
+                border={0}
+                color={'gray.500'}
+                _placeholder={{
+                  color: 'gray.500',
+                }}
+              />
+            </FormControl>
           </Grid>
           <Input
             type={'file'}
