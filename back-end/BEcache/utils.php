@@ -115,7 +115,8 @@ function bcdechex($dec)
 */
 function debug($texto,$valor,$alert=0)
 {
-	if(desarrollo())
+	$state=desarrollo();
+	if($state==1)
 	{ // si es debug entra acá
 		if(is_array($valor))
 		{
@@ -156,6 +157,23 @@ function debug($texto,$valor,$alert=0)
 			}
 		}
 		echo '</script>';
+	}
+	if($state==2)
+	{
+		if(is_array($valor))
+		{
+			echo '<br>';
+			echo $texto."= ";
+			print_r($valor);
+			echo '<br>';
+		}
+		else
+		{
+			echo '<br>';
+			echo $texto."= ";
+			echo $valor;
+			echo '<br>';
+		}
 	}
 }
 

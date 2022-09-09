@@ -1,6 +1,7 @@
 <?php
 
 include_once 'ignore/env.php';
+include_once 'utils.php';
 
 /*
 if(isset($_GET["OURAPIKEYSENT"]))
@@ -422,11 +423,11 @@ class NFT
             $this->tokenUri=$fila[0]['tokenUri'];
             $this->choose=$fila[0]['choose'];
             $this->dirty=$fila[0]['dirty'];
-            echo "<br>El token maximo tenia tokenId= ".$this->tokenId;
+            debug("En Del handler de BBDD El token maximo tenia tokenId ",$this->tokenId,0);
         }
         else        // si el usuario no esta devuelve todo en 0
         {
-            echo "<br>El token maximo estaba empty";
+            debug("En Del handler de BBDD el token maximo estaba empty ",'',0);
             $this->id=0;//['id'];
             $this->tokenId=0;//['tokenId'];
             $this->lastRefreshed=0;//['lastRefreshed'];
@@ -440,7 +441,7 @@ class NFT
             $this->choose=0;//['choose'];
             $this->dirty=0;//['dirty'];
         }
-        print_r($fila);
+        //print_r($fila);
 
         return($fila);
     }

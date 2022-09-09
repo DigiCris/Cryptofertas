@@ -1,5 +1,6 @@
 <?php
 
+
 include_once 'call.php';
 include_once 'DB_handler.php';
 include_once 'ignore/env.php';
@@ -24,17 +25,14 @@ $GLOBALS["provider"]= 0;
 $GLOBALS["tokenUri"]= 0;
 $GLOBALS["lastRefreshed"]= date('Y-m-d h-m-s', time() );
 
-//echo $GLOBALS["lastRefreshed"];
-//exit();
-
 getNextTokenId();
-echo "<br>sali de getNextTokenId";
-//exit();
+debug("sali de getNextTokenId",'',0);
+
 
 //////////////////////////////////////////////de acaaaaaaaa /////////////////////////////////////////////
 
 refreshValues();
-echo "<br>sali de refreshValues";
+debug("sali de refreshValues",'',0);
 //$GLOBALS["id"],$tokenId,$GLOBALS["lastRefreshed"],$GLOBALS["price"],$GLOBALS["used"],$GLOBALS["forSale"],$GLOBALS["owner"],$GLOBALS["provider"],$GLOBALS["embassador"],$GLOBALS["tokenUri"],$GLOBALS["choose"],$GLOBALS["dirty"];
 $NFT->set_id($GLOBALS["tokenId"]);
 $NFT->set_tokenId($GLOBALS["tokenId"]);
@@ -48,27 +46,27 @@ $NFT->set_embassador($GLOBALS["embassador"]);
 $NFT->set_tokenUri($GLOBALS["tokenUri"]);
 $NFT->set_choose($GLOBALS["choose"]+1);
 $NFT->set_dirty($GLOBALS["dirty"]);
-echo "<br>termine de setear los valores a update o insert";
+debug("termine de setear los valores a update o insert",'',0);
 if($GLOBALS["insert"])
 {
-    echo "<br>inserto".$GLOBALS["tokenId"];
+    debug("inserto ",$GLOBALS["tokenId"],0);
     $NFT->insert();
 }
 else
 {
-    echo "<br>Update".$GLOBALS["tokenId"];
+    debug("Update ",$GLOBALS["tokenId"],0);
     $NFT->update();
 }
-echo "<br>";echo "<br>";echo "<br>";
+
 $modified=$NFT->read($GLOBALS["tokenId"]);
-print_r( json_encode($modified) );
+debug("modified in json format= ",json_encode($modified),0);
 //refresh_page(5, "index.php?tokenId=".$_GET['tokenId']);
 
 ////////////////////////////////////////// hasta aca/////////////////////////////////////////////////////////
 function refreshValues()
 {
-    echo "tokenId=".$GLOBALS["tokenId"];
-    echo "<br><br>";
+    debug("en refreshValues tokenId ",$GLOBALS["tokenId"],0);
+    //
     $GLOBALS["provider"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','nftProvider(uint256)',$GLOBALS["tokenId"],"address");
     $GLOBALS["owner"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','ownerOf(uint256)',$GLOBALS["tokenId"],"address");
     $GLOBALS["tokenUri"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','tokenURI(uint256)',$GLOBALS["tokenId"],"url");
@@ -80,34 +78,32 @@ function refreshValues()
 
 function getNextTokenId()
 {
-    echo "<br>entre a getNextTokenId";
+    debug("entre a getNextTokenId",'',0);
     $NFTAUX = new NFT();
     $qry=$NFTAUX->read(0);
-    echo "<br>lei BBDD en 0 guardndolo en qry";
+    debug("lei BBDD en 0 guardndolo en qry",'',0);
     if(empty($qry))
     {
-        echo "<br>entre al if porque qry estaba vacio";
+        debug("entre al if porque qry estaba vacio",'',0);
         $GLOBALS["insert"]=1;
         $GLOBALS["choose"]=1;
         $GLOBALS["tokenId"]=0;
-        echo "<br>el valor de tokenId que devuelvo es: ".$GLOBALS["tokenId"];
-        echo "<br>el valor de choose que devuelvo es: ".$GLOBALS["choose"];
+        debug("el valor de tokenId que devuelvo es ",$GLOBALS["tokenId"],0);
+        debug("el valor de choose que devuelvo es ",$GLOBALS["choose"],0);
         return(0);
     }
-    echo "<br>no entre al if porque qry tenía algo=><br>";
-    print_r($qry);
-    echo "<br><br>voy a buscar el tokenId mas grande";
+    debug("no entre al if porque qry tenía algo ",$qry,0);
+    debug("voy a buscar el tokenId mas grande",'',0);
     $NFTAUX2 = new NFT();
     $qry=$NFTAUX2->read_tokenId();
-    echo "<br>busco el tokenId mas grande +1<br>";
-    $GLOBALS["tokenId"]=( $NFTAUX2->get_tokenId() );
-    echo "sin + 1 es=".$GLOBALS["tokenId"]."<br>";
+    $GLOBALS["tokenId"]=$qry['tokenId'];
+    debug("busco el tokenId mas grande",$GLOBALS["tokenId"],0);
     $GLOBALS["tokenId"]++;
-    echo "con + 1 es=".$GLOBALS["tokenId"]."<br>";
+    debug("Le sumo 1",$GLOBALS["tokenId"],0);
     $GLOBALS["embassador"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','nftEmbasador(uint256)',$GLOBALS["tokenId"],"address");
     if($GLOBALS["embassador"]=='0x0000000000000000000000000000000000000000')
-    {// no existe
-        echo "no existe ese tokenId en la blockchain<br>";
+    {// it doesn't exist
+        debug("no existe ese tokenId en la blockchain",'',0);
         $NFTAUX->read_choose();
         $GLOBALS["insert"]=0;
         $GLOBALS["tokenId"]= $NFTAUX->get_tokenId();
@@ -115,19 +111,19 @@ function getNextTokenId()
         $GLOBALS["choose"]++;
     }
     else
-    {// existe
-        echo "existe ese tokenId en la blockchain<br>";
+    {// exists
+        debug("Existe ese tokenId en la blockchain",'',0);
         $GLOBALS["insert"]=1;
         $qry=$NFTAUX->read($GLOBALS["tokenId"]-1);
         $GLOBALS["choose"]= $NFTAUX->get_choose();
-        echo "decido insertarlo y le pongo al chose el valor de: ".$GLOBALS["choose"]."<br>";
+        debug("decido insertarlo y le pongo al chose el valor de",$GLOBALS["choose"],0);
     }
-    echo "el valor de tokenId que devuelvo es: ".$GLOBALS["tokenId"];
+    debug("el valor de tokenId que devuelvo es ",$GLOBALS["tokenId"],0);
     return;
 
 /*    
     $GLOBALS["embassador"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','nftEmbasador(uint256)',$_GET['tokenId'],"address");
-    debug("embassador",$GLOBALS["embassador"]);
+    //debug("embassador",$GLOBALS["embassador"]);
     if($GLOBALS["embassador"]=='0x0000000000000000000000000000000000000000')
     {// there are no more NFTs to add so I should refresh
         $NFT->read_choose();
@@ -135,13 +131,13 @@ function getNextTokenId()
         $GLOBALS["choose"]=$NFT->get_choose();
         $GLOBALS["embassador"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','nftEmbasador(uint256)',$tokenId_,"address");
         $GLOBALS["insert"]=0;
-        debug("entro al if. embassador",$GLOBALS["embassador"]);
+        //debug("entro al if. embassador",$GLOBALS["embassador"]);
     }
     else
     {// this NFT exists so if it is not in the DB I should add it if it is I should look for the choose...  i should insert
         $tokenId_=$_GET['tokenId'];
         $GLOBALS["insert"]=1;
-        debug("entro al else. embassador",$GLOBALS["embassador"]);
+        //debug("entro al else. embassador",$GLOBALS["embassador"]);
     }
     $_GET['tokenId']=$tokenId_+1; //$_GET['tokenId'] will be the next value to send
     return($tokenId_);
