@@ -6,45 +6,93 @@ import Coupons from "../../components/coupon"
 import {Grid, GridItem, Center} from '@chakra-ui/react';
 import {useParams} from "react-router-dom";
 import Web3 from "web3/dist/web3.min"
-import abi from "../../abi/abi.json"
-
+import {useWeb3React } from "@web3-react/core";
+import useNFTGetterHandler from "../../hooks/useNFTGetterHandler"
 
 const UserCoupons = () => {
   const {value, ownerOrCreated} = useParams() 
   const [dataListOfTokensCreated, setDataListOfTokensCreated] = useState([])
   const [dataListOfTokensOwned, setDataListOfTokensOwned] = useState([])
-
+  const [arrayToDisplay, setArrayToDisplay] = useState([])
+  const { active, account} = useWeb3React();
+  const [firstContractCall, setFirstContractCall] = useState(false)
+  const nftGetterHandler = useNFTGetterHandler()
+  
   const getArrayOfCreatorOrOwner = () => {
       if(ownerOrCreated === "owner") {
         return dataListOfTokensOwned
-        
       } else if (ownerOrCreated === "created") {
         return dataListOfTokensCreated
       } else {
         return []
       }
   }
+
+  const getTokenURIList = arrayOfData => {
+    const arrayOfTokenURIs = arrayOfData.map(datum => datum.tokenURI)
+
+    return arrayOfTokenURIs
+  }
   
   const getRightArray = (arrayData) => {
     if(value === "actives") {
       let result = []
       arrayData.forEach(datum => {
-        if(datum.activeAmount > 0) {
+        if(datum.isUsed === false) {
           result.push(datum)
         }
       })
       return result
-    } else if (value === "used") {
+    } else {
       let result = []
       arrayData.forEach(datum => {
-        if(datum.usedAmount > 0) {
+        if(datum.isUsed === true) {
           result.push(datum)
         }
       })    
       return result
-    } else{
-      return arrayData
     } 
+  }
+
+  const getTimeToExpirate = time => {
+      const currentTime = new Date().getTime() / 1000
+
+      if(time > currentTime) {
+        return time - currentTime
+      } else {
+        return 0
+      }
+
+  }
+
+  const makeDataEasyToHandle = (datumFromContract, datumFromIpfs) => {
+    const {data} = datumFromIpfs
+    const {attributes} = data
+    const {isUsed, timeToExpirate, price, tokenId} = datumFromContract
+    const {name, image} = data
+    const oldPrice = attributes[1].value
+
+    let newData = {
+      name,
+      image,
+      timeToExpiration: convertSecondsToTimeString(getTimeToExpirate(timeToExpirate)),
+      oldPrice,
+      newPrice: price,
+      isUsed,
+      tokenId
+    }
+
+    return newData
+  }
+
+  const convertArrayOfDataOfContractAndDataOfIPSFInDataSimpleToManage = (arrayDataOfContract, arrayDataOfIpfs) => {
+    let result = []  
+    for(let i = 0; i < arrayDataOfContract.length; i++){
+      const currentData = makeDataEasyToHandle(arrayDataOfContract[i], arrayDataOfIpfs[i])
+      result.push(currentData)
+    }
+
+    return result
   }
 
   const convertSecondsToTimeString = timeInSeconds => {
@@ -114,113 +162,60 @@ const UserCoupons = () => {
   
   }, [])
 
-  useEffect(() => {
-     const getDataOfCreator = async () => {
-
-      const { ethereum } = window;
-
-      const accounts = await ethereum.request({ method: "eth_accounts" });
-       const web3 = new Web3("https://rinkeby.infura.io/v3/da3a7118ce6842b7b0fa32d304e1382b")
-
-       const contract = new web3.eth.Contract(abi, "0x247eF7b7f156C2c6b8e117B358c21B21473A7BB4")
-       const res = await contract.methods.getDataToDisplayForCreator(accounts[0]).call((err, result) => { 
-        return  result
-      })
-
-    const listOfURIs = res.map(element => element[2])
-
-    const resultOfFetch = await axios.all(listOfURIs.map((endpoint) => axios.get(endpoint))).then(
-      (data) => {return data}
-    );
-
-    const dataOfFetch = resultOfFetch.map(datum => datum.data)
-
-    let arrayOfResults = []
-
-    for(let i = 0; i < resultOfFetch.length; i++) {
-      let resultObject = {
-        image: dataOfFetch[i].image,
-        name: dataOfFetch[i].name, 
-        amount: parseInt(res[i].tokenAmountInformation.tokenTotal),
-        activeAmount: parseInt(res[i].tokenAmountInformation.tokenActives),
-        usedAmount: parseInt(res[i].tokenAmountInformation.tokenUsed),
-        newPrice: parseInt(res[i].tokenPrice),
-        oldPrice: dataOfFetch[i].attributes[0].value,
-        timeToExpirate: convertSecondsToTimeString(parseInt(res[i].timeToExpirate))
-      }
-      
-      arrayOfResults.push(resultObject)
-    }
-
-    console.log("1", arrayOfResults)
-
-    setDataListOfTokensCreated(arrayOfResults)
-     }
-
-     getDataOfCreator()
+  useEffect(()=> {
+    setFirstContractCall(true)
   },[])
 
   useEffect(() => {
     const getDataOfOwner = async () => {
-
-      const { ethereum } = window;
-
-      const accounts = await ethereum.request({ method: "eth_accounts" });     
       
-      const web3 = new Web3("https://rinkeby.infura.io/v3/da3a7118ce6842b7b0fa32d304e1382b")
-
-      const contract = new web3.eth.Contract(abi, "0x247eF7b7f156C2c6b8e117B358c21B21473A7BB4")
-      const res = await contract.methods.getDataToDisplayForOwner(accounts[0]).call((err, result) => { 
-       return  result
-     })
-
-   const listOfURIs = res.map(element => element[2])
-
-   const resultOfFetch = await axios.all(listOfURIs.map((endpoint) => axios.get(endpoint))).then(
-     (data) => {return data}
-   );
-
-   const dataOfFetch = resultOfFetch.map(datum => datum.data)
-
-   let arrayOfResults = []
-
-   for(let i = 0; i < resultOfFetch.length; i++) {
-     let resultObject = {
-       image: dataOfFetch[i].image,
-       name: dataOfFetch[i].name, 
-       amount: parseInt(res[i].tokenAmountInformation.tokenTotal),
-       activeAmount: parseInt(res[i].tokenAmountInformation.tokenActives),
-       usedAmount: parseInt(res[i].tokenAmountInformation.tokenUsed),
-       newPrice: parseInt(res[i].tokenPrice),
-       oldPrice: dataOfFetch[i].attributes[0].value,
-       timeToExpirate: convertSecondsToTimeString(parseInt(res[i].timeToExpirate))
+      const tokensOwnedByUser = await nftGetterHandler.methods.getDataOfNftsOwnedByUser(account).call()
+      
+      const tokenURIList = getTokenURIList(tokensOwnedByUser)
+      const listOfData = await axios.all(tokenURIList.map((tokenURI) => axios.get(tokenURI))).then((data) =>  data);
+      const arrayOfFixedData = convertArrayOfDataOfContractAndDataOfIPSFInDataSimpleToManage(tokensOwnedByUser, listOfData)
+      setDataListOfTokensOwned(arrayOfFixedData)
      }
-     
-     arrayOfResults.push(resultObject)
-   }
+  
+     const getDataOfCreator = async () => {
+  
+      const tokensOfCreator = await nftGetterHandler.methods.getDataOfNftsWithUserAsProvider(account).call()
+      const tokenURIList = getTokenURIList(tokensOfCreator)
+  
+     const listOfData = await axios.all(tokenURIList.map((tokenURI) => axios.get(tokenURI))).then((data) =>  data);
+  
+     const arrayOfFixedData = convertArrayOfDataOfContractAndDataOfIPSFInDataSimpleToManage(tokensOfCreator, listOfData)
+     setDataListOfTokensCreated(arrayOfFixedData)
+    }   
 
-   console.log("2", arrayOfResults)
+     getDataOfCreator()
+     getDataOfOwner()
+  },[account, active, firstContractCall])
 
-   setDataListOfTokensOwned(arrayOfResults)
-    }
 
-    getDataOfOwner()
-  }, [])
+  useEffect(()=> {
+    const arrayToDisplay = getRightArray(getArrayOfCreatorOrOwner())
+    setArrayToDisplay(arrayToDisplay)
+  },[value, ownerOrCreated] )
 
-    if(!((ownerOrCreated === "created" || ownerOrCreated === "owner") &&  (value === "actives" || value === "used" || value === "all" ))){
+
+
+    if(!((ownerOrCreated === "created" || ownerOrCreated === "owner") &&  (value === "actives" || value === "used" ))){
       return (
         <PageNotFound />
       )
     }  
 
+console.log(arrayToDisplay)
     return (
+      
       <>
         <NavbarCoupons />
         <Center width={"100%"}>
-        <Grid templateColumns={{md: "repeat(4, 1fr)"}} width={"100%"} >
-          {getRightArray(getArrayOfCreatorOrOwner()).map((data, i) => (
+        <Grid templateColumns={{lg: "repeat(4, 1fr)",md: "repeat(3, 1fr)"}} width={"100%"} >
+          {arrayToDisplay.map((data, i) => (
             <GridItem justifySelf={"center"} width={"90%"} mb={4} key={i} >
-              <Coupons data={data} value={value}/>
+              <Coupons data={data}/>
             </GridItem>
           ))}
         </Grid>

@@ -4,7 +4,7 @@ import { Badge } from "@chakra-ui/react";
 const IMAGE =
   "https://images.unsplash.com/photo-1518051870910-a46e30d9db16?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1350&q=80";
 
-const productDescription = () => {
+const productDescription = ({name, image, newPrice, oldPrice}) => {
   return (
     <>
       <Center py={12}>
@@ -27,7 +27,7 @@ const productDescription = () => {
               pos: "absolute",
               top: 5,
               left: 0,
-              backgroundImage: `url(${IMAGE})`,
+              backgroundImage: `url(${image})`,
               filter: "blur(15px)",
               zIndex: -1,
             }}
@@ -42,12 +42,12 @@ const productDescription = () => {
               height={230}
               width={282}
               objectFit={"cover"}
-              src={IMAGE}
+              src={image}
             />
           </Box>
           <Stack pt={10} align={"left"}>
             <Heading fontSize={"2xl"} fontFamily={"body"} fontWeight={500}>
-              Arroz Mary tradicional
+              {name}
             </Heading>
             <Text
               color={"gray.500"}
@@ -63,10 +63,10 @@ const productDescription = () => {
                   color={"red.500"}
                   fontSize="xs"
                 >
-                  $199
+                  {oldPrice}
                 </Text>
                 <Text fontWeight={800} fontSize={"4xl"} color={"green.300"}>
-                  57
+                  {newPrice}
                 </Text>
               </Stack>
               <Spacer />
