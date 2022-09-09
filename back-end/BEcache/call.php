@@ -1,6 +1,6 @@
 <?php
 
-include_once 'Keccak.php';
+include_once 'keccak.php';
 include_once 'ignore/env.php';
 include_once 'utils.php';
 

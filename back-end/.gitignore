@@ -6,7 +6,7 @@ cache
 artifacts
 
 # Ignora la carpeta ignore
-cache/ignore
+Becache/ignore
 
 # Logs
 logs

@@ -102,4 +102,62 @@ function bcdechex($dec)
     }
 }
 
+
+
+/*!
+* \brief 	Si está en modo debuging imprime en consola $texto => $valor. Y así poder seguir los errores.
+* \details 	Funcionamiento: Comprueba la constante DESARROLLO de ../constantes.php. si está en modo debuging escribe un script
+*					En Javascript que imprime el texto y el valor enviado.	
+* \param string $texto 	Es el string que vamos a imprimmir para identificar que es lo que estamos imprimiendo
+* \param string $valor 	Es cualquier valor que quiera imprimir en consola para estudiar el comportamiento de mi programa.
+* \param string $alert 	si es 1 en vez de imprimir por consola el valor lo manda por un alert.
+* \return 	string <script>...</script> 	Imprime javascript en el documento para debuguear
+*/
+function debug($texto,$valor,$alert=0)
+{
+	if(desarrollo())
+	{ // si es debug entra acá
+		if(is_array($valor))
+		{
+			$IsArray=1;
+			$valor=json_encode($valor);
+			$valor = preg_replace("[\n|\r|\n\r]", "", $valor);//url(\\'lib\/drophere.png\\')
+			$valor=str_replace("'", '"', $valor);
+		}
+		else
+		{
+			$IsArray=0;
+		}
+		$valor = preg_replace("[\n|\r|\n\r]", "", $valor);//url(\\'lib\/drophere.png\\')
+		$valor=str_replace("'", '"', $valor);
+		echo '<script>';
+		$texto=$texto.'=>'.$valor;
+		if($alert==0)
+		{
+			if($IsArray)
+			{
+				echo "console.log('".$texto."');";
+			}
+			else
+			{
+				echo "console.log('".$texto."');";
+				//echo 'console.log("'.$texto.'");';
+			}
+		}
+		else
+		{
+			if($IsArray)
+			{
+				echo 'alert('.$texto.');';
+			}
+			else
+			{
+				echo 'alert("'.$texto.'");';
+			}
+		}
+		echo '</script>';
+	}
+}
+
+
 ?>
