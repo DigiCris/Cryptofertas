@@ -221,6 +221,15 @@ class NFT
     }
     
     
+    public function read_all()
+    {
+        $query="select * from NFT_Cache where 1";
+        $resultado= $this->base->prepare($query);
+        $resultado->execute();
+        $fila=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        $resultado ->closeCursor();
+        return $fila;
+    }
     
     public function read($tokenId)
     {

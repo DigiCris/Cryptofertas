@@ -4,7 +4,7 @@ General Information
 
 Base URL = https://cryptofertas.tk/backend/api.php
 method = GET
-Functions= readOwner, readProvider, writeDirty.
+Functions= readOwner, readProvider, readAll, writeDirty.
 
 
 Function Information
@@ -98,6 +98,27 @@ Result example:
 		"dirty":"0"
 	}
 ]
+
+
+
+
+Function ReadAll
+
+Params send:
+	function= readAll
+	param= No need to specify a param
+
+Calling example:
+	https://cryptofertas.tk/backend/api.php?function=readAll
+
+Result example:
+	Same format that readProvider or readOwner
+
+
+
+
+
+
 
 
 

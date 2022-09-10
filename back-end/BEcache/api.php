@@ -11,8 +11,11 @@ if(!isset($_GET['function']))
 if(!isset($_GET['param']))
 {
 	//error. You need to specify a function
-	echo "You need to specify a param";
-	exit();
+	if($_GET['function']!='readAll')
+	{
+		echo "You need to specify a param";
+		exit();		
+	}
 }
 
 switch ($_GET['function']) 
@@ -27,6 +30,10 @@ switch ($_GET['function'])
 
 	case 'readProvider':
 		readProvider($_GET['param']);
+		break;
+
+	case 'readAll':
+		readAll();
 		break;
 
 	default:
@@ -54,12 +61,17 @@ function readProvider($wallet)
 	$wallet = strtolower($wallet);
 	$NFT = new NFT();
 	$rtas=$NFT->readProvider($wallet);
-
 	echo json_encode($rtas);
 }
 function func_default()
 {
 	echo "not a function";
+}
+function readAll()
+{
+	$NFT = new NFT();
+	$rtas=$NFT->read_all();
+	echo json_encode($rtas);	
 }
 
 
