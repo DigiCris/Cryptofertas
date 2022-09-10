@@ -8,7 +8,7 @@ import { useToast } from '@chakra-ui/react';
 
 const TokenClaim = () => {
 
-  const [balance, setBalance] = useState(0);
+  const [balance2, setbalance2] = useState(0);
   const [vestingQuantity, setVestingQuantity] = useState(0);
   const [vestingDate, setVestingDate] = useState(0);
 
@@ -18,22 +18,22 @@ const TokenClaim = () => {
   const erc20 = useERC20();
 
 /*
-  const getBalance = useCallback(async () => {
-    setBalance(10);//(balance / 1e18).toFixed(2));                // I want to show here how much do they have to claim
+  const getbalance2 = useCallback(async () => {
+    setbalance2(10);//(balance2 / 1e18).toFixed(2));                // I want to show here how much do they have to claim
   }, [account, library]);
 */
 
   useEffect(() => {
-    if (active) balanceOf();
-  }, [active], [balanceOf],[]);
+    if (active) balance2Of();
+  }, [active], [balance2Of],[]);
 
 
 
-  async function balanceOf()
+  async function balance2Of()
   {
     
     let totalVesting= await erc20.methods.vestingQuantity(account).call();
-    //await setBalance(vestq);
+    //await setbalance2(vestq);
     //alert("totalVesting before="+totalVesting);
     totalVesting=Acondicionar_numero(totalVesting);
     //alert("totalVesting after="+totalVesting);
@@ -60,8 +60,8 @@ const TokenClaim = () => {
     }
     //toHarvest=10.32;
     console.log("toHarvest="+toHarvest); 
-    await setBalance(toHarvest);
-    //await setBalance( (balance / 1e18).toFixed(2) );
+    setbalance2(toHarvest);
+    //await setbalance2( (balance2 / 1e18).toFixed(2) );
   
   }
 
@@ -122,6 +122,7 @@ function Acondicionar_numero(numero)
       .on('transactionHash', 
       function(hash)
       {
+        console.log('Transaction hash');
         toast({
           title: 'Transaccion hash.',
           description: hash,
@@ -130,14 +131,16 @@ function Acondicionar_numero(numero)
       .on('receipt', 
       function(receipt)
       {
+        console.log(receipt);
         toast({
           title: 'Your tokens have been claimed. Enjoy!!!.',
-          description: receipt,
+          description: 'receipt',
           status: 'success',});
       })
       .on('error', 
       function(error, receipt)
       {
+        console.log('Transaction failed');
         toast({
           title: 'transaction failed.',
           description: error.message,
@@ -152,7 +155,7 @@ function Acondicionar_numero(numero)
       {active ? (
         <Tag colorScheme="green" borderRadius="full">
           <TagLabel>
-            <button onClick={claim} >Claim ~ {balance} OFFUSD</button>
+            <button onClick={claim} >Claim ~ {balance2} OFFUSD</button>
           </TagLabel>
           
         </Tag>
