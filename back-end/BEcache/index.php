@@ -44,7 +44,7 @@ $NFT->set_owner($GLOBALS["owner"]);
 $NFT->set_provider($GLOBALS["provider"]);
 $NFT->set_embassador($GLOBALS["embassador"]);
 $NFT->set_tokenUri($GLOBALS["tokenUri"]);
-$NFT->set_choose($GLOBALS["choose"]+1);
+$NFT->set_choose($GLOBALS["choose"]);
 $NFT->set_dirty($GLOBALS["dirty"]);
 debug("termine de setear los valores a update o insert",'',0);
 if($GLOBALS["insert"])
@@ -55,12 +55,25 @@ if($GLOBALS["insert"])
 else
 {
     debug("Update ",$GLOBALS["tokenId"],0);
-    $NFT->update();
+    $NFT->set_dirty(0);
+    $NFT->update($GLOBALS["tokenId"]);
 }
 
 $modified=$NFT->read($GLOBALS["tokenId"]);
-debug("modified in json format= ",json_encode($modified),0);
-//refresh_page(5, "index.php?tokenId=".$_GET['tokenId']);
+debug("modified in json format ",'',0);
+print_r(json_encode($modified));
+
+
+//if an update was done and there is no more dirty flags I don't need to refresh it and save API calls.
+$modified=$NFT->read_choose();
+if( ($GLOBALS["insert"]==0) && empty($modified) )
+{
+    debug("No need to refresh ",'',0);
+}
+else
+{
+   refresh_page(10, "index.php"); 
+}
 
 ////////////////////////////////////////// hasta aca/////////////////////////////////////////////////////////
 function refreshValues()
@@ -103,12 +116,16 @@ function getNextTokenId()
     $GLOBALS["embassador"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','nftEmbasador(uint256)',$GLOBALS["tokenId"],"address");
     if($GLOBALS["embassador"]=='0x0000000000000000000000000000000000000000')
     {// it doesn't exist
-        debug("no existe ese tokenId en la blockchain",'',0);
-        $NFTAUX->read_choose();
+        debug("no existe ese tokenId en la blockchain",$GLOBALS["tokenId"],0);
+        debug("embassador ",$GLOBALS["embassador"],0);
+        $qry=$NFTAUX->read_choose();
+        debug("read_choose en tokenId devuelve ",$qry['tokenId'],0);
         $GLOBALS["insert"]=0;
-        $GLOBALS["tokenId"]= $NFTAUX->get_tokenId();
-        $GLOBALS["choose"]= $NFTAUX->get_choose();
+        $GLOBALS["tokenId"]=$qry['tokenId'];
+        debug("el token id a leer sera ",$GLOBALS["tokenId"],0);
+        $GLOBALS["choose"]= $qry['choose'];
         $GLOBALS["choose"]++;
+        debug("su nuevo choose sera ",$GLOBALS["choose"],0);
     }
     else
     {// exists

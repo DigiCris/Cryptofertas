@@ -21,6 +21,7 @@ else
 class NFT
 {
     private $id,$tokenId,$lastRefreshed,$price,$used,$forSale,$owner,$provider,$embassador,$tokenUri,$choose,$dirty;
+    private $base;
 
 
     public function set_id($var)
@@ -185,10 +186,12 @@ class NFT
 
     public function update($tokenId)
     {
-        $query="update NFT_Cache set id=?,tokenId=?,lastRefreshed=?,price=?,used=?,forSale=?,owner=?,provider=?,embassador=?,tokenUri=?,choose=?,dirty=? where tokenId='$tokenId'";
+        echo "hola";
+        debug("Entre alhandler en el Update ",$tokenId,0);
+        $query="update NFT_Cache set tokenId=?, lastRefreshed=?, price=?, used=?, forSale=?, owner=?, provider=?, embassador=?, tokenUri=?, choose=?, dirty=? where tokenId='$tokenId'";
         $resultado= $this->base->prepare($query);
 
-        $this->id=htmlentities(addslashes($this->id));
+        //$this->id=htmlentities(addslashes($this->id));
         $this->tokenId=htmlentities(addslashes($this->tokenId));
         $this->lastRefreshed=htmlentities(addslashes($this->lastRefreshed));
         $this->price=htmlentities(addslashes($this->price));
@@ -201,7 +204,7 @@ class NFT
         $this->choose=htmlentities(addslashes($this->choose));
         $this->dirty=htmlentities(addslashes($this->dirty));
 
-        $resultado->execute(array($this->buys));
+        $resultado->execute(array($this->tokenId, $this->lastRefreshed, $this->price, $this->used, $this->forSale, $this->owner, $this->provider, $this->embassador, $this->tokenUri, $this->choose, $this->dirty));
         $resultado ->closeCursor();
     }
     
@@ -357,7 +360,8 @@ class NFT
     */   
     public function read_choose()
     {
-        $query="SELECT * FROM ` NFT_Cache` where `choose`  =  (SELECT MIN(`choose`) FROM  `NFT_Cache`)"; // and dirty=1
+        //$query="SELECT * FROM `NFT_Cache` where `choose`  =  (SELECT MIN(`choose`) FROM  `NFT_Cache`) && `dirty`=1"; // and dirty=1
+        $query="SELECT * FROM `NFT_Cache` where `dirty`=1";
         $resultado= $this->base->prepare($query);
         $resultado->execute();
         $fila=$resultado->fetch(PDO::FETCH_ASSOC);
@@ -377,9 +381,11 @@ class NFT
             $this->tokenUri=$fila[0]['tokenUri'];
             $this->choose=$fila[0]['choose'];
             $this->dirty=$fila[0]['dirty'];
+            debug("En Del handler de BBDD El choose minimo tenia tokenId ",$this->tokenId,0);
         }
         else        // si el usuario no esta devuelve todo en 0
         {
+            debug("En Del handler de BBDD el chose minimo estaba empty ",'',0);
             $this->id=0;//['id'];
             $this->tokenId=0;//['tokenId'];
             $this->lastRefreshed=0;//['lastRefreshed'];

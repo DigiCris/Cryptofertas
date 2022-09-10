@@ -4,12 +4,13 @@ include_once 'keccak.php';
 include_once 'ignore/env.php';
 include_once 'utils.php';
 
-function call($to,$func,$params,$returningType)
+function call($to,$func,$params,$returningType) // params in dec
 {
   //0x0000000000000000000000000000000000000000000000000000000000000045
   //0x00000000000000000000000006Eb67071a06E676b678F5dd3614D852C129d460
   $func = "0x".substr(Keccak256::hash($func, 256), 0, 8);
   $params=str_replace('0x', '', $params);
+  $params=bcdechex($params);
   $i=(64-strlen($params));
   while($i>0)
   {
