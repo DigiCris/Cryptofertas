@@ -5,33 +5,21 @@ import PageNotFound from "../pageNotFound"
 import Coupons from "../../components/coupon"
 import {Grid, GridItem, Center} from '@chakra-ui/react';
 import {useParams} from "react-router-dom";
-import Web3 from "web3/dist/web3.min"
 import {useWeb3React } from "@web3-react/core";
-import useNFTGetterHandler from "../../hooks/useNFTGetterHandler"
 
 const UserCoupons = () => {
   const {value, ownerOrCreated} = useParams() 
-  const [dataListOfTokensCreated, setDataListOfTokensCreated] = useState([])
-  const [dataListOfTokensOwned, setDataListOfTokensOwned] = useState([])
   const [arrayToDisplay, setArrayToDisplay] = useState([])
   const { active, account} = useWeb3React();
-  const [firstContractCall, setFirstContractCall] = useState(false)
-  const nftGetterHandler = useNFTGetterHandler()
   
-  const getArrayOfCreatorOrOwner = () => {
+  const getArrayOfCreatorOrOwner = (ownerArray, creatorArray) => {
       if(ownerOrCreated === "owner") {
-        return dataListOfTokensOwned
+        return ownerArray
       } else if (ownerOrCreated === "created") {
-        return dataListOfTokensCreated
+        return creatorArray
       } else {
         return []
       }
-  }
-
-  const getTokenURIList = arrayOfData => {
-    const arrayOfTokenURIs = arrayOfData.map(datum => datum.tokenURI)
-
-    return arrayOfTokenURIs
   }
   
   const getRightArray = (arrayData) => {
@@ -42,6 +30,7 @@ const UserCoupons = () => {
           result.push(datum)
         }
       })
+      setArrayToDisplay(result)
       return result
     } else {
       let result = []
@@ -50,6 +39,7 @@ const UserCoupons = () => {
           result.push(datum)
         }
       })    
+      setArrayToDisplay(result)
       return result
     } 
   }
@@ -63,36 +53,6 @@ const UserCoupons = () => {
         return 0
       }
 
-  }
-
-  const makeDataEasyToHandle = (datumFromContract, datumFromIpfs) => {
-    const {data} = datumFromIpfs
-    const {attributes} = data
-    const {isUsed, timeToExpirate, price, tokenId} = datumFromContract
-    const {name, image} = data
-    const oldPrice = attributes[1].value
-
-    let newData = {
-      name,
-      image,
-      timeToExpiration: convertSecondsToTimeString(getTimeToExpirate(timeToExpirate)),
-      oldPrice,
-      newPrice: price,
-      isUsed,
-      tokenId
-    }
-
-    return newData
-  }
-
-  const convertArrayOfDataOfContractAndDataOfIPSFInDataSimpleToManage = (arrayDataOfContract, arrayDataOfIpfs) => {
-    let result = []  
-    for(let i = 0; i < arrayDataOfContract.length; i++){
-      const currentData = makeDataEasyToHandle(arrayDataOfContract[i], arrayDataOfIpfs[i])
-      result.push(currentData)
-    }
-
-    return result
   }
 
   const convertSecondsToTimeString = timeInSeconds => {
@@ -134,71 +94,79 @@ const UserCoupons = () => {
     
   }
 
-  useEffect(() => {
-    const connectWallet = async () => {
-      try {
-        const { ethereum } = window;
-  
-        if (!ethereum) {
-          alert("Get MetaMask!");
-          return;
-        }
-  
-        /*
-         * Fancy method to request access to account.
-         */
-        const accounts = await ethereum.request({
-          method: "eth_requestAccounts",
-        });
+  const convertNumberToTrueAndFalse = value => {
+    if(value === "1") {
+      return true
+    } else {
+      return false
+    }
+  }
 
-        console.log("Account: ", accounts[0], " connected")
-  
-      } catch (error) {
-        console.log(error);
-      }
-    } 
+  const getPinatasLinks = arrayOfData => {
+    let listOfLinks = arrayOfData.map(element => element.tokenUri)
+    return listOfLinks
+  }
 
-    connectWallet()
-  
-  }, [])
+  const convertArrayOfDataInValidData = async arrayOfData => {
+    const listOfLinks = getPinatasLinks(arrayOfData)
+    
+    const fetchData = await axios.all(listOfLinks.map((link) => axios.get(link))).then( (data) =>  data);
+
+    const listOfFetchedData = fetchData.map(datum => datum.data)
+
+    let result = []
+
+    for(let i = 0; i < arrayOfData.length; i++){
+      let data = {
+        name: listOfFetchedData[i].name,
+        description: listOfFetchedData[i].description,
+        oldPrice: parseInt(listOfFetchedData[i].attributes[1].value),
+        newPrice: parseInt(listOfFetchedData[i].attributes[2].value),
+        image: listOfFetchedData[i].image,
+        inSale: convertNumberToTrueAndFalse(arrayOfData[i].forSale),
+        isUsed: convertNumberToTrueAndFalse(arrayOfData[i].used),
+        owner: arrayOfData[i].owner,
+        tokenId: parseInt(arrayOfData[i].tokenId)
+      } 
+
+      result.push(data)
+
+    }
+
+    console.log(result)
+
+    return result
+  }
 
   useEffect(()=> {
-    setFirstContractCall(true)
-  },[])
-
-  useEffect(() => {
     const getDataOfOwner = async () => {
+      const result = await axios.get(`http://cryptofertas.tk/backend/api.php?function=readOwner&param=${account}`)
+      const resultData = result.data
+      const validData = convertArrayOfDataInValidData(resultData)
+      return validData
+    }
+
+    const getDataOfCreator = async () => {
+    const result = await axios.get(`https://cryptofertas.tk/backend/api.php?function=readProvider&param=${account}`)
+    const resultData = result.data
+    const validData = convertArrayOfDataInValidData(resultData)
+    return validData
+    }
+
+    const getAllData = async () => {
+      const ownerData = await getDataOfOwner()
+      const creatorData = await getDataOfCreator()
       
-      const tokensOwnedByUser = await nftGetterHandler.methods.getDataOfNftsOwnedByUser(account).call()
-      
-      const tokenURIList = getTokenURIList(tokensOwnedByUser)
-      const listOfData = await axios.all(tokenURIList.map((tokenURI) => axios.get(tokenURI))).then((data) =>  data);
-      const arrayOfFixedData = convertArrayOfDataOfContractAndDataOfIPSFInDataSimpleToManage(tokensOwnedByUser, listOfData)
-      setDataListOfTokensOwned(arrayOfFixedData)
-     }
+      const arrayOfCreatorOrOwner = getArrayOfCreatorOrOwner(ownerData, creatorData)
   
-     const getDataOfCreator = async () => {
-  
-      const tokensOfCreator = await nftGetterHandler.methods.getDataOfNftsWithUserAsProvider(account).call()
-      const tokenURIList = getTokenURIList(tokensOfCreator)
-  
-     const listOfData = await axios.all(tokenURIList.map((tokenURI) => axios.get(tokenURI))).then((data) =>  data);
-  
-     const arrayOfFixedData = convertArrayOfDataOfContractAndDataOfIPSFInDataSimpleToManage(tokensOfCreator, listOfData)
-     setDataListOfTokensCreated(arrayOfFixedData)
-    }   
+      getRightArray(arrayOfCreatorOrOwner)
+    }
 
-     getDataOfCreator()
-     getDataOfOwner()
-  },[account, active, firstContractCall])
+    getAllData()
 
+    console.log(arrayToDisplay)
 
-  useEffect(()=> {
-    const arrayToDisplay = getRightArray(getArrayOfCreatorOrOwner())
-    setArrayToDisplay(arrayToDisplay)
-  },[value, ownerOrCreated] )
-
-
+  },[value, ownerOrCreated, account, active])
 
     if(!((ownerOrCreated === "created" || ownerOrCreated === "owner") &&  (value === "actives" || value === "used" ))){
       return (
@@ -206,7 +174,6 @@ const UserCoupons = () => {
       )
     }  
 
-console.log(arrayToDisplay)
     return (
       
       <>

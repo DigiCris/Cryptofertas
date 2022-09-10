@@ -49,7 +49,7 @@ const ProductDetails = () => {
     let result = {
       description: ipfs.description,
       name: ipfs.description,
-      newPrice: contractData.price,
+      newPrice: ipfs.attributes[2].value,
       oldPrice: ipfs.attributes[1].value,
       image: ipfs.image,
       inSale: contractData.inSale,
@@ -65,7 +65,6 @@ const ProductDetails = () => {
     const tokenURI = await dataOfCurrentToken.tokenURI
     const dataFromAxios = await axios.get(tokenURI)
     const fixedData = getFixedDataFromIpfsAndContract(dataFromAxios.data, dataOfCurrentToken)
-    console.log(fixedData)
     setDataOfCurrentProduct(fixedData)
 }  
 
@@ -73,7 +72,7 @@ const ProductDetails = () => {
     getDataOfToken(tokenId)
   }, [])
 
-  const {name, description, image, newPrice, oldPrice, owner} = dataOfCurrentProduct
+  const {name, description, image, newPrice, oldPrice} = dataOfCurrentProduct
 
   return (
     <>

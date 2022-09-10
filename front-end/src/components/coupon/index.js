@@ -61,7 +61,7 @@ export default function CuponImage({data}) {
                   ${oldPrice}
                 </Text>
                 <Text fontWeight={600} fontSize='lg' color={'green.300'}>
-                  ${newPrice / 1000000000000000000}
+                  ${newPrice}
                 </Text>
               </Stack>
               </GridItem>
