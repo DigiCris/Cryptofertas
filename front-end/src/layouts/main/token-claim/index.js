@@ -118,7 +118,7 @@ function Acondicionar_numero(numero)
 
   async function claim()
   {
-    await erc20.methods.claim(31).send({from: account})
+    await erc20.methods.claim(32).send({from: account})
       .on('transactionHash', 
       function(hash)
       {
