@@ -39,10 +39,7 @@ function writeDirty($tokenId)
 {
 	$NFT = new NFT();
 	$NFT->set_dirty(1);
-	echo "entre";
-	//exit();
 	$success=$NFT->update_dirty($tokenId);
-	echo "entre";
 	echo $success;
 }
 function readOwner($wallet)
