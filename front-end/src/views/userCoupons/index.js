@@ -21,6 +21,14 @@ const UserCoupons = () => {
         return []
       }
   }
+
+  const convertISOTimeToSeconds = isoTime => {
+    const date = new Date(isoTime);
+
+    const timestamp = date.getTime() / 1000;
+
+    return timestamp
+  }
   
   const getRightArray = (arrayData) => {
     if(value === "actives") {
@@ -48,7 +56,7 @@ const UserCoupons = () => {
       const currentTime = new Date().getTime() / 1000
 
       if(time > currentTime) {
-        return time - currentTime
+        return Math.floor(time - currentTime)
       } else {
         return 0
       }
@@ -126,14 +134,13 @@ const UserCoupons = () => {
         inSale: convertNumberToTrueAndFalse(arrayOfData[i].forSale),
         isUsed: convertNumberToTrueAndFalse(arrayOfData[i].used),
         owner: arrayOfData[i].owner,
+        expiration: convertSecondsToTimeString(getTimeToExpirate(convertISOTimeToSeconds(listOfFetchedData[i].attributes[3].value))),
         tokenId: parseInt(arrayOfData[i].tokenId)
       } 
 
       result.push(data)
 
     }
-
-    console.log(result)
 
     return result
   }
@@ -164,9 +171,7 @@ const UserCoupons = () => {
 
     getAllData()
 
-    console.log(arrayToDisplay)
-
-  },[value, ownerOrCreated, account, active])
+  },[value, ownerOrCreated, account, active],[])
 
     if(!((ownerOrCreated === "created" || ownerOrCreated === "owner") &&  (value === "actives" || value === "used" ))){
       return (

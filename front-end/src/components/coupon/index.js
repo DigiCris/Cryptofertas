@@ -15,7 +15,7 @@ import { Link as ReachLink } from "react-router-dom"
 
 export default function CuponImage({data}) {
 
-  const {name, image, newPrice, oldPrice, timeToExpiration, isUsed, tokenId} = data
+  const {name, image, newPrice, oldPrice, expiration, isUsed, tokenId} = data
 
   return (
     <Stack borderWidth="1px" borderRadius="3%" boxShadow={'md'}>
@@ -46,7 +46,7 @@ export default function CuponImage({data}) {
           justifyContent="space-between"
           >
           <Stack width="60%">
-            <Button size='xs' fontSize="16px" fontWeight="bold" rounded={'full'} backgroundColor={"red"} color='white' cursor="auto" _active={{backgroundColor:"red", color:'white', cursor: "auto"}} _hover={{backgroundColor:"red", color:'white', cursor: "auto"}}>{timeToExpiration}</Button>
+            <Button size='xs' fontSize="16px" fontWeight="bold" rounded={'full'} backgroundColor={"red"} color='white' cursor="auto" _active={{backgroundColor:"red", color:'white', cursor: "auto"}} _hover={{backgroundColor:"red", color:'white', cursor: "auto"}}>{expiration}</Button>
           </Stack>
           <Stack>
             <Text fontWeight={600} fontSize='md' color={'black'} mb={-4} size="sm" >
