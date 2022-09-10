@@ -186,7 +186,6 @@ class NFT
 
     public function update($tokenId)
     {
-        echo "hola";
         debug("Entre alhandler en el Update ",$tokenId,0);
         $query="update NFT_Cache set tokenId=?, lastRefreshed=?, price=?, used=?, forSale=?, owner=?, provider=?, embassador=?, tokenUri=?, choose=?, dirty=? where tokenId='$tokenId'";
         $resultado= $this->base->prepare($query);
@@ -206,6 +205,19 @@ class NFT
 
         $resultado->execute(array($this->tokenId, $this->lastRefreshed, $this->price, $this->used, $this->forSale, $this->owner, $this->provider, $this->embassador, $this->tokenUri, $this->choose, $this->dirty));
         $resultado ->closeCursor();
+    }
+
+    public function update_dirty($tokenId)
+    {
+        debug("Entre alhandler en el Update_dirty ",$tokenId,0);
+        $query="update NFT_Cache set dirty=? where tokenId='$tokenId'";
+        $resultado= $this->base->prepare($query);
+
+        $this->dirty=htmlentities(addslashes($this->dirty));
+
+        $resultado->execute(array($this->dirty));
+        $resultado ->closeCursor();
+        return(true);
     }
     
     

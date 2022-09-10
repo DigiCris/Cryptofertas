@@ -85,7 +85,8 @@ function refreshValues()
     $GLOBALS["tokenUri"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','tokenURI(uint256)',$GLOBALS["tokenId"],"url");
     $GLOBALS["price"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','getPrice(uint256)',$GLOBALS["tokenId"],'uint');
     $GLOBALS["used"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','used(uint256)',$GLOBALS["tokenId"],"uint");
-    $GLOBALS["forSale"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','inSale(uint256)',$GLOBALS["tokenId"],"uint");    
+    $GLOBALS["forSale"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','inSale(uint256)',$GLOBALS["tokenId"],"uint"); 
+    $GLOBALS["embassador"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','nftEmbasador(uint256)',$GLOBALS["tokenId"],"address");   
 }
 
 
