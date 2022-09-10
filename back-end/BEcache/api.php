@@ -1,5 +1,7 @@
 <?php
 
+header('Access-Control-Allow-Origin: *');
+
 include_once 'DB_handler.php';
 
 if(!isset($_GET['function']))
