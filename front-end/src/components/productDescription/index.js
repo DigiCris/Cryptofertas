@@ -49,13 +49,13 @@ const productDescription = ({name, image, newPrice, oldPrice}) => {
             <Heading fontSize={"2xl"} fontFamily={"body"} fontWeight={500}>
               {name}
             </Heading>
-            <Text
+            {/* <Text
               color={"gray.500"}
               fontSize={"sm"}
               textTransform={"uppercase"}
             >
               (24 unidades)
-            </Text>
+            </Text> */}
             <Flex spacing="24px">
               <Stack direction={"column"} align={"left"}>
                 <Text
