@@ -11,6 +11,12 @@ contract Doloferta is ERC20, ERC20Burnable, Pausable, AccessControl
 
     /****************************Author: CMarchese*********************************/
     /*******************Deployed: 0x851705F7A0E26cc03656d6d1d9E21778dd7A1D08*******/
+    /*
+        New addresses deployments 9/11/2022
+        ERC20=0x0DE0361092D5d14BC1166ce6464bDFFFd14c9Eee
+        NFT factory=0x65b7981712F0CC653176CE7707fbE04f08987e44
+        Marketplace=0x6e0bD3D1751563a16E7b0949De9932a45596900d
+    */
 
     // Fixed wallets set in the constructor
     address private NftDeveloper; // our wallet
@@ -132,17 +138,14 @@ contract Doloferta is ERC20, ERC20Burnable, Pausable, AccessControl
         return(_amount);
     }
 
-    function claim(uint256 _tokenID) external returns (uint256 _vesting_quantity)
+    function claim() external returns (uint256 _vesting_quantity)
     {
         for(uint256 __counter=NftAmount[msg.sender]; __counter>=0; __counter--)
         {
-            if(sVesting[msg.sender][__counter].tokenId==_tokenID)
+            if(sVesting[msg.sender][__counter].timeStamp<block.timestamp)
             {
-                if(sVesting[msg.sender][__counter].timeStamp<block.timestamp)
-                {
-                    sVesting[msg.sender][__counter].amount=0;
-                }                
-            }
+                sVesting[msg.sender][__counter].amount=0;
+            }                
             _vesting_quantity+=sVesting[msg.sender][__counter].amount;
             if(__counter==0)
                 break;
