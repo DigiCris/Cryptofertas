@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Center,
@@ -45,6 +45,8 @@ const MarketPlace = useMarketPlace();
 const ERC20 = useERC20();
 const { tokenId } = useParams();
 console.log(tokenId);
+const [buying, setBuying] = useState(false);
+
 
 const marketPlaceAddress = '0x9196d7405C52E37CEe59A3E16e209285f6Fa11Aa';
 //const limitAllowance = BigNumber(BigNumber(999) * BigNumber(10).pow(18))//500 000000000000000000
@@ -53,6 +55,8 @@ const amountAllowance = ethers.BigNumber.from(900).mul(ethers.BigNumber.from(10)
 const { active, activate, deactivate, account, error, library } = useWeb3React();
 
 const Buy = (tokenId) => {
+  setBuying(true);
+  allowanceAccount();
   MarketPlace.methods
     .Buy(tokenId)
     .send({
@@ -60,20 +64,24 @@ const Buy = (tokenId) => {
       gas: 3000000,
     })
     .on("error", () => {
-      showToast('Error minteando cupón ', 'error')
+      setBuying(false);
+      showToast('Error, por favor verifique y vuelva a intentar', 'error')
       //setMinting(false);
       return null
     })
     .on("transactionHash", (txHash) => {
-      showToast('Transacción enviada', 'info')
+      showToast('Transaccion en progreso', 'info')
       console.log('hash', txHash)
       //props.closeModal()
     })
     .on("receipt", (receipt) => {
       //setMinting(false);
-      showToast('Token Minteado Correctamente', 'success')
+      setBuying(false);
+      showToast('Compra exitosa!', 'success')
       //getPlatziPunksData();
       console.log(receipt);
+      onTransactionClose();
+
       //props.closeModal()
       return 'ok'
     });
@@ -120,7 +128,7 @@ const toast = useToast()
 const showToast = (des, status) => {
   toast({
     position: 'top',
-    title: 'Creando cupón',
+    title: 'Proceso de compra',
     description: des,
     status: status,
     duration: 5000,
@@ -128,7 +136,7 @@ const showToast = (des, status) => {
   })
 }
 
-  const {isTransactionOpen, onTransactionClose} = props;
+  const {isTransactionOpen, onTransactionClose, name, description, newPrice} = props;
   return (
       <>
       <Center py={12}>
@@ -142,13 +150,13 @@ const showToast = (des, status) => {
         <Text color={'gray.500'} align="center">Está a punto de comprar</Text>
         <Stack pt={10} align={'center'}>
         <Heading fontSize={'2xl'} fontFamily={'body'} fontWeight={500}>
-        Arroz Mary tradicional 
+        {name} 
         </Heading>
         <Text color={'gray.500'} fontSize={'sm'} textTransform={'uppercase'}>
-        (descripcion?)
+        {description}
         </Text>
         <Text fontWeight={800} fontSize={'4xl'} color={'green.300'}>
-            57
+          {newPrice / 1000000000000000000}
           </Text>
       </Stack>
       <Stack>
@@ -171,7 +179,9 @@ const showToast = (des, status) => {
 
         <ModalFooter>
           <VStack  w={'full'}>
-          <Button colorScheme={"green"} mr={3} onClick={() => Buy(tokenId)}  w="100%">
+          <Button isLoading={buying}  colorScheme={"green"}
+          loadingText='Esperando aprobacion'
+          mr={3} onClick={() => Buy(tokenId)}  w="100%">
           Comprar
           </Button>
           <Button variant='outline'  w="100%" onClick={onTransactionClose}>Cancelar</Button>

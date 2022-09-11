@@ -6,22 +6,17 @@ import {
   Stack,
   Text,
   Grid,
-  GridItem
+  GridItem,
+  Link
 } from '@chakra-ui/react';
 
-export default function CuponImage({data, value}) {
+import { Link as ReachLink } from "react-router-dom"
 
-  const {image, name, amount, activeAmount, usedAmount, newPrice, oldPrice, timeToExpirate} = data
 
-  const getAmountToShow = () => {
-    if(value === "used") {
-        return usedAmount
-    } else if (value === "actives"){
-        return activeAmount
-    } else {
-      return amount
-    }
-  }
+export default function CuponImage({data}) {
+
+  const {name, image, newPrice, oldPrice, expiration, isUsed, tokenId} = data
+
   return (
     <Stack borderWidth="1px" borderRadius="3%" boxShadow={'md'}>
       <Center>
@@ -42,6 +37,7 @@ export default function CuponImage({data, value}) {
             src={
               image
             }
+            height={{md:"200px", lg:"180px"}}
           />
         </Flex>
         <Stack
@@ -50,14 +46,11 @@ export default function CuponImage({data, value}) {
           justifyContent="space-between"
           >
           <Stack width="60%">
-            <Button size='xs' fontSize="16px" fontWeight="bold" rounded={'full'} backgroundColor={"red"} color='white' cursor="auto" _active={{backgroundColor:"red", color:'white', cursor: "auto"}} _hover={{backgroundColor:"red", color:'white', cursor: "auto"}}>{timeToExpirate}</Button>
+            <Button size='xs' fontSize="16px" fontWeight="bold" rounded={'full'} backgroundColor={"red"} color='white' cursor="auto" _active={{backgroundColor:"red", color:'white', cursor: "auto"}} _hover={{backgroundColor:"red", color:'white', cursor: "auto"}}>{expiration}</Button>
           </Stack>
           <Stack>
             <Text fontWeight={600} fontSize='md' color={'black'} mb={-4} size="sm" >
               {name}
-            </Text>
-            <Text fontWeight={600} color={'gray.400'} fontSize='sm' size="xs" mb={4}>
-              ({getAmountToShow()} unidades)
             </Text>
           </Stack>
           <Stack direction={'row'}>
@@ -73,7 +66,7 @@ export default function CuponImage({data, value}) {
               </Stack>
               </GridItem>
               <GridItem height={"100%"}>
-              { value === "actives" ? <Stack
+               <Stack
                 height={"100%"}
                 width={'100%'}
                 direction={'row'}
@@ -84,18 +77,18 @@ export default function CuponImage({data, value}) {
                   flex={1}
                   fontSize={'md'}
                   rounded={'full'}
-                  bg={'green.300'}
+                  bg={isUsed ? "gray" : 'green.300'}
                   size='xs'
                   color={'white'}
                   _hover={{
-                    bg: 'green.500',
+                    bg: isUsed ? "gray" : 'green.500',
                   }}
                   _focus={{
-                    bg: 'green.500',
+                    bg: isUsed ? "gray" : 'green.500',
                   }}>
-                    Canjear
+                    {isUsed ? <Link as={ReachLink} to={`/productDetails/${tokenId}`}>Usado</Link> : <Link as={ReachLink} to={`/productDetails/${tokenId}`}>Canjear</Link>}
                 </Button> 
-              </Stack>: null}
+              </Stack>
               </GridItem>
             </Grid>     
           </Stack>

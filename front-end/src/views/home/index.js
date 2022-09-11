@@ -17,7 +17,8 @@ import {
   Icon,
   HStack,
   useToast,
-  Grid
+  Grid, 
+  SimpleGrid
 } from '@chakra-ui/react'
 import { Link, useLocation, useHistory } from "react-router-dom";
 
@@ -95,6 +96,7 @@ const Home = () => {
     const dataIPFS = await getDataCoupons(aux,0)
     SetLoadingCoupons(false)
     setAllCoupons(dataIPFS)
+    console.log(typeof(dataIPFS));
     return dataIPFS
   }
 
@@ -276,14 +278,14 @@ const Home = () => {
             </HStack>
             {loadingCoupons ?
               <Loading />
-              : <Grid templateColumns='repeat(5, 1fr)' gap={5}>
+              : <SimpleGrid columns={[1,2,null, 3]}  gap={10}>
                 {//new Array(14).fill().map(() => (
                   allCoupons.map((datacoupon) => (
                     <Link key={datacoupon.tokenId} to={`/productDetails/${datacoupon.tokenId}`}>
                       <CuponImage data={datacoupon} value={'actives'} />
                     </Link>
                   ))}
-              </Grid>
+              </SimpleGrid>
 
             }
           </>

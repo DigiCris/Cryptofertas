@@ -21,11 +21,11 @@ const Links = [
   },
   {
     name: "Mis Cupones Comprados",
-    to: "/user-coupons",
+    to: "/user-coupons/owner/actives",
   },
   {
     name: "Mis Cupones Vendidos",
-    to: "/user-coupons",
+    to: "/user-coupons/created/actives",
   },
 ];
 

@@ -13,37 +13,27 @@ import {
  
   const NAV_ITEMS_CREATED_BY_USER = [
     {
-      label: 'Todos',
-      href: "/user-coupons/created/all",
-      id: 0
-    },
-    {
       label: 'Activos',
       href: '/user-coupons/created/actives',
-      id: 1
+      id: 0
     },
     {
       label: 'Usados',
       href: '/user-coupons/created/used',
-      id: 2
+      id: 1
     },
   ];
 
   const NAV_ITEMS_BOUGHT_BY_USER = [
     {
-      label: 'Todos',
-      href: "/user-coupons/owner/all",
-      id: 0
-    },
-    {
       label: 'Activos',
       href: '/user-coupons/owner/actives',
-      id: 1
+      id: 0
     },
     {
       label: 'Usados',
       href: '/user-coupons/owner/used',
-      id: 2
+      id: 1
     },
   ];    
   
@@ -63,7 +53,7 @@ import {
     }
 
     return (
-        <Grid templateColumns='repeat(3, 1fr)' paddingLeft={16} paddingRight={16} mb={5}>
+        <Grid templateColumns='repeat(2, 1fr)' paddingLeft={16} paddingRight={16} mb={5}>
           {getRightLinks(ownerOrCreated).map((navItem, i) => (                         
             <GridItem key={i}>
               <Center>
