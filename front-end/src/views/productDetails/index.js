@@ -41,7 +41,7 @@ const ProductDetails = () => {
     } else if (inSale) {
       return "Comprar"
     } else {
-      return "No sé vende"
+      return "No disponible para venta"
     }
   }
 
@@ -80,7 +80,11 @@ const ProductDetails = () => {
         <Box
           role={"group"}
           maxW={"330px"}
-          w={"full"}
+          width={[
+            '100%', // 0-30em
+            '90%', // 30em-48em
+            '80%', // 62em+
+          ]}
         >
           <ProductDescription name={name} image={image} newPrice={newPrice} oldPrice={oldPrice}/>
           <Heading fontSize="sm" color={"gray.500"}>
@@ -95,9 +99,7 @@ const ProductDetails = () => {
           </Heading>
           <Text color={"gray.500"}>
             {" "}
-            Un delicado proceso de selección electrónica del grano garantizan
-            más de un 90% de granos enteros, utilizados en infinidades de platos
-            y postres,
+            {description}
           </Text>
           <Button
             colorScheme={"green"}
@@ -112,7 +114,7 @@ const ProductDetails = () => {
           {...{ isOpen, onClose, onTransactionOpen }}
         ></ModalMetamask>
         {active ? <><ModalTransaction
-          {...{ isTransactionOpen, onTransactionClose }}
+          {...{ isTransactionOpen, onTransactionClose, name, newPrice,description }}
         ></ModalTransaction>
         </>: []
         }
