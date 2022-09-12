@@ -48,16 +48,16 @@ console.log(tokenId);
 const [buying, setBuying] = useState(false);
 
 
-const marketPlaceAddress = '0x9196d7405C52E37CEe59A3E16e209285f6Fa11Aa';
+const marketPlaceAddress = '0x6e0bD3D1751563a16E7b0949De9932a45596900d';
 //const limitAllowance = BigNumber(BigNumber(999) * BigNumber(10).pow(18))//500 000000000000000000
 const limitAllowance = ethers.BigNumber.from(500).mul(ethers.BigNumber.from(10).pow(18))//500 000000000000000000
 const amountAllowance = ethers.BigNumber.from(900).mul(ethers.BigNumber.from(10).pow(18))//900 000000000000000000
 const { active, activate, deactivate, account, error, library } = useWeb3React();
 
-const Buy = (tokenId) => {
+const Buy = async (tokenId) => {
   setBuying(true);
-  allowanceAccount();
-  MarketPlace.methods
+  // await allowanceAccount();
+  await MarketPlace.methods
     .Buy(tokenId)
     .send({
       from: account,
@@ -87,7 +87,7 @@ const Buy = (tokenId) => {
     });
 }
 
-const approveAmount = () => {
+const approveAmount = (tokenId) => {
   ERC20.methods
     .approve(marketPlaceAddress, amountAllowance)
     .send({
@@ -105,6 +105,7 @@ const approveAmount = () => {
       //props.closeModal()
     })
     .on("receipt", (receipt) => {
+      Buy(tokenId);
       //setMinting(false);
       showToast('Approve(ERC20) Ejecutado Correctamente', 'success')
       //getPlatziPunksData();
@@ -156,7 +157,7 @@ const showToast = (des, status) => {
         {description}
         </Text>
         <Text fontWeight={800} fontSize={'4xl'} color={'green.300'}>
-          {newPrice / 1000000000000000000}
+          {newPrice}
           </Text>
       </Stack>
       <Stack>
@@ -181,7 +182,7 @@ const showToast = (des, status) => {
           <VStack  w={'full'}>
           <Button isLoading={buying}  colorScheme={"green"}
           loadingText='Esperando aprobacion'
-          mr={3} onClick={() => Buy(tokenId)}  w="100%">
+          mr={3} onClick={() => approveAmount(tokenId)}  w="100%">
           Comprar
           </Button>
           <Button variant='outline'  w="100%" onClick={onTransactionClose}>Cancelar</Button>

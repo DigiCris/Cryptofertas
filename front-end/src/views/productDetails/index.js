@@ -19,7 +19,6 @@ const ProductDetails = () => {
   const { activate, account, library, active, deactivate, error } =
     useWeb3React();
 
-
   console.log(tokenId);
   const {
     isOpen: isTransactionOpen,
@@ -40,35 +39,74 @@ const ProductDetails = () => {
     // console.log(active);
   };
 
-  const canBuy = dataOfCurrentProduct.inSale;
-  console.log(canBuy, "can buy");
+  // const canBuy = dataOfCurrentProduct.inSale;
 
   const getValidButton = (dataOfProduct) => {
-    const { owner, isUsed, inSale } = dataOfProduct;
-    if (isUsed) {
+    console.log(apiDataforSale, "for sale");
+    console.log(apiDataIsUsed, "is used");
+    console.log(account, "account")
+    console.log(apiDataExpiration, "expiration");
+    console.log(apiDataNewPrice, "price");
+
+
+    // const { owner } = dataOfProduct;
+    console.log(apiDataOwner, "owner");
+    if (apiDataIsUsed == 1) {
+      console.log("entro a usado");
       return "Usado";
-    } else if (owner === account) {
+    } else if (apiDataOwner === account) {
+      console.log("entro a canjeadp");
       return "Canjear";
-    } else if (inSale) {
+    } else if (apiDataforSale == 1) {
       // setCanBuy(true);
+      console.log("entro a compra");
       return "Comprar";
     } else {
+      console.log("es nadie");
       return "No disponible para venta";
     }
   };
 
+  // var apiDataforSale;
+  // const [canBuy, setCanBuy ]= useState(false);
+  const [apiDataforSale, setApiDataforSale ]= useState(false);
+  const [apiDataIsUsed, setApiDataIsUsed ]= useState(false);
+  const [apiDataOwner, setApiDataOwner ]= useState(false);
+  const [apiDataExpiration, setApiDataExpiration ]= useState(false);
+  const [apiDataNewPrice, setApiDataNewPrice ]= useState(false);
+
+
+  const getRealData = async () => {
+    let api = await axios.get(
+      `https://cryptofertas.tk/backend/api.php?function=readTokenId&param=${tokenId}`
+    );
+    const apiData = api.data;
+    // apiDataforSale = apiData[0].forSale;
+
+    // setCanBuy(apiDataforSale);
+    setApiDataforSale(apiData[0].forSale);
+    setApiDataIsUsed(apiData[0].used);
+    setApiDataOwner(apiData[0].owner);
+    setApiDataExpiration(apiData[0].expiration);
+    setApiDataNewPrice(apiData[0].price);
+
+    console.log(api, "soy apiData");
+    console.log(apiDataforSale, "soy apiData for sale");
+  };
+
+
   const getFixedDataFromIpfsAndContract = (ipfs, contractData) => {
     let result = {
       description: ipfs.description,
-      name: ipfs.description,
-      newPrice: ipfs.attributes[2].value,
+      name: ipfs.name,
+      // newPrice: ipfs.attributes[2].value,
       oldPrice: ipfs.attributes[1].value,
       image: ipfs.image,
-      inSale: contractData.inSale,
-      isUsed: contractData.isUsed,
+      inSale: apiDataforSale,
+      isUsed: apiDataIsUsed,
       owner: contractData.owner,
     };
-
+    alert(result.oldPrice);
     return result;
   };
 
@@ -88,7 +126,8 @@ const ProductDetails = () => {
 
   useEffect(() => {
     getDataOfToken(tokenId);
-    console.log('tokenId', tokenId)
+    getRealData(tokenId);
+    console.log("tokenId", tokenId);
   }, []);
 
   const { name, description, image, newPrice, oldPrice } = dataOfCurrentProduct;
@@ -127,7 +166,7 @@ const ProductDetails = () => {
             mt={10}
             w="100%"
             onClick={() => metamaskValidation(!isOpen)}
-            disabled={dataOfCurrentProduct.isUsed}
+            // disabled={!apiDataIsUsed}
           >
             {getValidButton(dataOfCurrentProduct)}
           </Button>
@@ -135,7 +174,7 @@ const ProductDetails = () => {
         <ModalMetamask
           {...{ isOpen, onClose, onTransactionOpen }}
         ></ModalMetamask>
-        {active && canBuy &&  (
+        {active && apiDataforSale && (
           <>
             <ModalTransaction
               {...{
@@ -153,8 +192,12 @@ const ProductDetails = () => {
           //   </>
           // )}
         )}
-        {active && (dataOfCurrentProduct.owner === account) && !canBuy &&  (
-          <ModalUsability isOpen={isUsabilityOpen} onClose={onUsabilityClose} tokenId={tokenId}/>
+        {active && apiDataOwner === account && !apiDataforSale && (
+          <ModalUsability
+            isOpen={isUsabilityOpen}
+            onClose={onUsabilityClose}
+            tokenId={tokenId}
+          />
         )}
       </Center>
     </>
