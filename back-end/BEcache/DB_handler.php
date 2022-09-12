@@ -547,6 +547,20 @@ class NFT
 
 
 
+    public function readForSale($forSale)
+    {
+        //SELECT * FROM `NFT_Cache` WHERE 1
+        $query="select * from NFT_Cache where forSale=:forSale";
+        $resultado= $this->base->prepare($query);
+        $forSale=htmlentities(addslashes($forSale));
+        $resultado->BindValue(":forSale",$forSale);
+        $resultado->execute();
+        $fila=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        $resultado ->closeCursor();
+        return ($fila);
+    }
+
+
 }
 
 

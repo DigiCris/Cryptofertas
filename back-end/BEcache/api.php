@@ -42,6 +42,10 @@ switch ($_GET['function'])
 		readByCategory($_GET['param']);
 		break;
 
+	case 'readForSale':
+		readForSale($_GET['param']);
+		break;
+
 	default:
 		func_default();
 		break;
@@ -83,6 +87,12 @@ function readByCategory($category)
 {
 	$NFT = new NFT();
 	$rta=$NFT->readByCategory($category);
+	echo json_encode($rta);
+}
+function readForSale($sale)
+{//$sale=1 if I want te read what do we have for sale and 0 if we want to read what we don't have for sale.
+	$NFT = new NFT();
+	$rta=$NFT->readForSale($sale);
 	echo json_encode($rta);
 }
 
