@@ -35,12 +35,15 @@ import { useWeb3React} from "@web3-react/core";
 import { useMarketPlace  as market } from '../../config/web3/contracts/MarketPlace';
 import { useParams } from "react-router-dom";
 
+import axios from "axios";
+
 import { ethers} from "ethers";
 
 const ModalTransition = (props) => {
+  /*
   useEffect(() => {
     allowanceAccount();
-}, []);
+}, []);*/
 const MarketPlace = useMarketPlace();
 const ERC20 = useERC20();
 const { tokenId } = useParams();
@@ -63,8 +66,9 @@ const Buy = async (tokenId) => {
       from: account,
       gas: 3000000,
     })
-    .on("error", () => {
+    .on("error", async () => {
       setBuying(false);
+      const res = await axios.get(`https://cryptofertas.tk/backend/api.php?function=writeDirty&param=${tokenId}`);
       showToast('Error, por favor verifique y vuelva a intentar', 'error')
       //setMinting(false);
       return null
@@ -115,14 +119,14 @@ const approveAmount = (tokenId) => {
     });
 }
 
-const allowanceAccount = async () => {
+const allowanceAccount = async (tokenId) => {
   const allowance = await ERC20.methods.allowance(account, marketPlaceAddress).call();
 
   if (allowance < limitAllowance) {
     console.log('menor', allowance, amountAllowance)
-    approveAmount();
+    approveAmount(tokenId);
   }
-  else console.log('mayor', allowance)
+  else Buy(tokenId);
 }
 
 const toast = useToast()
@@ -182,7 +186,7 @@ const showToast = (des, status) => {
           <VStack  w={'full'}>
           <Button isLoading={buying}  colorScheme={"green"}
           loadingText='Esperando aprobacion'
-          mr={3} onClick={() => approveAmount(tokenId)}  w="100%">
+          mr={3} onClick={() => allowanceAccount(tokenId)}  w="100%">
           Comprar
           </Button>
           <Button variant='outline'  w="100%" onClick={onTransactionClose}>Cancelar</Button>
