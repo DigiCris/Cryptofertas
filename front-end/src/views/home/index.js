@@ -129,8 +129,9 @@ const Home = () => {
     for (let i = 0; i < apiCacheData.length; i++) {
 
       //if (category>0) tokenId=arrayTokens[i]
-      // else  
-      tokenId = i
+      // else  tokenId
+      tokenId = apiCacheData[i].tokenId
+      console.log('tokenid',apiCacheData[i].tokenId,'api',apiCacheData[i])
       //const isSale = await NFTFactory.methods.inSale(apiCacheData[i].tokenId).call();
       const isSale = apiCacheData[i].forSale
       if (isSale == '1') {
