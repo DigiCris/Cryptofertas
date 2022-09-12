@@ -186,7 +186,7 @@ const UserCoupons = () => {
     if(arrayToDisplay.length === 0) {
       return(
         <>  
-          <NavbarCoupons />
+          <NavbarCoupons value={value}/>
           <EmptyCouponList />
         </>
       )
@@ -195,7 +195,7 @@ const UserCoupons = () => {
     return (
       
       <>
-        <NavbarCoupons />
+        <NavbarCoupons value={value}/>
         <Center width={"100%"}>
         <Grid templateColumns={{lg: "repeat(4, 1fr)",md: "repeat(3, 1fr)"}} width={"100%"} >
           {arrayToDisplay.map((data, i) => (

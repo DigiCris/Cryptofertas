@@ -86,7 +86,7 @@ export default function CuponImage({data}) {
                   _focus={{
                     bg: isUsed ? "gray" : 'green.500',
                   }}>
-                    {isUsed ? <Link as={ReachLink} to={`/productDetails/${tokenId}`}>Usado</Link> : <Link as={ReachLink} to={`/productDetails/${tokenId}`}>Canjear</Link>}
+                    {isUsed ? <Link as={ReachLink} to={`/productDetails/${tokenId}`} _hover={{textDecoration: 'none'}}>Usado</Link> : <Link as={ReachLink} to={`/productDetails/${tokenId}`} _hover={{textDecoration: 'none'}}>Canjear</Link>}
                 </Button> 
               </Stack>
               </GridItem>
