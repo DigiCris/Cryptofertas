@@ -130,7 +130,7 @@ const Home = () => {
 
       //if (category>0) tokenId=arrayTokens[i]
       // else  
-      tokenId = i
+      tokenId = apiCacheData[i].tokenId;
       //const isSale = await NFTFactory.methods.inSale(apiCacheData[i].tokenId).call();
       const isSale = apiCacheData[i].forSale
       if (isSale == '1') {
@@ -142,7 +142,7 @@ const Home = () => {
         const response = res.data
         //console.log('tokenURI',response)
         const dataCoupon = {
-          tokenId: (tokenId + 1),
+          tokenId: tokenId, //Pendiente por revisar
           name: response['name'],
           image: response['image'],
           oldPrice: response['attributes'][1]['value'],
