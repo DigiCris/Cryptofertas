@@ -44,17 +44,16 @@ const ProductDetails = () => {
   const getValidButton = (dataOfProduct) => {
     console.log(apiDataforSale, "for sale");
     console.log(apiDataIsUsed, "is used");
-    console.log(account, "account")
+    console.log(account, "account");
     console.log(apiDataExpiration, "expiration");
     console.log(apiDataNewPrice, "price");
-
 
     // const { owner } = dataOfProduct;
     console.log(apiDataOwner, "owner");
     if (apiDataIsUsed == 1) {
       console.log("entro a usado");
       return "Usado";
-    } else if (apiDataOwner === account) {
+    } else if (apiDataOwner === account.toLowerCase()) {
       console.log("entro a canjeadp");
       return "Canjear";
     } else if (apiDataforSale == 1) {
@@ -69,12 +68,11 @@ const ProductDetails = () => {
 
   // var apiDataforSale;
   // const [canBuy, setCanBuy ]= useState(false);
-  const [apiDataforSale, setApiDataforSale ]= useState(false);
-  const [apiDataIsUsed, setApiDataIsUsed ]= useState(false);
-  const [apiDataOwner, setApiDataOwner ]= useState(false);
-  const [apiDataExpiration, setApiDataExpiration ]= useState(false);
-  const [apiDataNewPrice, setApiDataNewPrice ]= useState(false);
-
+  const [apiDataforSale, setApiDataforSale] = useState(false);
+  const [apiDataIsUsed, setApiDataIsUsed] = useState(false);
+  const [apiDataOwner, setApiDataOwner] = useState(false);
+  const [apiDataExpiration, setApiDataExpiration] = useState(false);
+  const [apiDataNewPrice, setApiDataNewPrice] = useState(false);
 
   const getRealData = async () => {
     let api = await axios.get(
@@ -85,15 +83,15 @@ const ProductDetails = () => {
 
     // setCanBuy(apiDataforSale);
     setApiDataforSale(apiData[0].forSale);
+    console.log(apiDataforSale, "esto es el set de apiDataForSale en el getRealData");
     setApiDataIsUsed(apiData[0].used);
-    setApiDataOwner(apiData[0].owner);
+    setApiDataOwner(apiData[0].owner.toLowerCase());
     setApiDataExpiration(apiData[0].expiration);
     setApiDataNewPrice(apiData[0].price);
 
     console.log(api, "soy apiData");
     console.log(apiDataforSale, "soy apiData for sale");
   };
-
 
   const getFixedDataFromIpfsAndContract = (ipfs, contractData) => {
     let result = {
@@ -174,8 +172,12 @@ const ProductDetails = () => {
         <ModalMetamask
           {...{ isOpen, onClose, onTransactionOpen }}
         ></ModalMetamask>
-        {active && apiDataforSale && (
+        {(active == true ? console.log("active entro en modal Transaction") : console.log("no entre a active != true modal Transaction"))}
+        {(apiDataforSale == 1) ? console.log(apiDataforSale," forSale entro en modal Transaction") : console.log(apiDataforSale,"no entro en modal transacion por forSale")}
+        {(active == true) && (apiDataforSale == 1) && (
           <>
+          
+          {console.log(active, apiDataforSale, "entro en transaction")}
             <ModalTransaction
               {...{
                 isTransactionOpen,
@@ -192,12 +194,21 @@ const ProductDetails = () => {
           //   </>
           // )}
         )}
-        {active && apiDataOwner === account && !apiDataforSale && (
+        {console.log ("entro a modal usability antes del comparador")}
+        {(active == true ? console.log("active es true") : console.log("no entre a active != true"))}
+        {(apiDataOwner === account.toLowerCase()) ? console.log("owner = account es true") : console.log("owner != account es true")}
+        {(apiDataforSale == 0) ? console.log("apiDataForSale entro al if") : console.log("apiDataForSale no entro al if")}
+        {console.log(active, apiDataforSale,apiDataOwner, account.toLowerCase(), "active, for Sale, owner, accountLower")}
+        {(active == true) && (apiDataOwner === account.toLowerCase()) && (apiDataforSale == 0) && (
+          <>
+          {console.log ("entro a modal usability")}
+          {console.log(active, apiDataforSale,apiDataOwner, account.toLowerCase(), "active, for Sale, owner, accountLower")}
           <ModalUsability
             isOpen={isUsabilityOpen}
             onClose={onUsabilityClose}
             tokenId={tokenId}
           />
+          </>
         )}
       </Center>
     </>

@@ -142,7 +142,7 @@ const Home = () => {
         const response = res.data
         //console.log('tokenURI',response)
         const dataCoupon = {
-          tokenId: tokenId,
+          tokenId: (tokenId + 1),
           name: response['name'],
           image: response['image'],
           oldPrice: response['attributes'][1]['value'],
@@ -307,6 +307,7 @@ const Home = () => {
                     <SimpleGrid columns={[1, 2, null, 3]} gap={10}>
                       {//new Array(14).fill().map(() => (
                         allCoupons.map((datacoupon) => (
+                      console.log(datacoupon.tokenId, "este es datacoupon"),
                           <Link key={datacoupon.tokenId} to={`/productDetails/${datacoupon.tokenId}`}>
                             <CuponImage data={datacoupon} value={'actives'} />
                           </Link>
