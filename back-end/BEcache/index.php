@@ -82,13 +82,13 @@ function refreshValues()
 {
     debug("en refreshValues tokenId ",$GLOBALS["tokenId"],0);
     //
-    $GLOBALS["provider"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','nftProvider(uint256)',$GLOBALS["tokenId"],"address");
-    $GLOBALS["owner"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','ownerOf(uint256)',$GLOBALS["tokenId"],"address");
-    $GLOBALS["tokenUri"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','tokenURI(uint256)',$GLOBALS["tokenId"],"url");
-    $GLOBALS["price"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','getPrice(uint256)',$GLOBALS["tokenId"],'uint');
-    $GLOBALS["used"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','used(uint256)',$GLOBALS["tokenId"],"uint");
-    $GLOBALS["forSale"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','inSale(uint256)',$GLOBALS["tokenId"],"uint"); 
-    $GLOBALS["embassador"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','nftEmbasador(uint256)',$GLOBALS["tokenId"],"address");  
+    $GLOBALS["provider"]=call('0x65b7981712F0CC653176CE7707fbE04f08987e44','nftProvider(uint256)',$GLOBALS["tokenId"],"address");
+    $GLOBALS["owner"]=call('0x65b7981712F0CC653176CE7707fbE04f08987e44','ownerOf(uint256)',$GLOBALS["tokenId"],"address");
+    $GLOBALS["tokenUri"]=call('0x65b7981712F0CC653176CE7707fbE04f08987e44','tokenURI(uint256)',$GLOBALS["tokenId"],"url");
+    $GLOBALS["price"]=call('0x65b7981712F0CC653176CE7707fbE04f08987e44','getPrice(uint256)',$GLOBALS["tokenId"],'uint');
+    $GLOBALS["used"]=call('0x65b7981712F0CC653176CE7707fbE04f08987e44','used(uint256)',$GLOBALS["tokenId"],"uint");
+    $GLOBALS["forSale"]=call('0x65b7981712F0CC653176CE7707fbE04f08987e44','inSale(uint256)',$GLOBALS["tokenId"],"uint"); 
+    $GLOBALS["embassador"]=call('0x65b7981712F0CC653176CE7707fbE04f08987e44','nftEmbasador(uint256)',$GLOBALS["tokenId"],"address");  
     $GLOBALS["category"]=getCategory($GLOBALS["tokenUri"]);   
 }
 
@@ -117,7 +117,7 @@ function getNextTokenId()
     debug("busco el tokenId mas grande",$GLOBALS["tokenId"],0);
     $GLOBALS["tokenId"]++;
     debug("Le sumo 1",$GLOBALS["tokenId"],0);
-    $GLOBALS["embassador"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','nftEmbasador(uint256)',$GLOBALS["tokenId"],"address");
+    $GLOBALS["embassador"]=call('0x65b7981712F0CC653176CE7707fbE04f08987e44','nftEmbasador(uint256)',$GLOBALS["tokenId"],"address");
     if($GLOBALS["embassador"]=='0x0000000000000000000000000000000000000000')
     {// it doesn't exist
         debug("no existe ese tokenId en la blockchain",$GLOBALS["tokenId"],0);
@@ -143,14 +143,14 @@ function getNextTokenId()
     return;
 
 /*    
-    $GLOBALS["embassador"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','nftEmbasador(uint256)',$_GET['tokenId'],"address");
+    $GLOBALS["embassador"]=call('0x65b7981712F0CC653176CE7707fbE04f08987e44','nftEmbasador(uint256)',$_GET['tokenId'],"address");
     //debug("embassador",$GLOBALS["embassador"]);
     if($GLOBALS["embassador"]=='0x0000000000000000000000000000000000000000')
     {// there are no more NFTs to add so I should refresh
         $NFT->read_choose();
         $tokenId_=$NFT->get_tokenId();
         $GLOBALS["choose"]=$NFT->get_choose();
-        $GLOBALS["embassador"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','nftEmbasador(uint256)',$tokenId_,"address");
+        $GLOBALS["embassador"]=call('0x65b7981712F0CC653176CE7707fbE04f08987e44','nftEmbasador(uint256)',$tokenId_,"address");
         $GLOBALS["insert"]=0;
         //debug("entro al if. embassador",$GLOBALS["embassador"]);
     }
