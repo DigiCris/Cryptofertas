@@ -19,6 +19,8 @@ const ProductDetails = () => {
   const { activate, account, library, active, deactivate, error } =
     useWeb3React();
 
+
+  console.log(tokenId);
   const {
     isOpen: isTransactionOpen,
     onOpen: onTransactionOpen,
@@ -86,6 +88,7 @@ const ProductDetails = () => {
 
   useEffect(() => {
     getDataOfToken(tokenId);
+    console.log('tokenId', tokenId)
   }, []);
 
   const { name, description, image, newPrice, oldPrice } = dataOfCurrentProduct;
@@ -151,7 +154,7 @@ const ProductDetails = () => {
           // )}
         )}
         {active && (dataOfCurrentProduct.owner === account) && !canBuy &&  (
-          <ModalUsability isOpen={isUsabilityOpen} onClose={onUsabilityClose} />
+          <ModalUsability isOpen={isUsabilityOpen} onClose={onUsabilityClose} tokenId={tokenId}/>
         )}
       </Center>
     </>

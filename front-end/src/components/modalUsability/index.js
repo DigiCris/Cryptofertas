@@ -33,7 +33,7 @@ const borderRadius = {
 };
 
 function ModalUsability(props) {
-  const {isOpen, onClose} = props;
+  const {isOpen, onClose, tokenId} = props;
   const { active, activate, deactivate, account, error, library } = useWeb3React();
   const [usedQR, setUsedQR] = useState(false);
 
@@ -41,11 +41,12 @@ function ModalUsability(props) {
 
   const toast = useToast();
 
-  const useNFT = async () => {
+  const canjearNFT = async () => {
     NFTFactory.methods
-    .MarkUsed(0)
+    .MarkUsed(36)
     .send({
-      from: account
+      from: account,
+      gas: 3000000
     })
     .on("transactionHash", (txHash) => {
       toast({
@@ -93,7 +94,7 @@ function ModalUsability(props) {
               <ModalCloseButton />
               <ModalBody>
                 <QR></QR>
-                <Button isLoading={usedQR} onClick={useNFT}>Canjear cupón</Button>
+                <Button isLoading={usedQR} onClick={() => canjearNFT()}>Canjear cupón</Button>
               </ModalBody>
               <Center>
                 <Button
