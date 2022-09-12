@@ -106,6 +106,7 @@ const ProductDetails = () => {
             mt={10}
             w="100%"
             onClick={() => metamaskValidation(!isOpen)}
+            disabled={dataOfCurrentProduct.isUsed}
           >
             {getValidButton(dataOfCurrentProduct)}
           </Button>
