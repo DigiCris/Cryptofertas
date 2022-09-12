@@ -199,8 +199,10 @@ const ProductDetails = () => {
               {...{
                 isTransactionOpen,
                 onTransactionClose,
+                apiDataImage,
                 apiDataName,
                 apiDataNewPrice,
+                apiDataOldPrice,
                 apiDataDescription
               }}
             ></ModalTransaction>

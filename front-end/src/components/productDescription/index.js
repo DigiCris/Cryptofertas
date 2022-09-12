@@ -1,7 +1,9 @@
 import { Box, Center, Text, Heading, Stack, Image } from "@chakra-ui/react";
 import { Flex, Spacer } from "@chakra-ui/react";
 
-const productDescription = ({name, image, newPrice, oldPrice}) => {
+const productDescription = (props) => {
+  const {name, image, newPrice, oldPrice} = props;
+  console.log(props);
   return (
     <>
       <Center py={12}>
