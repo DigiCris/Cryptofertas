@@ -33,7 +33,7 @@ const ProductForm = (props) => {
   const [providerAddress, setProviderAddress] = useState('')
 
   const [fileHash, setFileHash] = useState('')
-  const [numCupons, setNumCupons] = useState(5)
+  const [numCupons, setNumCupons] = useState(1)
   const [nftProvider, setNftProvider] = useState("")
   const [message, setMessage] = useState("")
   const [link, setLink] = useState("")
@@ -320,7 +320,7 @@ const ProductForm = (props) => {
             <Text align={'center'} >
               Cupones
             </Text>
-            <NumberInput onChange={(e) => setNumCupons(Number(e))} isRequired={true} step={5} defaultValue={numCupons} min={numCupons} max={50}>
+            <NumberInput onChange={(e) => setNumCupons(Number(e))} isRequired={true} step={1} defaultValue={numCupons} min={numCupons} max={50}>
               <NumberInputField />
               <NumberInputStepper>
                 <NumberIncrementStepper />

@@ -1,6 +1,6 @@
 const ERC20 = {
     address: {
-        4: "0x495654e1208aaCB4aa4C3AF3fAa64111c6CDd83a",
+        4: "0x0DE0361092D5d14BC1166ce6464bDFFFd14c9Eee",
       },
       "abi": [
         {
@@ -321,13 +321,7 @@ const ERC20 = {
             "type": "function"
         },
         {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "_tokenID",
-                    "type": "uint256"
-                }
-            ],
+            "inputs": [],
             "name": "claim",
             "outputs": [
                 {
