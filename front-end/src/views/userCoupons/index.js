@@ -6,6 +6,8 @@ import Coupons from "../../components/coupon"
 import {Grid, GridItem, Center} from '@chakra-ui/react';
 import {useParams} from "react-router-dom";
 import {useWeb3React } from "@web3-react/core";
+import EmptyCouponList from "../../components/emptyCouponList"
+
 
 const UserCoupons = () => {
   const {value, ownerOrCreated} = useParams() 
@@ -48,6 +50,7 @@ const UserCoupons = () => {
         }
       })    
       setArrayToDisplay(result)
+
       return result
     } 
   }
@@ -173,16 +176,26 @@ const UserCoupons = () => {
 
   },[value, ownerOrCreated, account, active],[])
 
+
     if(!((ownerOrCreated === "created" || ownerOrCreated === "owner") &&  (value === "actives" || value === "used" ))){
       return (
         <PageNotFound />
       )
     }  
 
+    if(arrayToDisplay.length === 0) {
+      return(
+        <>  
+          <NavbarCoupons value={value}/>
+          <EmptyCouponList />
+        </>
+      )
+    } 
+
     return (
       
       <>
-        <NavbarCoupons />
+        <NavbarCoupons value={value}/>
         <Center width={"100%"}>
         <Grid templateColumns={{lg: "repeat(4, 1fr)",md: "repeat(3, 1fr)"}} width={"100%"} >
           {arrayToDisplay.map((data, i) => (
