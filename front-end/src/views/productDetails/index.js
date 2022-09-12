@@ -41,7 +41,7 @@ const ProductDetails = () => {
 
   // const canBuy = dataOfCurrentProduct.inSale;
 
-  const getValidButton = (dataOfProduct) => {
+  const getValidButton = (apiDataIsUsed,apiDataforSale, apiDataOwner) => {
     // console.log(apiDataforSale, "for sale");
     // console.log(apiDataIsUsed, "is used");
     // console.log(account, "account");
@@ -181,9 +181,9 @@ const ProductDetails = () => {
             mt={10}
             w="100%"
             onClick={() => metamaskValidation(!isOpen)}
-            // disabled={!apiDataIsUsed}
+            disabled={(apiDataIsUsed == 1)}
           >
-            {getValidButton(dataOfCurrentProduct)}
+            {getValidButton(apiDataIsUsed,apiDataforSale, apiDataOwner)}
           </Button>
         </Box>
         <ModalMetamask
