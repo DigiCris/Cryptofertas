@@ -6,6 +6,7 @@ import {
   Text,
   Stack,
   useToast,
+  Image,
   VStack
 } from '@chakra-ui/react';
 import {
@@ -17,17 +18,6 @@ import {
   ModalCloseButton,
 } from '@chakra-ui/react';
 import { useDisclosure } from '@chakra-ui/react';
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
-  TableContainer,
-} from '@chakra-ui/react';
 import { Button, ButtonGroup } from '@chakra-ui/react';
 import useMarketPlace from '../../hooks/useMarketPlace';
 import useERC20 from '../../hooks/useERC20';
@@ -35,12 +25,17 @@ import { useWeb3React} from "@web3-react/core";
 import { useMarketPlace  as market } from '../../config/web3/contracts/MarketPlace';
 import { useParams } from "react-router-dom";
 
+import axios from "axios";
+
 import { ethers} from "ethers";
 
 const ModalTransition = (props) => {
+  const {apiDataName, apiDataImage, apiDataNewPrice, apiDataOldPrice, apiDataDescription} = props;
+
+  /*
   useEffect(() => {
     allowanceAccount();
-}, []);
+}, []);*/
 const MarketPlace = useMarketPlace();
 const ERC20 = useERC20();
 const { tokenId } = useParams();
@@ -48,23 +43,24 @@ console.log(tokenId);
 const [buying, setBuying] = useState(false);
 
 
-const marketPlaceAddress = '0x9196d7405C52E37CEe59A3E16e209285f6Fa11Aa';
+const marketPlaceAddress = '0x6e0bD3D1751563a16E7b0949De9932a45596900d';
 //const limitAllowance = BigNumber(BigNumber(999) * BigNumber(10).pow(18))//500 000000000000000000
 const limitAllowance = ethers.BigNumber.from(500).mul(ethers.BigNumber.from(10).pow(18))//500 000000000000000000
 const amountAllowance = ethers.BigNumber.from(900).mul(ethers.BigNumber.from(10).pow(18))//900 000000000000000000
 const { active, activate, deactivate, account, error, library } = useWeb3React();
 
-const Buy = (tokenId) => {
+const Buy = async (tokenId) => {
   setBuying(true);
-  allowanceAccount();
-  MarketPlace.methods
+  // await allowanceAccount();
+  await MarketPlace.methods
     .Buy(tokenId)
     .send({
       from: account,
       gas: 3000000,
     })
-    .on("error", () => {
+    .on("error", async () => {
       setBuying(false);
+      const res = await axios.get(`https://cryptofertas.tk/backend/api.php?function=writeDirty&param=${tokenId}`);
       showToast('Error, por favor verifique y vuelva a intentar', 'error')
       //setMinting(false);
       return null
@@ -87,7 +83,7 @@ const Buy = (tokenId) => {
     });
 }
 
-const approveAmount = () => {
+const approveAmount = (tokenId) => {
   ERC20.methods
     .approve(marketPlaceAddress, amountAllowance)
     .send({
@@ -105,6 +101,7 @@ const approveAmount = () => {
       //props.closeModal()
     })
     .on("receipt", (receipt) => {
+      Buy(tokenId);
       //setMinting(false);
       showToast('Approve(ERC20) Ejecutado Correctamente', 'success')
       //getPlatziPunksData();
@@ -114,14 +111,14 @@ const approveAmount = () => {
     });
 }
 
-const allowanceAccount = async () => {
+const allowanceAccount = async (tokenId) => {
   const allowance = await ERC20.methods.allowance(account, marketPlaceAddress).call();
 
   if (allowance < limitAllowance) {
     console.log('menor', allowance, amountAllowance)
-    approveAmount();
+    approveAmount(tokenId);
   }
-  else console.log('mayor', allowance)
+  else Buy(tokenId);
 }
 
 const toast = useToast()
@@ -148,32 +145,27 @@ const showToast = (des, status) => {
         <Heading mt='8' as='h3' size='lg' align="center">
         Ya casi!</Heading>
         <Text color={'gray.500'} align="center">Está a punto de comprar</Text>
+      <Stack>
+        <Center>
+            <Image
+              rounded={"lg"}
+              height={230}
+              width={282}
+              objectFit={"cover"}
+              src={apiDataImage}
+            />
+            </Center>
+      </Stack>
         <Stack pt={10} align={'center'}>
         <Heading fontSize={'2xl'} fontFamily={'body'} fontWeight={500}>
-        {name} 
+        {apiDataName} 
         </Heading>
         <Text color={'gray.500'} fontSize={'sm'} textTransform={'uppercase'}>
-        {description}
+        {apiDataDescription}
         </Text>
         <Text fontWeight={800} fontSize={'4xl'} color={'green.300'}>
-          {newPrice / 1000000000000000000}
+          {apiDataNewPrice}
           </Text>
-      </Stack>
-      <Stack>
-      <TableContainer>
-<Table variant='simple'>
-  <Tbody>
-    <Tr>
-      <Td>Fee</Td>
-      <Td isNumeric>25.4</Td>
-    </Tr>
-    <Tr>
-      <Td>Total</Td>
-      <Td isNumeric>0.91444</Td>
-    </Tr>
-  </Tbody>
-</Table>
-</TableContainer>
       </Stack>
         </ModalBody>
 
@@ -181,7 +173,7 @@ const showToast = (des, status) => {
           <VStack  w={'full'}>
           <Button isLoading={buying}  colorScheme={"green"}
           loadingText='Esperando aprobacion'
-          mr={3} onClick={() => Buy(tokenId)}  w="100%">
+          mr={3} onClick={() => allowanceAccount(tokenId)}  w="100%">
           Comprar
           </Button>
           <Button variant='outline'  w="100%" onClick={onTransactionClose}>Cancelar</Button>

@@ -130,7 +130,7 @@ const Home = () => {
 
       //if (category>0) tokenId=arrayTokens[i]
       // else  tokenId
-      tokenId = apiCacheData[i].tokenId
+      tokenId = apiCacheData[i].tokenId;
       console.log('tokenid',apiCacheData[i].tokenId,'api',apiCacheData[i])
       //const isSale = await NFTFactory.methods.inSale(apiCacheData[i].tokenId).call();
       const isSale = apiCacheData[i].forSale
@@ -143,7 +143,7 @@ const Home = () => {
         const response = res.data
         //console.log('tokenURI',response)
         const dataCoupon = {
-          tokenId: tokenId,
+          tokenId: tokenId, //Pendiente por revisar
           name: response['name'],
           image: response['image'],
           oldPrice: response['attributes'][1]['value'],
@@ -308,6 +308,7 @@ const Home = () => {
                     <SimpleGrid columns={[1, 2, null, 3]} gap={10}>
                       {//new Array(14).fill().map(() => (
                         allCoupons.map((datacoupon) => (
+                      console.log(datacoupon.tokenId, "este es datacoupon"),
                           <Link key={datacoupon.tokenId} to={`/productDetails/${datacoupon.tokenId}`}>
                             <CuponImage data={datacoupon} value={'actives'} />
                           </Link>
