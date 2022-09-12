@@ -132,6 +132,7 @@ function Acondicionar_numero(numero)
       function(receipt)
       {
         console.log(receipt);
+        balance2Of();
         toast({
           title: 'Your tokens have been claimed. Enjoy!!!.',
           description: 'receipt',
