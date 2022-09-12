@@ -14,7 +14,9 @@ import {
   extendTheme,
   useToast
 } from "@chakra-ui/react";
-import { useWeb3React} from "@web3-react/core";
+import axios from "axios";
+
+import { useWeb3React } from "@web3-react/core";
 import QR from "../QR";
 import useNFTFactory from "../../hooks/useNFTFactory";
 
@@ -33,7 +35,7 @@ const borderRadius = {
 };
 
 function ModalUsability(props) {
-  const {isOpen, onClose, tokenId} = props;
+  const { isOpen, onClose, tokenId } = props;
   const { active, activate, deactivate, account, error, library } = useWeb3React();
   const [usedQR, setUsedQR] = useState(false);
 
@@ -41,42 +43,45 @@ function ModalUsability(props) {
 
   const toast = useToast();
 
-  const canjearNFT = async () => {
+  const canjearNFT = async (tokenid) => {
     NFTFactory.methods
-    .MarkUsed(36)
-    .send({
-      from: account,
-      gas: 3000000
-    })
-    .on("transactionHash", (txHash) => {
-      toast({
-        title: "Transacción enviada",
-        description: txHash,
-        status: "info"
+      .MarkUsed(tokenid)
+      .send({
+        from: account,
+        gas: 3000000
       })
-    })
-    .on("receipt", () => {
-      setUsedQR(true);
-      toast({
-        title: "Transacción confirmada.",
-        description: "Cupón redimido",
-        status: "success"
+      .on("transactionHash", (txHash) => {
+        toast({
+          title: "Transacción enviada",
+          description: txHash,
+          status: "info"
+        })
       })
-    })
-    .on("error", (error) => {
-      setUsedQR(false);
-      toast({
-        title: "Transacción fallida",
-        description: "Cupón no redimido",
-        status: "error"
+      .on("receipt", async () => {
+        setUsedQR(true);
+        const res = await axios.get(`https://cryptofertas.tk/backend/api.php?function=writeDirty&param=${tokenid}`);
+        //const resdata = res.data
+        //console.log('resdirty',resdata,tokenid)
+        toast({
+          title: "Transacción confirmada.",
+          description: "Cupón redimido",
+          status: "success"
+        })
       })
-    })
+      .on("error", (error) => {
+        setUsedQR(false);
+        toast({
+          title: "Transacción fallida",
+          description: "Cupón no redimido",
+          status: "error"
+        })
+      })
   };
 
   return (
     <>
-     <Center>
-      {/* <Button onClick={onOpen}>{titleButton}</Button> */}
+      <Center>
+        {/* <Button onClick={onOpen}>{titleButton}</Button> */}
       </Center>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
@@ -94,7 +99,7 @@ function ModalUsability(props) {
               <ModalCloseButton />
               <ModalBody>
                 <QR></QR>
-                <Button isLoading={usedQR} onClick={() => canjearNFT()}>Canjear cupón</Button>
+                <Button isLoading={usedQR} onClick={() => canjearNFT(tokenId)}>Canjear cupón</Button>
               </ModalBody>
               <Center>
                 <Button
