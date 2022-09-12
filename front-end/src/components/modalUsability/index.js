@@ -32,9 +32,9 @@ const borderRadius = {
   },
 };
 
-function ModalUsability() {
+function ModalUsability(props) {
+  const {isOpen, onClose} = props;
   const { active, activate, deactivate, account, error, library } = useWeb3React();
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const [usedQR, setUsedQR] = useState(false);
 
   const NFTFactory = useNFTFactory();
@@ -74,7 +74,9 @@ function ModalUsability() {
 
   return (
     <>
-      <Button onClick={onOpen}>Open Modal</Button>
+     <Center>
+      {/* <Button onClick={onOpen}>{titleButton}</Button> */}
+      </Center>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
