@@ -178,4 +178,13 @@ function debug($texto,$valor,$alert=0)
 }
 
 
+function getCategory($url)
+{
+	$result=file_get_contents($url);
+	$result=json_decode($result,true);
+	$category=$result['attributes'][0]['value'];
+	debug("categoría ",$category,0);
+	return($category);
+}
+
 ?>

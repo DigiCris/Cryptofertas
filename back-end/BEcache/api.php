@@ -38,6 +38,10 @@ switch ($_GET['function'])
 		readAll();
 		break;
 
+	case 'readByCategory':
+		readByCategory($_GET['param']);
+		break;
+
 	default:
 		func_default();
 		break;
@@ -75,7 +79,12 @@ function readAll()
 	$rtas=$NFT->read_all();
 	echo json_encode($rtas);	
 }
-
+function readByCategory($category)
+{
+	$NFT = new NFT();
+	$rta=$NFT->readByCategory($category);
+	echo json_encode($rta);
+}
 
 
 ?>

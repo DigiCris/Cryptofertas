@@ -20,7 +20,7 @@ else
 */
 class NFT
 {
-    private $id,$tokenId,$lastRefreshed,$price,$used,$forSale,$owner,$provider,$embassador,$tokenUri,$choose,$dirty;
+    private $id,$tokenId,$category,$lastRefreshed,$price,$used,$forSale,$owner,$provider,$embassador,$tokenUri,$choose,$dirty;
     private $base;
 
 
@@ -32,6 +32,11 @@ class NFT
     public function set_tokenId($var)
     {
         $this->tokenId=$var;
+    }
+
+    public function set_category($var)
+    {
+        $this->category=$var;
     }
 
     public function set_lastRefreshed($var)
@@ -136,6 +141,11 @@ class NFT
         return($this->lastRefreshed);
     }
 
+    public function get_category()
+    {
+        return($this->category);
+    }
+
     public function get_tokenId()
     {
         return($this->tokenId);
@@ -163,11 +173,12 @@ class NFT
     public function insert()
     {
         //$id,$tokenId,$lastRefreshed,$price,$used,$forSale,$owner,$provider,$embassador,$tokenUri,$choose,$dirty;
-        $query="insert into NFT_Cache (tokenId, lastRefreshed, price, used, forSale, owner, provider, embassador, tokenUri, choose, dirty) values (?,?,?,?,?,?,?,?,?,?,?)";
+        $query="insert into NFT_Cache (tokenId, category, lastRefreshed, price, used, forSale, owner, provider, embassador, tokenUri, choose, dirty) values (?,?,?,?,?,?,?,?,?,?,?,?)";
         $resultado= $this->base->prepare($query);
 
         //$this->id=htmlentities(addslashes($this->id));
         $this->tokenId=htmlentities(addslashes($this->tokenId));
+        $this->category=htmlentities(addslashes($this->category));
         $this->lastRefreshed=htmlentities(addslashes($this->lastRefreshed));
         $this->price=htmlentities(addslashes($this->price));
         $this->used=htmlentities(addslashes($this->used));
@@ -179,7 +190,7 @@ class NFT
         $this->choose=htmlentities(addslashes($this->choose));
         $this->dirty=htmlentities(addslashes($this->dirty));
 
-        $resultado->execute(array($this->tokenId, $this->lastRefreshed, $this->price, $this->used, $this->forSale, $this->owner, $this->provider, $this->embassador, $this->tokenUri, $this->choose, $this->dirty));
+        $resultado->execute(array($this->tokenId, $this->category, $this->lastRefreshed, $this->price, $this->used, $this->forSale, $this->owner, $this->provider, $this->embassador, $this->tokenUri, $this->choose, $this->dirty));
         $resultado ->closeCursor();
     }
     
@@ -187,11 +198,12 @@ class NFT
     public function update($tokenId)
     {
         debug("Entre alhandler en el Update ",$tokenId,0);
-        $query="update NFT_Cache set tokenId=?, lastRefreshed=?, price=?, used=?, forSale=?, owner=?, provider=?, embassador=?, tokenUri=?, choose=?, dirty=? where tokenId='$tokenId'";
+        $query="update NFT_Cache set tokenId=?, category=?, lastRefreshed=?, price=?, used=?, forSale=?, owner=?, provider=?, embassador=?, tokenUri=?, choose=?, dirty=? where tokenId='$tokenId'";
         $resultado= $this->base->prepare($query);
 
         //$this->id=htmlentities(addslashes($this->id));
         $this->tokenId=htmlentities(addslashes($this->tokenId));
+        $this->category=htmlentities(addslashes($this->category));
         $this->lastRefreshed=htmlentities(addslashes($this->lastRefreshed));
         $this->price=htmlentities(addslashes($this->price));
         $this->used=htmlentities(addslashes($this->used));
@@ -203,7 +215,7 @@ class NFT
         $this->choose=htmlentities(addslashes($this->choose));
         $this->dirty=htmlentities(addslashes($this->dirty));
 
-        $resultado->execute(array($this->tokenId, $this->lastRefreshed, $this->price, $this->used, $this->forSale, $this->owner, $this->provider, $this->embassador, $this->tokenUri, $this->choose, $this->dirty));
+        $resultado->execute(array($this->tokenId, $this->category, $this->lastRefreshed, $this->price, $this->used, $this->forSale, $this->owner, $this->provider, $this->embassador, $this->tokenUri, $this->choose, $this->dirty));
         $resultado ->closeCursor();
     }
 
@@ -246,6 +258,7 @@ class NFT
         {
             $this->id=$fila[0]['id'];
             $this->tokenId=$fila[0]['tokenId'];
+            $this->category=$fila[0]['category'];
             $this->lastRefreshed=$fila[0]['lastRefreshed'];
             $this->price=$fila[0]['price'];
             $this->used=$fila[0]['used'];
@@ -261,6 +274,7 @@ class NFT
         {
             $this->id=0;//['id'];
             $this->tokenId=0;//['tokenId'];
+            $this->category=0;//['category'];
             $this->lastRefreshed=0;//['lastRefreshed'];
             $this->price=0;//['price'];
             $this->used=0;//['used'];
@@ -293,6 +307,7 @@ class NFT
         {
             $this->id=$fila[0]['id'];
             $this->tokenId=$fila[0]['tokenId'];
+            $this->category=$fila[0]['category'];
             $this->lastRefreshed=$fila[0]['lastRefreshed'];
             $this->price=$fila[0]['price'];
             $this->used=$fila[0]['used'];
@@ -308,6 +323,7 @@ class NFT
         {
             $this->id=0;//['id'];
             $this->tokenId=0;//['tokenId'];
+            $this->category=0;//['category'];
             $this->lastRefreshed=0;//['lastRefreshed'];
             $this->price=0;//['price'];
             $this->used=0;//['used'];
@@ -340,6 +356,7 @@ class NFT
         {
             $this->id=$fila[0]['id'];
             $this->tokenId=$fila[0]['tokenId'];
+            $this->category=$fila[0]['category'];
             $this->lastRefreshed=$fila[0]['lastRefreshed'];
             $this->price=$fila[0]['price'];
             $this->used=$fila[0]['used'];
@@ -355,6 +372,7 @@ class NFT
         {
             $this->id=0;//['id'];
             $this->tokenId=0;//['tokenId'];
+            $this->category=0;//['category'];
             $this->lastRefreshed=0;//['lastRefreshed'];
             $this->price=0;//['price'];
             $this->used=0;//['used'];
@@ -392,6 +410,7 @@ class NFT
         {
             $this->id=$fila[0]['id'];
             $this->tokenId=$fila[0]['tokenId'];
+            $this->category=$fila[0]['category'];
             $this->lastRefreshed=$fila[0]['lastRefreshed'];
             $this->price=$fila[0]['price'];
             $this->used=$fila[0]['used'];
@@ -409,6 +428,7 @@ class NFT
             debug("En Del handler de BBDD el chose minimo estaba empty ",'',0);
             $this->id=0;//['id'];
             $this->tokenId=0;//['tokenId'];
+            $this->category=0;//['category'];
             $this->lastRefreshed=0;//['lastRefreshed'];
             $this->price=0;//['price'];
             $this->used=0;//['used'];
@@ -440,6 +460,7 @@ class NFT
         {
             $this->id=$fila[0]['id'];
             $this->tokenId=$fila[0]['tokenId'];
+            $this->category=$fila[0]['category'];
             $this->lastRefreshed=$fila[0]['lastRefreshed'];
             $this->price=$fila[0]['price'];
             $this->used=$fila[0]['used'];
@@ -457,6 +478,7 @@ class NFT
             debug("En Del handler de BBDD el token maximo estaba empty ",'',0);
             $this->id=0;//['id'];
             $this->tokenId=0;//['tokenId'];
+            $this->category=0;//['category'];
             $this->lastRefreshed=0;//['lastRefreshed'];
             $this->price=0;//['price'];
             $this->used=0;//['used'];
@@ -471,6 +493,56 @@ class NFT
         //print_r($fila);
 
         return($fila);
+    }
+
+
+
+    public function readByCategory($category)
+    {
+        //SELECT * FROM `NFT_Cache` WHERE 1
+        $query="select * from NFT_Cache where category=:category";
+        $resultado= $this->base->prepare($query);
+        $category=htmlentities(addslashes($category));
+        $resultado->BindValue(":category",$category);
+        $resultado->execute();
+        $fila=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        $resultado ->closeCursor();
+
+    
+        if (!empty($fila[0])) // si fila no esta vacia carga estos valores
+        {
+            $this->id=$fila[0]['id'];
+            $this->tokenId=$fila[0]['tokenId'];
+            $this->category=$fila[0]['category'];
+            $this->lastRefreshed=$fila[0]['lastRefreshed'];
+            $this->price=$fila[0]['price'];
+            $this->used=$fila[0]['used'];
+            $this->forSale=$fila[0]['forSale'];       
+            $this->owner=$fila[0]['owner'];
+            $this->provider=$fila[0]['provider'];
+            $this->embassador=$fila[0]['embassador'];
+            $this->tokenUri=$fila[0]['tokenUri'];
+            $this->choose=$fila[0]['choose'];
+            $this->dirty=$fila[0]['dirty'];
+        }
+        else        // si el usuario no esta devuelve todo en 0
+        {
+            $this->id=0;//['id'];
+            $this->tokenId=0;//['tokenId'];
+            $this->category=0;//['category'];
+            $this->lastRefreshed=0;//['lastRefreshed'];
+            $this->price=0;//['price'];
+            $this->used=0;//['used'];
+            $this->forSale=0;//['forSale'];       
+            $this->owner=0;//['owner'];
+            $this->provider=0;//['provider'];
+            $this->embassador=0;//['embassador'];
+            $this->tokenUri=0;//['tokenUri'];
+            $this->choose=0;//['choose'];
+            $this->dirty=0;//['dirty'];
+        }
+        return ($fila);
+
     }
 
 

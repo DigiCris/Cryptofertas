@@ -16,6 +16,7 @@ $GLOBALS["embassador"]='0x0000000000000000000000000000000000000000';
 $GLOBALS["tokenId"]=0;
 
 $GLOBALS["id"]= 0;
+$GLOBALS["category"]= 254;
 $GLOBALS["dirty"]= 0;
 $GLOBALS["price"]= 0;
 $GLOBALS["used"]= 0;
@@ -36,6 +37,7 @@ debug("sali de refreshValues",'',0);
 //$GLOBALS["id"],$tokenId,$GLOBALS["lastRefreshed"],$GLOBALS["price"],$GLOBALS["used"],$GLOBALS["forSale"],$GLOBALS["owner"],$GLOBALS["provider"],$GLOBALS["embassador"],$GLOBALS["tokenUri"],$GLOBALS["choose"],$GLOBALS["dirty"];
 $NFT->set_id($GLOBALS["tokenId"]);
 $NFT->set_tokenId($GLOBALS["tokenId"]);
+$NFT->set_category($GLOBALS["category"]);
 $NFT->set_lastRefreshed($GLOBALS["lastRefreshed"]);
 $NFT->set_price($GLOBALS["price"]);
 $NFT->set_used($GLOBALS["used"]);
@@ -72,7 +74,7 @@ if( ($GLOBALS["insert"]==0) && empty($modified) )
 }
 else
 {
-   refresh_page(10, "index.php"); 
+   refresh_page(1, "index.php"); 
 }
 
 ////////////////////////////////////////// hasta aca/////////////////////////////////////////////////////////
@@ -86,7 +88,8 @@ function refreshValues()
     $GLOBALS["price"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','getPrice(uint256)',$GLOBALS["tokenId"],'uint');
     $GLOBALS["used"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','used(uint256)',$GLOBALS["tokenId"],"uint");
     $GLOBALS["forSale"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','inSale(uint256)',$GLOBALS["tokenId"],"uint"); 
-    $GLOBALS["embassador"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','nftEmbasador(uint256)',$GLOBALS["tokenId"],"address");   
+    $GLOBALS["embassador"]=call('0xE54CB67B86335286bE90c63E6C9632846D3830a1','nftEmbasador(uint256)',$GLOBALS["tokenId"],"address");  
+    $GLOBALS["category"]=getCategory($GLOBALS["tokenUri"]);   
 }
 
 
