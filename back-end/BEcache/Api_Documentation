@@ -4,7 +4,7 @@ General Information
 
 Base URL = https://cryptofertas.tk/backend/api.php
 method = GET
-Functions= readOwner, readProvider, readAll, readByCategory, readForSale, writeDirty.
+Functions= readOwner, readProvider, readAll, readByCategory, readForSale, readTokenId, writeDirty.
 
 
 Function Information
@@ -134,6 +134,19 @@ Calling example:
 Result example:
 	Same format that readProvider or readOwner
 
+
+
+Function readTokenId
+
+Params send:
+	function= readTokenId
+	param= TokenId of the NFT I want to read
+
+Calling example:
+	https://cryptofertas.tk/backend/api.php?function=readTokenId&param=0
+
+Result example:
+	Same format that readProvider or readOwner
 
 
 

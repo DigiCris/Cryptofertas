@@ -560,6 +560,19 @@ class NFT
         return ($fila);
     }
 
+    public function readTokenId($tokenId)
+    {
+        //SELECT * FROM `NFT_Cache` WHERE 1
+        $query="select * from NFT_Cache where tokenId=:tokenId";
+        $resultado= $this->base->prepare($query);
+        $tokenId=htmlentities(addslashes($tokenId));
+        $resultado->BindValue(":tokenId",$tokenId);
+        $resultado->execute();
+        $fila=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        $resultado ->closeCursor();
+        return ($fila);
+    }
+
 
 }
 
