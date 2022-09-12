@@ -37,10 +37,22 @@ import {
     },
   ];    
   
-  export default function WithSubnavigation() {
+  export default function WithSubnavigation({value}) {
     const linkHoverColor = useColorModeValue('gray.800', 'white');
+    const linkHoverColor2 = useColorModeValue('green','gray.800');
   
     const {ownerOrCreated} = useParams()
+
+    const getActiveLabel = (currentLabel) => {
+      if(value === "actives" && currentLabel === "Activos") {
+        return true
+      } else if(value === "used" && currentLabel === "Usados") {
+        return true
+      }
+        else {
+        return false
+      }
+    }
 
     const getRightLinks = data => {
       if(data === "created") {
@@ -64,6 +76,7 @@ import {
                 fontSize={'sm'}
                 fontWeight={500}
                 to={navItem.href}
+                color={getActiveLabel(navItem.label) ? linkHoverColor2 : null}
                 _hover={{
                   textDecoration: 'none',
                   color: linkHoverColor,
