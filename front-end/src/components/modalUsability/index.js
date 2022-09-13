@@ -7,12 +7,11 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  useDisclosure,
   Button,
   Text,
   Center,
-  extendTheme,
-  useToast
+  VStack,
+  useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 
@@ -20,23 +19,10 @@ import { useWeb3React } from "@web3-react/core";
 import QR from "../QR";
 import useNFTFactory from "../../hooks/useNFTFactory";
 
-const borderRadius = {
-  radii: {
-    none: "0",
-    sm: "0.125rem",
-    base: "0.25rem",
-    md: "0.375rem",
-    lg: "0.5rem",
-    xl: "0.75rem",
-    "2xl": "1rem",
-    "3xl": "1.5rem",
-    full: "9999px",
-  },
-};
-
 function ModalUsability(props) {
   const { isOpen, onClose, tokenId } = props;
-  const { active, activate, deactivate, account, error, library } = useWeb3React();
+  const { active, activate, deactivate, account, error, library } =
+    useWeb3React();
   const [usedQR, setUsedQR] = useState(false);
 
   const NFTFactory = useNFTFactory();
@@ -48,41 +34,41 @@ function ModalUsability(props) {
       .MarkUsed(tokenid)
       .send({
         from: account,
-        gas: 3000000
+        gas: 3000000,
       })
       .on("transactionHash", (txHash) => {
         toast({
           title: "Transacción enviada",
           description: txHash,
-          status: "info"
-        })
+          status: "info",
+        });
       })
       .on("receipt", async () => {
         setUsedQR(true);
-        const res = await axios.get(`https://cryptofertas.tk/backend/api.php?function=writeDirty&param=${tokenid}`);
+        const res = await axios.get(
+          `https://cryptofertas.tk/backend/api.php?function=writeDirty&param=${tokenid}`
+        );
         //const resdata = res.data
         //console.log('resdirty',resdata,tokenid)
         toast({
           title: "Transacción confirmada.",
           description: "Cupón redimido",
-          status: "success"
-        })
+          status: "success",
+        });
       })
       .on("error", (error) => {
         setUsedQR(false);
         toast({
           title: "Transacción fallida",
           description: "Cupón no redimido",
-          status: "error"
-        })
-      })
+          status: "error",
+        });
+      });
   };
 
   return (
     <>
-      <Center>
-        {/* <Button onClick={onOpen}>{titleButton}</Button> */}
-      </Center>
+      <Center>{/* <Button onClick={onOpen}>{titleButton}</Button> */}</Center>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
@@ -99,24 +85,26 @@ function ModalUsability(props) {
               <ModalCloseButton />
               <ModalBody>
                 <QR></QR>
-                <Button isLoading={usedQR} onClick={() => canjearNFT(tokenId)}>Canjear cupón</Button>
               </ModalBody>
-              <Center>
+              
+              <ModalFooter>
+              <VStack  w={'full'}>
+                <Button 
+                isLoading={usedQR} 
+                colorScheme={"green"}
+                mt={10}
+                w="100%"
+                onClick={() => canjearNFT(tokenId)}>
+                  Canjear cupón
+                </Button>
                 <Button
-                  width="287px"
-                  height="35px"
-                  backgroundColor="white"
-                  border="1px"
-                  borderRadius="xl"
-                  borderColor="gray.300"
+                 variant='outline'  w="100%"
                   onClick={onClose}
                 >
-                  <Text color="gray" fontSize="sm">
                     Cerrar
-                  </Text>
                 </Button>
-              </Center>
-              <ModalFooter></ModalFooter>
+                </VStack>
+              </ModalFooter>
             </>
           ) : (
             <>
@@ -135,17 +123,10 @@ function ModalUsability(props) {
               </ModalBody>
               <Center>
                 <Button
-                  width="287px"
-                  height="35px"
-                  backgroundColor="white"
-                  border="1px"
-                  borderRadius="xl"
-                  borderColor="gray.300"
+                  variant='outline'  w="100%"
                   onClick={onClose}
                 >
-                  <Text color="gray" fontSize="sm">
                     Cerrar
-                  </Text>
                 </Button>
               </Center>
               <ModalFooter></ModalFooter>
