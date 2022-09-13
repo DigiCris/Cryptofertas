@@ -1,3 +1,5 @@
+import { useRef } from 'react'
+import { useEffect } from "react";
 import {
   Box,
   Flex,
@@ -6,21 +8,33 @@ import {
   useDisclosure,
   useColorModeValue,
   Stack,
+  VStack,
+  Divider,
+  Text,
+  Button,
   Image,
   Heading,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
-
-import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
+import { HamburgerIcon, CloseIcon, QuestionIcon } from "@chakra-ui/icons";
 import NavLink from "./nav-link";
 import WalletData from "./wallet-data";
 import TokenClaim from "./token-claim";
+import {
+  Drawer,
+  DrawerBody,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+} from '@chakra-ui/react';
 
 const Links = [
   {
-    name: "Home",
-    to: "/",
+    name: "Cupones comprados",
+    to: "/user-coupons",
   },
+
   {
     name: "Mis Cupones Comprados",
     to: "/user-coupons/owner/actives",
@@ -31,10 +45,10 @@ const Links = [
   },
 ];
 
-
-
 const MainLayout = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const btnRef = useRef()
+
 
   return (
     <Flex minH="100vh" direction="column">
@@ -88,15 +102,58 @@ const MainLayout = ({ children }) => {
         </Flex>
 
         {isOpen ? (
-          <Box pb={4} display={{ md: "none" }}>
-            <Stack as={"nav"} spacing={4}>
+        <Drawer
+        isOpen={isOpen}
+        placement='left'
+        onClose={onClose}
+        finalFocusRef={btnRef}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>Categorias</DrawerHeader>
+
+          {/* For the categories, just to show this working, i used ul tag, but this may be replaced by a navlink */}
+          <DrawerBody color={'gray.500'}>
+          <Flex flexDir="column" align="left" lineHeight={10}  >
+              {Filters.map(({ name, to }) => (
+                <ul key={name}>
+                  {name}
+                </ul>
+              ))}
+            <Divider />
+
+            <Flex flexDir="column" align="left">
               {Links.map(({ name, to }) => (
                 <NavLink key={name} to={to}>
                   {name}
                 </NavLink>
               ))}
-            </Stack>
-          </Box>
+            </Flex>
+
+            <Flex flexDir="column" align="left" mt={10}>
+            <div>Quieres publicar una oferta?</div>
+          <Button
+            background={'#67E992'}
+            color={'white'}
+            _hover={{
+
+              boxShadow: 'xl',
+            }}
+            onClick={onOpen}>
+            Crear Cupón
+          </Button>
+            </Flex>
+            </Flex>
+          </DrawerBody>
+
+          <DrawerFooter borderTopWidth='1px' justify={'flex-start'}>
+          <Flex flexDir="row" align="center" color={'gray.500'}>
+            <QuestionIcon/><Text ml='2'>Ayuda</Text>
+          </Flex>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
         ) : null}
       </Box>
       <Box mx="auto" flex={1} p={4} maxW={"7xl"} width="100%">
