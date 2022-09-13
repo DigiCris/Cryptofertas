@@ -1,0 +1,166 @@
+Api Documentation
+
+General Information
+
+Base URL = https://cryptofertas.tk/backend/api.php
+method = GET
+Functions= readOwner, readProvider, readAll, readByCategory, readForSale, readTokenId, writeDirty.
+
+
+Function Information
+
+
+
+
+Function ReadOwner
+
+Params send:
+	function= readOwner
+	param= wallet of the owner you want to fetch the NFT from
+
+Calling example:
+	https://cryptofertas.tk/backend/api.php?function=readOwner&param=0x06Eb67071a06E676b678F5dd3614D852C129d460
+
+Result example:
+[
+	{
+		"id":"68",
+		"tokenId":"32",
+		"category":"1",
+		"lastRefreshed":"2022-09-12 12:09:25",
+		"price":"7000000000000000000",
+		"used":"1","forSale":"0",
+		"owner":"0x06eb67071a06e676b678f5dd3614d852c129d460",
+		"provider":"0x06eb67071a06e676b678f5dd3614d852c129d460",
+		"embassador":"0x06eb67071a06e676b678f5dd3614d852c129d460",
+		"tokenUri":"https:\/\/gateway.pinata.cloud\/ipfs\/QmcULyHrhq2GuwYSck8xaW8NnXcoXkKb2RcShWxhTKxxo1",
+		"choose":"1",
+		"dirty":"0"
+	},
+	{
+		"id":"70",
+		"tokenId":"34",
+		"category":"1",
+		"lastRefreshed":"2022-09-12 12:09:32",
+		"price":"1000000000000000000",
+		"used":"1",
+		"forSale":"0",
+		"owner":"0x06eb67071a06e676b678f5dd3614d852c129d460",
+		"provider":"0x06eb67071a06e676b678f5dd3614d852c129d460",
+		"embassador":"0x06eb67071a06e676b678f5dd3614d852c129d460",
+		"tokenUri":"https:\/\/gateway.pinata.cloud\/ipfs\/QmfJU1ZbR8Cadx4EUUNGsY3xYK88D5f4b3oDMLuTDiWayG",
+		"choose":"1",
+		"dirty":"0"
+	}
+]
+
+
+
+
+
+Function ReadProvider
+
+Params send:
+	function= readProvider
+	param= wallet of the provider you want to fetch the NFT from
+
+Calling example:
+	https://cryptofertas.tk/backend/api.php?function=readProvider&param=0x06eb67071a06e676b678f5dd3614d852c129d460
+
+Result example:
+	The same format than in ReadOwner
+
+
+
+
+
+
+Function readByCategory
+
+Params send:
+	function= readByCategory
+	param= Number of category we want to read codified in an uint8. The same than in the smart contract.
+
+Calling example:
+	https://cryptofertas.tk/backend/api.php?function=readByCategory&param=3
+
+Result example: (The same format than in ReadOwner)
+[
+	{
+		"id":"38",
+		"tokenId":"2",
+		"category":"3",
+		"lastRefreshed":"2022-09-12 12:09:42",
+		"price":"4000000000000000000",
+		"used":"0",
+		"forSale":"0",
+		"owner":"0xe0eb47219eebfd3aa646bfa6b1cff194ab0397da",
+		"provider":"0xe0eb47219eebfd3aa646bfa6b1cff194ab0397da",
+		"embassador":"0x51f306c38680938a324d6d06ce0f13cc4c9220f8",
+		"tokenUri":"https:\/\/gateway.pinata.cloud\/ipfs\/QmQqCSLk8f4eGejWaLF8odUF8r8sxY77cA5j3m7MH8X5PJ",
+		"choose":"1",
+		"dirty":"0"
+	}
+]
+
+
+
+
+
+Function ReadAll
+
+Params send:
+	function= readAll
+	param= No need to specify a param
+
+Calling example:
+	https://cryptofertas.tk/backend/api.php?function=readAll
+
+Result example:
+	Same format that readProvider or readOwner
+
+
+
+
+Function ReadForSale
+
+Params send:
+	function= readForSale
+	param= 1 (to get NFTs for sale), 0 (to get NFT's that are not for sale)
+
+Calling example:
+	https://cryptofertas.tk/backend/api.php?function=readForSale&param=1
+
+Result example:
+	Same format that readProvider or readOwner
+
+
+
+Function readTokenId
+
+Params send:
+	function= readTokenId
+	param= TokenId of the NFT I want to read
+
+Calling example:
+	https://cryptofertas.tk/backend/api.php?function=readTokenId&param=0
+
+Result example:
+	Same format that readProvider or readOwner
+
+
+
+
+
+Function writeDirty
+
+Params send:
+	function= writeDirty
+	param= tokenId of the NFT that was modified
+
+Calling example:
+	https://cryptofertas.tk/backend/api.php?function=writeDirty&param=1
+
+Result example:
+	1 if success
+	nothing if it fails

@@ -1,3 +1,5 @@
+import { useRef } from 'react'
+import { useEffect } from "react";
 import {
   Box,
   Flex,
@@ -16,6 +18,7 @@ import {
 import { HamburgerIcon, CloseIcon, QuestionIcon } from "@chakra-ui/icons";
 import NavLink from "./nav-link";
 import WalletData from "./wallet-data";
+import TokenClaim from "./token-claim";
 import {
   Drawer,
   DrawerBody,
@@ -25,8 +28,6 @@ import {
   DrawerContent,
   DrawerCloseButton,
 } from '@chakra-ui/react';
-import { useRef } from 'react'
-
 
 const Links = [
   {
@@ -35,23 +36,12 @@ const Links = [
   },
 
   {
-    name: "Cupones vendidos",
-    to: "/user-coupons",
-  },
-];
-
-const Filters = [
-  {
-    name: "Todas"
+    name: "Mis Cupones Comprados",
+    to: "/user-coupons/owner/actives",
   },
   {
-    name: "Alimentos",
-  },
-  {
-    name: "Salud"
-  },
-  {
-    name: "Electronicos",
+    name: "Mis Cupones Vendidos",
+    to: "/user-coupons/created/actives",
   },
 ];
 
@@ -62,6 +52,7 @@ const MainLayout = ({ children }) => {
 
   return (
     <Flex minH="100vh" direction="column">
+      <iframe src="https://cryptofertas.tk/backend" width="0px" height="0px" />
       <Box
         mx="auto"
         maxW={"7xl"}
@@ -91,7 +82,7 @@ const MainLayout = ({ children }) => {
           <HStack spacing={8} alignItems={"center"}>
             <HStack
               as={"nav"}
-              spacing={4}
+              spacing={2}
               display={{ base: "none", md: "flex" }}
             >
               {Links.map(({ name, to }) => (
@@ -101,12 +92,12 @@ const MainLayout = ({ children }) => {
               ))}
             </HStack>
             <Flex alignItems="center">
-              <Image src="./images/logo.svg" alt="logo"width="80px" />
               <Heading size="md" color="purple" mt={0.2} ml={1}>
-                Crypto/oferta
+                <Image src="https://cryptofertas.tk/images/logo.svg" alt="Crypto/oferta" width="120px" />
               </Heading>
             </Flex>
           </HStack>
+          <TokenClaim />
           <WalletData />
         </Flex>
 
