@@ -8,7 +8,9 @@ import {
   useDisclosure,
   useColorModeValue,
   Text,
+  Show,
   Button,
+  Divider,
   Image,
   Heading,
 } from "@chakra-ui/react";
@@ -72,14 +74,14 @@ const MainLayout = ({ children }) => {
             size={"md"}
             icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
             aria-label={"Open Menu"}
-            display={{ md: "none" }}
+            display={{ lg: "none" }}
             onClick={isOpen ? onClose : onOpen}
           />
-          <HStack spacing={8} alignItems={"center"}>
+          <HStack spacing={2} alignItems={"center"}>
             <HStack
               as={"nav"}
-              spacing={2}
-              display={{ base: "none", md: "flex" }}
+              spacing={4}
+              display={{ base: "none", lg: "flex" }}
             >
               {Links.map(({ name, to }) => (
                 <NavLink key={name} to={to}>
@@ -87,13 +89,16 @@ const MainLayout = ({ children }) => {
                 </NavLink>
               ))}
             </HStack>
+            </HStack>
             <Flex alignItems="center">
-              <Heading size="md" color="purple" mt={0.2} ml={1}>
-                <Image src="https://cryptofertas.tk/images/logo.svg" alt="Crypto/oferta" width="120px" />
+              <Heading size="md" mt={0.2}>
+                <Image src="https://cryptofertas.tk/images/logo.svg" alt="Crypto/oferta" width="150px" />
               </Heading>
             </Flex>
-          </HStack>
+         
+          <Show above='lg'>
           <TokenClaim />
+          </Show>
           <WalletData />
         </Flex>
 
@@ -133,6 +138,8 @@ const MainLayout = ({ children }) => {
             onClick={onOpen}>
             Crear Cupón
           </Button>
+          <Divider my={8}/>
+          <TokenClaim />
 
             </Flex>
           </DrawerBody>
