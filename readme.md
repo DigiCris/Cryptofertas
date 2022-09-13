@@ -2,7 +2,7 @@
 
 Criptoferta is a decentralized platform that connects users in the crypto space to trade NFT discount coupons for products and services to mitigate inflation.
 
-Blockchain technology will allow for self-managed business model where all users would benefit from our native token.
+Blockchain technology will allow for a self-managed business model where all users will benefit from our native token.
 
 ![Imgur](https://imgur.com/dkP7USh.png)
 
@@ -16,7 +16,7 @@ http://criptofertas.tk/notion
 
 **Instalation**
 
-Smart contracts developed on Solidity language and deployed with Rinkeby Testnet
+Smart contracts developed with Solidity language and deployed to Rinkeby Testnet
 Front-end developed with React.js
 
 ```npm i```
