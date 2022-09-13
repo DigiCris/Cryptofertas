@@ -72,7 +72,7 @@ export default function CuponImage({data}) {
                   ${oldPrice}
                 </Text>
                 <Text fontWeight={800}
-              fontSize={{ base: "2xl", md: "3xl" }}  color={"green.300"}
+              fontSize={{ base: "xl", md: "2xl" }}  color={"green.300"}
               lineHeight={1.8}>
                   ${newPrice}
                 </Text>
@@ -91,15 +91,14 @@ export default function CuponImage({data}) {
                   flex={1}
                   fontSize={'md'}
                   rounded={'full'}
-                  bg={isUsed ? "gray" : 'green.300'}
-                  size='xs'
-                  py={5}
+                  bg={isUsed ? "gray.600" : 'green.300'}
+                  size='md'
                   color={'white'}
                   _hover={{
-                    bg: isUsed ? "gray" : 'green.500',
+                    bg: isUsed ? "gray.700" : 'green.500',
                   }}
                   _focus={{
-                    bg: isUsed ? "gray" : 'green.500',
+                    bg: isUsed ? "gray.700" : 'green.500',
                   }}>
                     {isUsed ? <Link as={ReachLink} to={`/productDetails/${tokenId}`} _hover={{textDecoration: 'none'}}><span>Usado</span></Link> : <Link as={ReachLink} to={`/productDetails/${tokenId}`} _hover={{textDecoration: 'none'}}><span>Canjear</span></Link>}
                 </Button> 

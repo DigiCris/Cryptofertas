@@ -345,7 +345,7 @@ const convertISOTimeToTimeOfExpiration = isotime => {
               <>
                 {
                   allCoupons.length > 0 ?
-                    <SimpleGrid columns={[1, 1,2, 3]} gap={10} pt={8} maxW={{ base: "90%", md: "4xl" }}>
+                    <SimpleGrid columns={[1, 1,2, 3,]} gap={10} pt={8} maxW={{ base: "90%", md: "4xl" }}>
                       {//new Array(14).fill().map(() => (
                         allCoupons.map((datacoupon) => (
                       console.log(datacoupon.tokenId, "este es datacoupon"),
