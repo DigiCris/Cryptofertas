@@ -38,8 +38,8 @@ import {
   ];    
   
   export default function WithSubnavigation({value}) {
-    const linkHoverColor = useColorModeValue('gray.800', 'white');
-    const linkHoverColor2 = useColorModeValue('green','gray.800');
+    const linkHoverColor = useColorModeValue('green.400', 'white');
+    const linkHoverColor2 = useColorModeValue('green.500','green.500');
   
     const {ownerOrCreated} = useParams()
 
@@ -73,10 +73,10 @@ import {
                 p={2}
                 href={navItem.href ?? '#'}
                 as={ReachLink}
-                fontSize={'sm'}
+                fontSize={{ base: "md" }}
                 fontWeight={500}
                 to={navItem.href}
-                color={getActiveLabel(navItem.label) ? linkHoverColor2 : null}
+                color={getActiveLabel(navItem.label) ? linkHoverColor2 : "gray.600"}
                 _hover={{
                   textDecoration: 'none',
                   color: linkHoverColor,
