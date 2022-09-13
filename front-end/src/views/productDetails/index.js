@@ -36,7 +36,7 @@ const ProductDetails = () => {
   } = useDisclosure();
 
   const metamaskValidation = () => {
-    active ? onOpen() : onTransactionOpen();
+    !active ? onOpen() : onTransactionOpen();
     !active ? onOpen() : onUsabilityOpen();
   };
 
