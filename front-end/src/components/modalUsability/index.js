@@ -73,7 +73,7 @@ function ModalUsability(props) {
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
-          {usedQR ? (
+          {!usedQR ? (
             <>
               <ModalHeader mt="8" as="h3" size="lg" align="center">
                 Canjear cupón
