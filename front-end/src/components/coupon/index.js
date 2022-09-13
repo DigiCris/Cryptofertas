@@ -32,7 +32,7 @@ export default function CuponImage({data}) {
     <Stack  borderRadius="5%" boxShadow={'md'}>
       <Center>
       <Stack
-        w={'80%'}
+        w={'95%'}
         h={{ sm: '350px', md: '360px'}}
         direction={'column' }
         color={'white'}
