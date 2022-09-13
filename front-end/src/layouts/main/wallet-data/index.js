@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import {
   Flex,
   Button,
+  Show,
   Tag,
   TagLabel,
   Badge,
@@ -49,10 +50,12 @@ const WalletData = () => {
     <Flex alignItems={"center"}>
       {active ? (
         <Tag colorScheme="green" borderRadius="full">
-          <TagLabel>
+          <Show above='md'>
+          <TagLabel >
             {/* <Link to={`/punks?address=${account}`}>{truncatedAddress}</Link> */}
             {truncatedAddress}
           </TagLabel>
+          </Show>
           <Badge
             d={{
               base: "none",

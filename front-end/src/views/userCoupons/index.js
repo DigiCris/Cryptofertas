@@ -3,7 +3,7 @@ import axios from "axios"
 import NavbarCoupons from "../../components/navbarCoupons"
 import PageNotFound from "../pageNotFound"
 import Coupons from "../../components/coupon"
-import {Grid, GridItem, Center} from '@chakra-ui/react';
+import {SimpleGrid, GridItem, Center} from '@chakra-ui/react';
 import {useParams} from "react-router-dom";
 import {useWeb3React } from "@web3-react/core";
 import EmptyCouponList from "../../components/emptyCouponList"
@@ -197,13 +197,13 @@ const UserCoupons = () => {
       <>
         <NavbarCoupons value={value}/>
         <Center width={"100%"}>
-        <Grid templateColumns={{lg: "repeat(4, 1fr)",md: "repeat(3, 1fr)"}} width={"100%"} >
+        <SimpleGrid columns={[1, 1,2, 3]} gap={10} pt={8} maxW={{ base: "90%", md: "4xl" }}>
           {arrayToDisplay.map((data, i) => (
             <GridItem justifySelf={"center"} width={"90%"} mb={4} key={i} >
               <Coupons data={data}/>
             </GridItem>
           ))}
-        </Grid>
+        </SimpleGrid>
         </Center>
       </>
     );

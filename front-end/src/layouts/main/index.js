@@ -1,3 +1,5 @@
+import { useRef } from 'react'
+import { useEffect } from "react";
 import {
   Box,
   Flex,
@@ -5,36 +7,46 @@ import {
   IconButton,
   useDisclosure,
   useColorModeValue,
-  Stack,
+  Text,
+  Show,
+  Button,
+  Divider,
   Image,
   Heading,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
-
-import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
+import { HamburgerIcon, CloseIcon, QuestionIcon } from "@chakra-ui/icons";
 import NavLink from "./nav-link";
 import WalletData from "./wallet-data";
 import TokenClaim from "./token-claim";
+import {
+  Drawer,
+  DrawerBody,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+} from '@chakra-ui/react';
 
 const Links = [
   {
-    name: "Home",
+    name: "Inicio",
     to: "/",
   },
   {
-    name: "Mis Cupones Comprados",
+    name: "Cupones Comprados",
     to: "/user-coupons/owner/actives",
   },
   {
-    name: "Mis Cupones Vendidos",
+    name: "Cupones Vendidos",
     to: "/user-coupons/created/actives",
   },
 ];
 
-
-
 const MainLayout = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const btnRef = useRef()
+
 
   return (
     <Flex minH="100vh" direction="column">
@@ -62,14 +74,14 @@ const MainLayout = ({ children }) => {
             size={"md"}
             icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
             aria-label={"Open Menu"}
-            display={{ md: "none" }}
+            display={{ lg: "none" }}
             onClick={isOpen ? onClose : onOpen}
           />
-          <HStack spacing={8} alignItems={"center"}>
+          <HStack spacing={2} alignItems={"center"}>
             <HStack
               as={"nav"}
-              spacing={2}
-              display={{ base: "none", md: "flex" }}
+              spacing={4}
+              display={{ base: "none", lg: "flex" }}
             >
               {Links.map(({ name, to }) => (
                 <NavLink key={name} to={to}>
@@ -77,26 +89,68 @@ const MainLayout = ({ children }) => {
                 </NavLink>
               ))}
             </HStack>
+            </HStack>
             <Flex alignItems="center">
-              <Heading size="md" color="purple" mt={0.2} ml={1}>
-                <Image src="https://cryptofertas.tk/images/logo.svg" alt="Crypto/oferta" width="120px" />
+              <Heading size="md" mt={0.2}>
+                <Image src="https://cryptofertas.tk/images/logo.svg" alt="Crypto/oferta" width="150px" />
               </Heading>
             </Flex>
-          </HStack>
+         
+          <Show above='lg'>
           <TokenClaim />
+          </Show>
           <WalletData />
         </Flex>
 
         {isOpen ? (
-          <Box pb={4} display={{ md: "none" }}>
-            <Stack as={"nav"} spacing={4}>
+        <Drawer
+        isOpen={isOpen}
+        placement='left'
+        onClose={onClose}
+        finalFocusRef={btnRef}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerHeader>  <Image src="https://cryptofertas.tk/images/logo.svg" alt="Crypto/oferta" width="160px" mt="20px" />
+          <DrawerCloseButton mt={6}/>
+          </DrawerHeader>
+
+          {/* For the categories, just to show this working, i used ul tag, but this may be replaced by a navlink */}
+          <DrawerBody color={'gray.500'}>
+
+            <Flex flexDir="column" align="left">
               {Links.map(({ name, to }) => (
                 <NavLink key={name} to={to}>
                   {name}
                 </NavLink>
               ))}
-            </Stack>
-          </Box>
+            </Flex>
+
+            <Flex flexDir="column" align="left" mt={10}>
+            <div>Quieres publicar una oferta?</div>
+          <Button
+            background={'#67E992'}
+            color={'white'}
+            _hover={{
+
+              boxShadow: 'xl',
+            }}
+            onClick={onOpen}>
+            Crear Cupón
+          </Button>
+          <Divider my={8}/>
+          <TokenClaim />
+
+            </Flex>
+          </DrawerBody>
+
+          <DrawerFooter borderTopWidth='1px' justify={'flex-start'}>
+          <Flex flexDir="row" align="center" color={'gray.500'}>
+            <QuestionIcon/><Text ml='2'>Ayuda</Text>
+          </Flex>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
         ) : null}
       </Box>
       <Box mx="auto" flex={1} p={4} maxW={"7xl"} width="100%">
