@@ -14,10 +14,7 @@ import {
   ModalFooter,
   Heading,
   Text,
-  Icon,
-  HStack,
   useToast,
-  Grid,
   SimpleGrid
 } from '@chakra-ui/react'
 import { Link, useLocation, useHistory} from "react-router-dom";
@@ -297,8 +294,8 @@ const convertISOTimeToTimeOfExpiration = isotime => {
       <VStack>
         <Heading
           color={'gray.800'}
-          lineHeight={1.1}
-          fontSize={{ base: '2xl', sm: '3xl', md: '4xl' }}>
+          lineHeight={1.4}
+          fontSize={{ base: '2xl', sm: '3xl', md: '4xl' }} textAlign="center" px={{ base: '4', sm: '6', md: '12'}}>
           Encuentra las mejores&nbsp;
           <Text
             as={'span'}
@@ -306,10 +303,9 @@ const convertISOTimeToTimeOfExpiration = isotime => {
             bgClip="text">
             ofertas&nbsp;
           </Text>
-          y paga con tus cryptomonedas
+          <br></br>
+          y paga con tus criptomonedas
         </Heading>
-
-        {/* <ModalUsability></ModalUsability> */}
 
         <Modal
           initialFocusRef={initialRef}
@@ -329,51 +325,27 @@ const convertISOTimeToTimeOfExpiration = isotime => {
         </Modal>
         {active ?
           <>
-            <div>Quieres publicar una oferta?</div>
+            <Text  fontSize={{ base: "md", sm: "lg", md: "xl" }} color={"gray.600"} pt={4} py={2}
+              fontWeight={400}>Quieres publicar una oferta?</Text>
             <Button
               background={'#67E992'}
               color={'white'}
+              w={{ base: "100%", sm: "30%" }}
+              fontSize={{ base: "md", md: "lg" }}
+                colorScheme={"green"}
               _hover={{
-
                 boxShadow: 'xl',
               }}
               onClick={onOpen}>
               Crear Cupón
             </Button>
-            {/* <Button
-              background={'blue'}
-              color={'white'}
-              _hover={{
-
-                boxShadow: 'xl',
-              }}
-              onClick={onTestingBuy}>
-              Comprando cupón
-            </Button>
-            <Button
-              background={'red'}
-              color={'white'}
-              _hover={{
-
-                boxShadow: 'xl',
-              }}
-              onClick={onTestingBuy}>
-              Usar cupon
-            </Button> */}
-            {/*             <HStack>
-              <Icon w={8} h={8} color='red.500' />
-
-              <Icon w={8} h={8} />
-
-              <Icon w={8} h={8} />
-            </HStack> */}
             {loadingCoupons ?
               <Loading />
               :
               <>
                 {
                   allCoupons.length > 0 ?
-                    <SimpleGrid columns={[1, 2, null, 3]} gap={10}>
+                    <SimpleGrid columns={[1, 2, 3]} gap={10} pt={8} maxW={{ base: "90%", md: "4xl" }}>
                       {//new Array(14).fill().map(() => (
                         allCoupons.map((datacoupon) => (
                       console.log(datacoupon.tokenId, "este es datacoupon"),
@@ -382,19 +354,23 @@ const convertISOTimeToTimeOfExpiration = isotime => {
                           </Link>
                         ))}
                     </SimpleGrid>
-                    : <div>No hay cupones</div>
+                    : <div> No hay cupones</div>
                 }
               </>
             }</>
             :
-            <Text
-              as={'span'}
-              lineHeight={1.5}
-              fontSize={{ base: '2xl', sm: '3xl', md: '4xl' }}
-              background={'#d1320f'}
-              bgClip="text">
+            <Button
+            colorScheme={"green"}
+            color={'white'}
+            w={{ base: "100%", sm: "30%" }}
+            fontSize={{ base: "md", md: "lg" }}
+            _hover={{
+              boxShadow: 'xl',
+            }}
+
+            onClick={connect}>
               Conecta tu Wallet !
-            </Text>
+            </Button>
         }
           </VStack>
     </Center >
