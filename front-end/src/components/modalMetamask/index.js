@@ -3,7 +3,10 @@ import {
     Center,
     Text,
     Image,
-    VStack
+    VStack,
+    Heading,
+    ModalHeader,
+    Flex
   } from '@chakra-ui/react';
   import {
     Modal,
@@ -18,7 +21,7 @@ import {
 import { connector } from '../../config/web3'
   import { Button } from '@chakra-ui/react';
   const IMAGE =
-    'https://images.unsplash.com/photo-1518051870910-a46e30d9db16?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1350&q=80';
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/MetaMask_Fox.svg/800px-MetaMask_Fox.svg.png';
   
   
   const ModalMetamask = (props) => {
@@ -51,18 +54,25 @@ import { connector } from '../../config/web3'
         <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-        <Center py={12}>
+        
+        <ModalHeader>
+        <ModalCloseButton />
+        </ModalHeader>
+        <ModalBody>
+        <Flex  flex={1}
+          flexDirection="column"
+          align="center">
+        <Heading m='4' as='h3'color={'red.400'} size='lg' align="center">
+        Debes conectar tu wallet!</Heading>
         <Image
             rounded={'lg'}
-            height={230}
-            width={282}
+            height={200}
+            width={220}
             objectFit={'cover'}
             src={IMAGE}
           />
-          </Center>
-          <ModalCloseButton />
-          <ModalBody>
-          <Text color={'gray.500'} align="center"> Primero debe conectar su billetera para firmar mensajes y enviar transacciones a la red Ethereum</Text>
+          <Text color={'gray.500'} align="center"> Para comenzar debe conectar su billetera para firmar mensajes y enviar transacciones a la red Ethereum</Text>
+          </Flex>
           </ModalBody>
 
           <ModalFooter>

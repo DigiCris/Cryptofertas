@@ -1,6 +1,7 @@
 import {
   Button,
   Center,
+  Badge,
   Flex,
   Image,
   Stack,
@@ -28,38 +29,38 @@ export default function CuponImage({data}) {
   }
 
   return (
-    <Stack borderWidth="1px" borderRadius="3%" boxShadow={'md'}>
+    <Stack  borderRadius="5%" boxShadow={'md'}>
       <Center>
       <Stack
-        w={{ md: '90%', sm: '90%' }}
-        h={{ md: '30%', sm: '160px' }}
-        direction={{ base: ['row'], md: 'column' }}
+        w={'80%'}
+        h={{ sm: '350px', md: '360px'}}
+        direction={'column' }
         color={'white'}
         padding={2}
         gap={2}
         
         >  
-        <Flex flex={1}>
+
           <Image
             objectFit="cover"
-            boxSize="100%"
-            borderRadius="7%"
+            borderRadius="5%"
             src={
               image
             }
-            height={{md:"200px", lg:"180px"}}
+            w={'100%'}
+            height={{base:"180px", 
+            md:"200px"}}
           />
-        </Flex>
+
         <Stack
           flex={1}
           flexDirection="column"
-          justifyContent="space-between"
           >
           <Stack width="60%">
-            <Button size='xs' fontSize="16px" fontWeight="bold" rounded={'full'} backgroundColor={"red"} color='white' cursor="auto" _active={{backgroundColor:"red", color:'white', cursor: "auto"}} _hover={{backgroundColor:"red", color:'white', cursor: "auto"}}>{expiration}</Button>
+            <Badge  w={'120px'} size='xs' fontSize="16px" fontWeight="bold" rounded={'full'} backgroundColor={"red.500"} color='white' cursor="auto" pl="4">{expiration}</Badge>
           </Stack>
           <Stack>
-            <Text fontWeight={600} fontSize='md' color={'black'} mb={-4} size="sm" >
+            <Text fontWeight={600} fontSize={{ base: "lg", md: "xl" }}color={"gray.600"} mb={-4} size="sm" noOfLines={1} >
               {name}
             </Text>
           </Stack>
@@ -67,10 +68,12 @@ export default function CuponImage({data}) {
             <Grid  templateColumns='repeat(2, 1fr)'  width={"100%"} >
               <GridItem height={"100%"}>
               <Stack align={'left'} spacing={-2}>
-                <Text fontSize='sm' color={'red.500'} textDecoration={'line-through'}>
+                <Text color={"red.500"}  fontSize={{ base: "md", sm: "xl"}} lineHeight={1.6} textDecoration={'line-through'}>
                   ${oldPrice}
                 </Text>
-                <Text fontWeight={600} fontSize='lg' color={'green.300'}>
+                <Text fontWeight={800}
+              fontSize={{ base: "2xl", md: "3xl" }}  color={"green.300"}
+              lineHeight={1.8}>
                   ${newPrice}
                 </Text>
               </Stack>
@@ -90,6 +93,7 @@ export default function CuponImage({data}) {
                   rounded={'full'}
                   bg={isUsed ? "gray" : 'green.300'}
                   size='xs'
+                  py={5}
                   color={'white'}
                   _hover={{
                     bg: isUsed ? "gray" : 'green.500',
