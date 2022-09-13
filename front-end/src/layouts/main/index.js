@@ -7,9 +7,6 @@ import {
   IconButton,
   useDisclosure,
   useColorModeValue,
-  Stack,
-  VStack,
-  Divider,
   Text,
   Button,
   Image,
@@ -31,16 +28,15 @@ import {
 
 const Links = [
   {
-    name: "Cupones comprados",
-    to: "/user-coupons",
+    name: "Inicio",
+    to: "/",
   },
-
   {
-    name: "Mis Cupones Comprados",
+    name: "Cupones Comprados",
     to: "/user-coupons/owner/actives",
   },
   {
-    name: "Mis Cupones Vendidos",
+    name: "Cupones Vendidos",
     to: "/user-coupons/created/actives",
   },
 ];
@@ -110,18 +106,12 @@ const MainLayout = ({ children }) => {
       >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader>Categorias</DrawerHeader>
+          <DrawerHeader>  <Image src="https://cryptofertas.tk/images/logo.svg" alt="Crypto/oferta" width="160px" mt="20px" />
+          <DrawerCloseButton mt={6}/>
+          </DrawerHeader>
 
           {/* For the categories, just to show this working, i used ul tag, but this may be replaced by a navlink */}
           <DrawerBody color={'gray.500'}>
-          <Flex flexDir="column" align="left" lineHeight={10}  >
-              {Filters.map(({ name, to }) => (
-                <ul key={name}>
-                  {name}
-                </ul>
-              ))}
-            <Divider />
 
             <Flex flexDir="column" align="left">
               {Links.map(({ name, to }) => (
@@ -143,7 +133,7 @@ const MainLayout = ({ children }) => {
             onClick={onOpen}>
             Crear Cupón
           </Button>
-            </Flex>
+
             </Flex>
           </DrawerBody>
 
