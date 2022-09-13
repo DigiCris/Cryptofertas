@@ -8,11 +8,11 @@ Blockchain technology will allow for a self-managed business model where all use
 
 **Website**
 
-http://criptofertas.tk
+https://cryptofertas.tk
 
 **More information here**
 
-http://criptofertas.tk/notion
+https://cryptofertas.tk/notion
 
 **Instalation**
 
@@ -69,6 +69,8 @@ http://criptofertas.tk/smartcontractsdocs
 ```
 
 **Authors**
+
+[About Us](https://linktr.ee/criptofertas)
 
 [Cristian Marchese](https://github.com/DigiCris)
 
