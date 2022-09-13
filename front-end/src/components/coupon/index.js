@@ -10,12 +10,22 @@ import {
   Link
 } from '@chakra-ui/react';
 
-import { Link as ReachLink } from "react-router-dom"
+import { Link as ReachLink, useParams } from "react-router-dom"
 
 
 export default function CuponImage({data}) {
 
   const {name, image, newPrice, oldPrice, expiration, isUsed, tokenId} = data
+
+  const {ownerOrCreated, value} = useParams()
+
+  const checkIfUserIsInHome = () => {
+    if(typeof ownerOrCreated == "undefined" && typeof value == "undefined"){
+      return true
+    } else {
+      return false
+    }
+  }
 
   return (
     <Stack borderWidth="1px" borderRadius="3%" boxShadow={'md'}>
@@ -86,7 +96,7 @@ export default function CuponImage({data}) {
                   _focus={{
                     bg: isUsed ? "gray" : 'green.500',
                   }}>
-                    {isUsed ? <Link as={ReachLink} to={`/productDetails/${tokenId}`} _hover={{textDecoration: 'none'}}>Usado</Link> : <Link as={ReachLink} to={`/productDetails/${tokenId}`} _hover={{textDecoration: 'none'}}>Canjear</Link>}
+                    {isUsed ? <Link as={ReachLink} to={`/productDetails/${tokenId}`} _hover={{textDecoration: 'none'}}>{ checkIfUserIsInHome() ? <span>Comprar</span> : <span>Usado</span>}</Link> : <Link as={ReachLink} to={`/productDetails/${tokenId}`} _hover={{textDecoration: 'none'}}>{ checkIfUserIsInHome() ? <span>Comprar</span> : <span>Canjear</span>}</Link>}
                 </Button> 
               </Stack>
               </GridItem>

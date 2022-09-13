@@ -20,7 +20,7 @@ import {
   Grid,
   SimpleGrid
 } from '@chakra-ui/react'
-import { Link, useLocation, useHistory } from "react-router-dom";
+import { Link, useLocation, useHistory} from "react-router-dom";
 
 import ProductForm from '../../components/ProductForm'
 import Loading from '../../components/loading'
@@ -101,12 +101,78 @@ const Home = () => {
     return dataIPFS
   }
 
+  const convertISOTimeToSeconds = isoTime => {
+    const date = new Date(isoTime);
+
+    const timestamp = date.getTime() / 1000;
+
+    return timestamp
+  }  
+ 
+  const getTimeToExpirate = time => {
+    const currentTime = new Date().getTime() / 1000
+
+    if(time > currentTime) {
+      return Math.floor(time - currentTime)
+    } else {
+      return 0
+    }
+
+}
+
+const convertSecondsToTimeString = timeInSeconds => {
+  let days = 0
+  let hours = 0
+  let minutes = 0
+  let seconds = 0
+
+  days = Math.floor(timeInSeconds / 86400)
+  timeInSeconds =  timeInSeconds - (days * 86400)
+
+  hours = Math.floor(timeInSeconds / 3600)
+  timeInSeconds = timeInSeconds - (hours * 3600)
+
+  minutes = Math.floor(timeInSeconds / 60)
+  timeInSeconds = timeInSeconds - (minutes * 60)
+
+  seconds = timeInSeconds
+
+  if( days > 0) {                 
+      
+      return `${days}d ${hours}h`
+
+  } else if(hours > 0){ 
+
+    return `${hours}h ${minutes}m`
+
+  } else if(minutes > 0){
+
+    return `${minutes}m ${seconds}s`
+
+  } else if (seconds > 0){
+
+    return `${seconds}s`
+        
+  } else {
+    return `Expired`
+  }
+  
+}
+
+const convertISOTimeToTimeOfExpiration = isotime => {
+  return convertSecondsToTimeString(getTimeToExpirate(convertISOTimeToSeconds(isotime)))
+}
+
+
+
+
   useEffect(() => {
     const interval = setInterval(() => {
       console.log('every 5 seconds')
     }, 5000);
     return () => clearInterval(interval);
   }, []);
+
 
   const getDataCoupons = async () => {
 
@@ -152,7 +218,7 @@ const Home = () => {
           amount: 1,
           usedAmount: 1,
           activeAmount: 1,
-          timeToExpirate: response['attributes'][3]['value'],
+          expiration: convertISOTimeToTimeOfExpiration(response['attributes'][3]['value']),
 
         }
         allActiveCouponsData.push(dataCoupon)
@@ -161,6 +227,8 @@ const Home = () => {
     }
     //)
     SetLoadingCoupons(false)
+
+    console.log(allActiveCouponsData, "Aqui esta")
 
     return allActiveCouponsData
 
