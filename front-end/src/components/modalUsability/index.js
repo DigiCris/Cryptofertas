@@ -7,6 +7,7 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  Circle,
   Button,
   Text,
   Center,
@@ -14,7 +15,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-
+import { CheckIcon } from '@chakra-ui/icons'
 import { useWeb3React } from "@web3-react/core";
 import QR from "../QR";
 import useNFTFactory from "../../hooks/useNFTFactory";
@@ -72,7 +73,7 @@ function ModalUsability(props) {
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
-          {!usedQR ? (
+          {usedQR ? (
             <>
               <ModalHeader mt="8" as="h3" size="lg" align="center">
                 Canjear cupón
@@ -118,18 +119,17 @@ function ModalUsability(props) {
               </Center>
               <ModalCloseButton />
               <ModalBody>
-                {/* <img src="../../assets/check.png"/> */}
-                <img src="https://bit.ly/dan-abramov" />
-              </ModalBody>
               <Center>
-                <Button
-                  variant='outline'  w="100%"
-                  onClick={onClose}
-                >
-                    Cerrar
-                </Button>
+              <Circle  w={36} h={36} bg={"#38a169"} color='white'>
+              <CheckIcon w={24} h={24} />
+              </Circle>
               </Center>
-              <ModalFooter></ModalFooter>
+              </ModalBody>
+              <ModalFooter>
+              <VStack  w={'full'}>
+              <Button variant='outline'  w="100%" onClick={onClose}>Cerrar</Button>
+              </VStack>
+              </ModalFooter>
             </>
           )}
         </ModalContent>
