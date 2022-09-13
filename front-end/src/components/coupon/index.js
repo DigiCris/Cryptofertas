@@ -75,6 +75,7 @@ export default function CuponImage({data}) {
                 </Text>
               </Stack>
               </GridItem>
+              {!checkIfUserIsInHome() ?
               <GridItem height={"100%"}>
                <Stack
                 height={"100%"}
@@ -96,10 +97,10 @@ export default function CuponImage({data}) {
                   _focus={{
                     bg: isUsed ? "gray" : 'green.500',
                   }}>
-                    {isUsed ? <Link as={ReachLink} to={`/productDetails/${tokenId}`} _hover={{textDecoration: 'none'}}>{ checkIfUserIsInHome() ? <span>Comprar</span> : <span>Usado</span>}</Link> : <Link as={ReachLink} to={`/productDetails/${tokenId}`} _hover={{textDecoration: 'none'}}>{ checkIfUserIsInHome() ? <span>Comprar</span> : <span>Canjear</span>}</Link>}
+                    {isUsed ? <Link as={ReachLink} to={`/productDetails/${tokenId}`} _hover={{textDecoration: 'none'}}><span>Usado</span></Link> : <Link as={ReachLink} to={`/productDetails/${tokenId}`} _hover={{textDecoration: 'none'}}><span>Canjear</span></Link>}
                 </Button> 
               </Stack>
-              </GridItem>
+              </GridItem> : null} 
             </Grid>     
           </Stack>
         </Stack>
